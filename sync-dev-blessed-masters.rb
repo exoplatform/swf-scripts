@@ -1,9 +1,24 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require "json"
+require "fileutils"
 require "benchmark"
 require 'net/http'
 require 'net/https'
+
+# Validate inputs
+if ENV['GITHUB_USER'].nil?
+  print "[ERROR] GITHUB_USER env var not set !!!\n"
+  Process.exit  
+end
+if ENV['GITHUB_PWD'].nil?
+  print "[ERROR] GITHUB_PWD env var not set !!!\n"
+  Process.exit  
+end
+if ENV['WORKSPACE'].nil?
+  print "[ERROR] WORKSPACE env var not set !!!\n"
+  Process.exit  
+end
 
 # retrieves the list of repositories from exodev organization
 ContentURI = URI.parse("https://api.github.com/orgs/exodev/repos")
@@ -34,9 +49,11 @@ data = response.body
 result = JSON.parse(data)
 
 here = Dir.pwd
+FileUtils.mkdir_p ENV['WORKSPACE']
 
 result.each {
   |repo|
+    Dir.chdir ENV['WORKSPACE']
     if File.directory?(repo["name"])
       print "[INFO] Deleting current copy of : ",repo["name"]," ...\n"
       s = system("rm -rf #{repo['name']}")
@@ -68,5 +85,6 @@ result.each {
       Process.exit 
     end  
     print "[INFO] Done.\n"
-    Dir.chdir here
 }
+
+Dir.chdir here
