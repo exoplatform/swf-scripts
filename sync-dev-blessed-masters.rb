@@ -8,16 +8,13 @@ require 'net/https'
 
 # Validate inputs
 if ENV['GITHUB_USER'].nil?
-  print "[ERROR] GITHUB_USER env var not set !!!\n"
-  Process.exit  
+  abort("[ERROR] GITHUB_USER env var not set !!!\n")
 end
 if ENV['GITHUB_PWD'].nil?
-  print "[ERROR] GITHUB_PWD env var not set !!!\n"
-  Process.exit  
+  abort("[ERROR] GITHUB_PWD env var not set !!!\n")
 end
 if ENV['WORKSPACE'].nil?
-  print "[ERROR] WORKSPACE env var not set !!!\n"
-  Process.exit  
+  abort("[ERROR] WORKSPACE env var not set !!!\n")
 end
 
 # retrieves the list of repositories from exodev organization
@@ -58,31 +55,27 @@ result.each {
       print "[INFO] Deleting current copy of : ",repo["name"]," ...\n"
       s = system("rm -rf #{repo['name']}")
       if !s
-        print "[ERROR] Deletion of repository ",repo["name"]," failed !!!\n"
-        Process.exit 
+        abort("[ERROR] Deletion of repository #{repo['name']} failed !!!\n")
       end  
       print "[INFO] Done.\n"
     end
     print "[INFO] Cloning : ",repo["name"]," from ",repo['ssh_url']," ...\n"
     s = system("git clone --quiet #{repo['ssh_url']}") 
     if !s
-      print "[ERROR] Cloning of repository ",repo["name"]," failed !!!\n"
-      Process.exit 
+      abort("[ERROR] Cloning of repository #{repo['name']} failed !!!\n")
     end  
     print "[INFO] Done.\n"
     Dir.chdir repo["name"]
     print "[INFO] Checkout master branch ...\n"
     s = system("git checkout --quiet -b master-dev origin/master")
     if !s
-      print "[ERROR] Checkout of master branch from repository ",repo["name"]," failed !!!\n"
-      Process.exit 
+      abort("[ERROR] Checkout of master branch from repository #{repo['name']} failed !!!\n")
     end  
     print "[INFO] Done.\n"
     print "[INFO] Push master branch content from dev repository to blessed repository ...\n"
     s = system("git push git@github.com:exoplatform/#{repo['name']}.git master-dev:master")
     if !s
-      print "[ERROR] Push of master branch updates to repository ",repo["name"]," failed !!!\n"
-      Process.exit 
+      abort("[ERROR] Push of master branch updates to repository #{repo['name']} failed !!!\n")
     end  
     print "[INFO] Done.\n"
 }
