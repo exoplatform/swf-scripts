@@ -18,7 +18,7 @@ if ENV['WORKSPACE'].nil?
 end
 
 # retrieves the list of repositories from exodev organization
-ContentURI = URI.parse("https://api.github.com/orgs/exodev/repos")
+ContentURI = URI.parse("https://api.github.com/orgs/exodev/repos?per_page=100")
 req = Net::HTTP::Get.new(ContentURI.path)
 req.basic_auth ENV['GITHUB_USER'], ENV['GITHUB_PWD']
 https = Net::HTTP.new(ContentURI.host, ContentURI.port)
