@@ -21,11 +21,12 @@ end
 ContentURI = URI.parse("https://api.github.com/orgs/exodev/repos?per_page=100")
 req = Net::HTTP::Get.new(ContentURI.request_uri)
 req.basic_auth ENV['GITHUB_USER'], ENV['GITHUB_PWD']
+req.add_field('User-Agent', 'Custom Ruby Script from exo-swf@exoplatform.com')
 https = Net::HTTP.new(ContentURI.host, ContentURI.port)
 https.use_ssl = true
 https.verify_mode = OpenSSL::SSL::VERIFY_NONE
 response = https.start() {|http|
-  http.get ContentURI.request_uri, 'User-Agent' => 'MyLib v1.2'
+  http.get ContentURI.request_uri
   http.request(req)
 }
 
