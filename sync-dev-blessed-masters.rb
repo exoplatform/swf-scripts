@@ -53,31 +53,61 @@ print "[INFO] NB results : ",result.length,"\n"
 result.each {
   |repo|
     Dir.chdir ENV['WORKSPACE']
-    if File.directory?(repo["name"])
-      print "[INFO] Deleting current copy of : ",repo["name"]," ...\n"
-      s = system("rm -rf #{repo['name']}")
+    repoName = repo["name"]
+    repoDevURL = repo['ssh_url']
+    repoBlessedURL  = String.new(repo['ssh_url'])
+    repoBlessedURL ["exodev"] = "exoplatform"
+    if File.directory?(repoName)
+      Dir.chdir repoName
+      print "[INFO] Setting origin url ",repoDevURL," for ",repoName," ...\n"
+      s = system("git remote set-url origin #{repoDevURL}") 
       if !s
-        abort("[ERROR] Deletion of repository #{repo['name']} failed !!!\n")
+        abort("[ERROR] Setting origin url of repository #{repoName} failed !!!\n")
+      end  
+      print "[INFO] Done.\n"      
+      print "[INFO] Fetching from origin for ",repoName," ...\n"
+      s = system("git fetch origin --prune") 
+      if !s
+        abort("[ERROR] Fetching from origin for repository #{repoName} failed !!!\n")
       end  
       print "[INFO] Done.\n"
+      print "[INFO] Setting blessed url ",repoBlessedURL," for ",repoName," ...\n"
+      s = system("git remote set-url blessed #{repoBlessedURL}") 
+      if !s
+        abort("[ERROR] Setting blessed url of repository #{repoName} failed !!!\n")
+      end  
+      print "[INFO] Done.\n"      
+    else
+      print "[INFO] Cloning : ",repoName," from ",repoDevURL," ...\n"
+      s = system("git clone --quiet #{repoDevURL}") 
+      if !s
+        abort("[ERROR] Cloning of repository #{repoName} failed !!!\n")
+      end  
+      print "[INFO] Done.\n" 
+      Dir.chdir repoName     
+      print "[INFO] Add blessed repository ",repoBlessedURL," for ",repoName," ...\n"
+      s = system("git remote add blessed #{repoBlessedURL}") 
+      if !s
+        abort("[ERROR] Adding blessed remote of repository #{repoName} failed !!!\n")
+      end  
+      print "[INFO] Done.\n"      
+    end    
+    print "[INFO] Checkout master branch (it is perhaps not the default) for ",repoName," ...\n"
+    s = system("git checkout master")
+    if !s
+      abort("[ERROR] Checkout master branch of repository #{repoName} failed !!!\n")
+    end  
+    print "[INFO] Done.\n"      
+    print "[INFO] Reset master to origin/master for ",repoName," ...\n"
+    s = system("git reset --hard origin/master") 
+    if !s
+      abort("[ERROR] Reset master to origin/master for #{repoName} failed !!!\n")
     end
-    print "[INFO] Cloning : ",repo["name"]," from ",repo['ssh_url']," ...\n"
-    s = system("git clone --quiet #{repo['ssh_url']}") 
-    if !s
-      abort("[ERROR] Cloning of repository #{repo['name']} failed !!!\n")
-    end  
-    print "[INFO] Done.\n"
-    Dir.chdir repo["name"]
-    print "[INFO] Checkout master branch ...\n"
-    s = system("git checkout --quiet -b master-dev origin/master")
-    if !s
-      abort("[ERROR] Checkout of master branch from repository #{repo['name']} failed !!!\n")
-    end  
     print "[INFO] Done.\n"
     print "[INFO] Push master branch content from dev repository to blessed repository ...\n"
-    s = system("git push git@github.com:exoplatform/#{repo['name']}.git master-dev:master")
+    s = system("git push blessed master")
     if !s
-      abort("[ERROR] Push of master branch updates to repository #{repo['name']} failed !!!\n")
+      abort("[ERROR] Push of master branch updates to repository #{repoName} failed !!!\n")
     end  
     print "[INFO] Done.\n"
 }
