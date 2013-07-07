@@ -21,10 +21,25 @@ JSON.load(STDIN.read).each { |repo|
     
   client = Octokit::Client.new(:login => ENV['GITHUB_USER'], :password => ENV['GITHUB_PWD'])
   client.follow(ENV['GITHUB_USER'])
+  #MasterBranch
+  #hook = client.create_hook(
+  #  "#{repo["owner"]["login"]}/#{repo["name"]}",
+  #  'masterbranch',
+  #  {},
+  #  {
+  #    :events => ['push'],
+  #    :active => true
+  #  }
+  #)
+  #Fisheye   
   hook = client.create_hook(
     "#{repo["owner"]["login"]}/#{repo["name"]}",
-    'masterbranch',
-    {},
+    'fisheye',
+    {
+      :url_base => 'https://fisheye.exoplatform.org',
+      :token => '7a40d066423ed0e62a943876c8d9ffe29d8805ad',
+      :repository_name => repo['name']+"-dev"
+    },
     {
       :events => ['push'],
       :active => true
