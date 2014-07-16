@@ -94,10 +94,8 @@ result.each {
     end    
     print "[INFO] Checkout master branch (it is perhaps not the default) for ",repoName," ...\n"
     s = system("git checkout master")
-    if !s
-      print("[WARN] Checkout master branch of repository #{repoName} failed !!! Skip this repo\n")
-      next
-    end  
+    next if !s
+    # No master branch perhaps ? Let's skip #{repoName}.\n")
     print "[INFO] Done.\n"      
     print "[INFO] Reset master to origin/master for ",repoName," ...\n"
     s = system("git reset --hard origin/master") 
