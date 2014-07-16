@@ -97,7 +97,7 @@ result.each {
     if !s
       print("[WARN] Checkout master branch of repository #{repoName} failed !!! Skip this repo\n")
       # No master branch perhaps ? Let's skip #{repoName}.\n")
-      next repo
+      next
     end
     print "[INFO] Done.\n"      
     print "[INFO] Reset master to origin/master for ",repoName," ...\n"
