@@ -94,21 +94,24 @@ result.each {
     end    
     print "[INFO] Checkout master branch (it is perhaps not the default) for ",repoName," ...\n"
     s = system("git checkout master")
-    next if !s
-    # No master branch perhaps ? Let's skip #{repoName}.\n")
-    print "[INFO] Done.\n"      
-    print "[INFO] Reset master to origin/master for ",repoName," ...\n"
-    s = system("git reset --hard origin/master") 
     if !s
-      abort("[ERROR] Reset master to origin/master for #{repoName} failed !!!\n")
-    end
-    print "[INFO] Done.\n"
-    print "[INFO] Push master branch content from dev repository to blessed repository ...\n"
-    s = system("git push blessed master")
-    if !s
-      abort("[ERROR] Push of master branch updates to repository #{repoName} failed !!!\n")
+      print("[WARN] Checkout master branch of repository #{repoName} failed !!! Skip this repo\n")
+      # No master branch perhaps ? Let's skip #{repoName}.\n")
+    else
+      print "[INFO] Done.\n"      
+      print "[INFO] Reset master to origin/master for ",repoName," ...\n"
+      s = system("git reset --hard origin/master") 
+      if !s
+        abort("[ERROR] Reset master to origin/master for #{repoName} failed !!!\n")
+      end
+      print "[INFO] Done.\n"
+      print "[INFO] Push master branch content from dev repository to blessed repository ...\n"
+      s = system("git push blessed master")
+      if !s
+        abort("[ERROR] Push of master branch updates to repository #{repoName} failed !!!\n")
+      end  
+      print "[INFO] Done.\n"
     end  
-    print "[INFO] Done.\n"
 }
 
 Dir.chdir here
