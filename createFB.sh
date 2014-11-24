@@ -1,11 +1,11 @@
 #!/bin/bash -eu
 
-BRANCH=js-improvement
-ISSUE=SWF-2982
-ORIGIN_BRANCH=master
+BRANCH=notification-web
+ISSUE=SWF-3092
+ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
-ORIGIN_VERSION=4.1.x-SNAPSHOT
-TARGET_VERSION_PREFIX=4.1.x
+ORIGIN_VERSION=4.2.x-SNAPSHOT
+TARGET_VERSION_PREFIX=4.2.x
 
 function createFB(){
   pushd $1
@@ -35,7 +35,7 @@ function createFB(){
 #  replaceInPom.sh "<org.exoplatform.depmgt.version>9-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>9-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"  
   git commit -m"$ISSUE : Create $BRANCH branch and update projects versions" -a
   git push origin $TARGET_BRANCH --set-upstream
-  git checkout master
+  git checkout develop
   popd
 }
 
