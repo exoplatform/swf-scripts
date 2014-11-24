@@ -91,25 +91,45 @@ result.each {
         abort("[ERROR] Adding blessed remote of repository #{repoName} failed !!!\n")
       end  
       print "[INFO] Done.\n"      
-    end    
-    print "[INFO] Checkout master branch (it is perhaps not the default) for ",repoName," ...\n"
-    s = system("git checkout master")
+    end
+    print "[INFO] Checkout develop branch (it is perhaps not the default) for ",repoName," ...\n"
+    s = system("git checkout develop")
     if !s
-      print("[WARN] Checkout master branch of repository #{repoName} failed !!! Skip this repo\n")
-      # No master branch perhaps ? Let's skip #{repoName}.\n")
+      print("[INFO] No develop branch in repository #{repoName}, let's sync master\n")
+      print "[INFO] Checkout master branch (it is perhaps not the default) for ",repoName," ...\n"
+      s = system("git checkout master")
+      if !s
+        print("[WARN] Checkout master branch of repository #{repoName} failed !!! Skip this repo\n")
+        # No master branch perhaps ? Let's skip #{repoName}.\n")
+        next
+      end
+      print "[INFO] Done.\n"      
+      print "[INFO] Reset master to origin/master for ",repoName," ...\n"
+      s = system("git reset --hard origin/master") 
+      if !s
+        abort("[ERROR] Reset master to origin/master for #{repoName} failed !!!\n")
+      end
+      print "[INFO] Done.\n"
+      print "[INFO] Push master branch content from dev repository to blessed repository ...\n"
+      s = system("git push blessed master")
+      if !s
+        abort("[ERROR] Push of master branch updates to repository #{repoName} failed !!!\n")
+      end  
+      print "[INFO] Done.\n"
+      # Let's process the next one
       next
     end
     print "[INFO] Done.\n"      
-    print "[INFO] Reset master to origin/master for ",repoName," ...\n"
-    s = system("git reset --hard origin/master") 
+    print "[INFO] Reset develop to origin/develop for ",repoName," ...\n"
+    s = system("git reset --hard origin/develop") 
     if !s
-      abort("[ERROR] Reset master to origin/master for #{repoName} failed !!!\n")
+      abort("[ERROR] Reset develop to origin/develop for #{repoName} failed !!!\n")
     end
     print "[INFO] Done.\n"
-    print "[INFO] Push master branch content from dev repository to blessed repository ...\n"
-    s = system("git push blessed master")
+    print "[INFO] Push develop branch content from dev repository to blessed repository ...\n"
+    s = system("git push blessed develop")
     if !s
-      abort("[ERROR] Push of master branch updates to repository #{repoName} failed !!!\n")
+      abort("[ERROR] Push of develop branch updates to repository #{repoName} failed !!!\n")
     end  
     print "[INFO] Done.\n"
 }
