@@ -1,14 +1,21 @@
 #!/bin/bash -eu
 
-BRANCH=notification-web
-ISSUE=SWF-3092
+BRANCH=share-content
+ISSUE=SWF-3109
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=4.2.x-SNAPSHOT
 TARGET_VERSION_PREFIX=4.2.x
 
 function createFB(){
+  echo "########################################"
+  echo "# Repository: $1"
+  echo "########################################"
   pushd $1
+
+  # Remove all branches but the origin one
+#  git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
+
   git remote update --prune
   git reset --hard HEAD
   git checkout $ORIGIN_BRANCH
@@ -32,7 +39,7 @@ function createFB(){
   replaceInPom.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION_PREFIX-plf-$BRANCH-SNAPSHOT</org.exoplatform.platform.version>"
   replaceInPom.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION_PREFIX-pkgpub-$BRANCH-SNAPSHOT</org.exoplatform.platform.distributions.version>"
 #  replaceInPom.sh "<org.exoplatform.ide.version>1.4.x-SNAPSHOT</org.exoplatform.ide.version>" "<org.exoplatform.ide.version>1.4.x-ide-$BRANCH-SNAPSHOT</org.exoplatform.ide.version>"
-#  replaceInPom.sh "<org.exoplatform.depmgt.version>9-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>9-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"  
+#  replaceInPom.sh "<org.exoplatform.depmgt.version>9-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>9-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"
   git commit -m"$ISSUE : Create $BRANCH branch and update projects versions" -a
   git push origin $TARGET_BRANCH --set-upstream
   git checkout develop
@@ -40,14 +47,14 @@ function createFB(){
 }
 
 
-createFB platform-ui plfui 
-createFB commons commons 
-createFB social soc 
-createFB ecms ecms 
-createFB wiki wiki 
-createFB forum forum 
-createFB calendar cal 
-createFB integration integ 
-createFB platform plf 
-createFB platform-public-distributions pkgpub 
-createFB platform-private-distributions pkgpriv 
+createFB platform-ui plfui
+createFB commons commons
+createFB social soc
+createFB ecms ecms
+createFB wiki wiki
+createFB forum forum
+createFB calendar cal
+createFB integration integ
+createFB platform plf
+createFB platform-public-distributions pkgpub
+createFB platform-private-distributions pkgpriv
