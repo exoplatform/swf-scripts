@@ -1,6 +1,7 @@
 #!/bin/bash -eu
 
-BRANCH=feature/4.1.x-translation
+BRANCH=feature/open-doc-in-office
+
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
 
