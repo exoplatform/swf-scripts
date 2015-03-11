@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/open-doc-in-office
+BRANCH=feature/upg-juzu-1.0
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -20,6 +20,7 @@ function deleteFB(){
 }
 
 pushd ${SWF_FB_REPOS}
+#deleteFB maven-depmgt-pom
 deleteFB platform-ui
 deleteFB commons
 deleteFB social
