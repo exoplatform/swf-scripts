@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/upg-juzu-1.0
+BRANCH=feature/notification-web
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
