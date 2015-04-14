@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/notification-web
+BRANCH=feature/user-profile-redesign
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
