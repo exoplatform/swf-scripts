@@ -1,11 +1,11 @@
 #!/bin/bash -eu
 
-BRANCH=share-content
-ISSUE=SWF-3109
+BRANCH=responsive-design
+ISSUE=SWF-3242
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=4.2.x-SNAPSHOT
-TARGET_VERSION_PREFIX=4.2.x
+TARGET_VERSION_PREFIX=4.3.x
 
 function createFB(){
   echo "########################################"
