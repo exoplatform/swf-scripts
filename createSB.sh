@@ -13,8 +13,6 @@ function createSB(){
   echo "########################################"
   pushd $1
 
-  # Remove all branches but the origin one
-#  git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
   git remote update --prune
   git reset --hard HEAD
   git checkout $ORIGIN_BRANCH
@@ -41,7 +39,7 @@ function createSB(){
 #  replaceInPom.sh "<org.exoplatform.ide.version>1.4.x-SNAPSHOT</org.exoplatform.ide.version>" "<org.exoplatform.ide.version>1.4.x-ide-$BRANCH-SNAPSHOT</org.exoplatform.ide.version>"
 #  replaceInPom.sh "<org.exoplatform.depmgt.version>9-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>9-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"
   git commit -m"$ISSUE : Create $TARGET_BRANCH branch and update projects versions" -a
-  #git push origin $TARGET_BRANCH --set-upstream
+  git push origin $TARGET_BRANCH --set-upstream
   git checkout develop
   popd
 }
