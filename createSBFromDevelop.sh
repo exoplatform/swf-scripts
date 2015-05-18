@@ -40,7 +40,7 @@ function createSBFromDevelop(){
  #  replaceInPom.sh "<org.exoplatform.depmgt.version>9-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>9-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"
   git add -A
   git diff-index --quiet HEAD || git commit -m "$ISSUE : Create $STABLE_BRANCH branch and update projects versions"
-  #git push origin $STABLE_BRANCH --set-upstream
+  git push origin $STABLE_BRANCH --set-upstream
 
   #update project version on develop branch
   git checkout develop
@@ -56,23 +56,23 @@ function createSBFromDevelop(){
   replaceInPom.sh "<org.exoplatform.platform.version>$CURRENT_DEVELOP_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$NEXT_DEVELOP_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.version>"
   replaceInPom.sh "<org.exoplatform.platform.distributions.version>$CURRENT_DEVELOP_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$NEXT_DEVELOP_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.distributions.version>"
   replaceInPom.sh "<org.gatein.portal.version>$CURRENT_DEVELOP_VERSION_PREFIX-PLF-SNAPSHOT</org.gatein.portal.version>" "<org.gatein.portal.version>$NEXT_DEVELOP_VERSION_PREFIX-PLF-SNAPSHOT</org.gatein.portal.version>"
- #  replaceInPom.sh "<org.exoplatform.ide.version>1.4.x-SNAPSHOT</org.exoplatform.ide.version>" "<org.exoplatform.ide.version>1.4.x-ide-$BRANCH-SNAPSHOT</org.exoplatform.ide.version>"
- #  replaceInPom.sh "<org.exoplatform.depmgt.version>9-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>9-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"
- git commit -m "$ISSUE : Update projects versions for next development" -a
- #git push origin develop
+  #  replaceInPom.sh "<org.exoplatform.ide.version>1.4.x-SNAPSHOT</org.exoplatform.ide.version>" "<org.exoplatform.ide.version>1.4.x-ide-$BRANCH-SNAPSHOT</org.exoplatform.ide.version>"
+  #  replaceInPom.sh "<org.exoplatform.depmgt.version>9-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>9-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"
+  git commit -m "$ISSUE : Update projects versions for next development" -a
+  git push origin develop
 
   popd
 }
 
 
 createSBFromDevelop platform-ui
-#createSBFromDevelop commons
-#createSBFromDevelop social
-#createSBFromDevelop ecms
-#createSBFromDevelop wiki
-#createSBFromDevelop forum
-#createSBFromDevelop calendar
-#createSBFromDevelop integration
-#createSBFromDevelop platform
-#createSBFromDevelop platform-public-distributions
-#createSBFromDevelop platform-private-distributions
+createSBFromDevelop commons
+createSBFromDevelop social
+createSBFromDevelop ecms
+createSBFromDevelop wiki
+createSBFromDevelop forum
+createSBFromDevelop calendar
+createSBFromDevelop integration
+createSBFromDevelop platform
+createSBFromDevelop platform-public-distributions
+createSBFromDevelop platform-private-distributions
