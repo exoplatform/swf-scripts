@@ -7,6 +7,11 @@ TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=4.2.x-SNAPSHOT
 TARGET_VERSION_PREFIX=4.3.x
 
+SCRIPTDIR=$(cd $(dirname "$0"); pwd)
+CURRENTDIR=$(pwd)
+
+SWF_FB_REPOS=${SWF_FB_REPOS:-$CURRENTDIR}
+
 function createFB(){
   echo "########################################"
   echo "# Repository: $1"
@@ -46,6 +51,7 @@ function createFB(){
   popd
 }
 
+pushd ${SWF_FB_REPOS}
 
 createFB platform-ui plfui
 createFB commons commons
@@ -58,3 +64,5 @@ createFB integration integ
 createFB platform plf
 createFB platform-public-distributions pkgpub
 createFB platform-private-distributions pkgpriv
+
+popd
