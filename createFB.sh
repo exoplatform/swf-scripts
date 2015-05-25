@@ -1,10 +1,10 @@
 #!/bin/bash -eu
 
-BRANCH=responsive-design
-ISSUE=SWF-3242
+BRANCH=social-rdbms
+ISSUE=SWF-3293
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
-ORIGIN_VERSION=4.2.x-SNAPSHOT
+ORIGIN_VERSION=4.3.x-SNAPSHOT
 TARGET_VERSION_PREFIX=4.3.x
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
