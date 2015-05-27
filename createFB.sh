@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
-BRANCH=social-rdbms
-ISSUE=SWF-3293
+BRANCH=oauth
+ISSUE=SWF-3275
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=4.3.x-SNAPSHOT
@@ -65,7 +65,7 @@ createFB platform-ui plfui
 createFB commons commons
 createFB social soc
 createFB ecms ecms
-createFB wiki wiki 
+createFB wiki wiki
 createFB forum forum
 createFB calendar cal
 createFB integration integ
