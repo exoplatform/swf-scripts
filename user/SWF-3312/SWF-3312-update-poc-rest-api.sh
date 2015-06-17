@@ -1,18 +1,19 @@
-#!/bin/bash -eu
+#!/bin/bash -ue
 
 BRANCH=social-rest-api
 ISSUE=SWF-3312
-ORIGIN_BRANCH=develop
+ORIGIN_BRANCH=PoC/soc-rest-api
 TARGET_BRANCH=feature/$BRANCH
-ORIGIN_VERSION=4.3.x-SNAPSHOT
+ORIGIN_VERSION=4.2.x-SNAPSHOT
 TARGET_VERSION_PREFIX=4.3.x
 
-SCRIPTDIR=$(cd $(dirname "$0"); pwd)
-CURRENTDIR=$(pwd)
 
-SWF_FB_REPOS=${SWF_FB_REPOS:-$CURRENTDIR}
+function pause(){
+   read -p "$*"
+}
 
-function createFB(){
+updateProject (){
+  echo "================================================================================"
   local repo_name=$1
   printf "\e[1;33m########################################\e[m\n"
   printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
@@ -20,7 +21,7 @@ function createFB(){
   pushd ${repo_name}
 
   # Remove all branches but the origin one
-#  git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
+  #  git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
   printf "\e[1;33m# %s\e[m\n" "Cleaning of ${repo_name} repository ..."
   git remote update --prune
   git reset --hard HEAD
@@ -36,8 +37,15 @@ function createFB(){
     printf "\e[1;35m# %s\e[m\n" "WARNING : the ${TARGET_BRANCH} branch already exists so we reuse it (you have 5 seconds to cancel with CTRL+C) ..."
     sleep 5
   fi
-  set -e
-  printf "\e[1;33m# %s\e[m\n" "Modifying versions in the POMs ..."
+
+  #CF
+  replaceInPom.sh "<org.exoplatform.depmgt.version>10-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>11-SNAPSHOT</org.exoplatform.depmgt.version>"
+  replaceInPom.sh "<org.exoplatform.kernel.version>2.4.x-SNAPSHOT</org.exoplatform.kernel.version>" "<org.exoplatform.kernel.version>2.5.1-GA</org.exoplatform.kernel.version>"
+  replaceInPom.sh "<org.exoplatform.core.version>2.5.x-SNAPSHOT</org.exoplatform.core.version>" "<org.exoplatform.core.version>2.6.1-GA</org.exoplatform.core.version>"
+  replaceInPom.sh "<org.exoplatform.ws.version>2.3.x-SNAPSHOT</org.exoplatform.ws.version>" "<org.exoplatform.ws.version>2.4.1-GA</org.exoplatform.ws.version>"
+  replaceInPom.sh "<org.exoplatform.jcr.version>1.15.x-SNAPSHOT</org.exoplatform.jcr.version>" "<org.exoplatform.jcr.version>1.16.1-GA</org.exoplatform.jcr.version>"
+
+  #PLF
   replaceInPom.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION_PREFIX-$2-$BRANCH-SNAPSHOT</version>" ""
   replaceInPom.sh "<org.exoplatform.platform-ui.version>$ORIGIN_VERSION</org.exoplatform.platform-ui.version>" "<org.exoplatform.platform-ui.version>$TARGET_VERSION_PREFIX-plfui-$BRANCH-SNAPSHOT</org.exoplatform.platform-ui.version>"
   replaceInPom.sh "<org.exoplatform.commons.version>$ORIGIN_VERSION</org.exoplatform.commons.version>" "<org.exoplatform.commons.version>$TARGET_VERSION_PREFIX-commons-$BRANCH-SNAPSHOT</org.exoplatform.commons.version>"
@@ -49,28 +57,16 @@ function createFB(){
   replaceInPom.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION_PREFIX-integ-$BRANCH-SNAPSHOT</org.exoplatform.integ.version>"
   replaceInPom.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION_PREFIX-plf-$BRANCH-SNAPSHOT</org.exoplatform.platform.version>"
   replaceInPom.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION_PREFIX-pkgpub-$BRANCH-SNAPSHOT</org.exoplatform.platform.distributions.version>"
-#  replaceInPom.sh "<org.exoplatform.ide.version>1.4.x-SNAPSHOT</org.exoplatform.ide.version>" "<org.exoplatform.ide.version>1.4.x-ide-$BRANCH-SNAPSHOT</org.exoplatform.ide.version>"
-#  replaceInPom.sh "<org.exoplatform.depmgt.version>9-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>9-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"
+
+  replaceInPom.sh "<org.exoplatform.doc.doc-style.version>4.2.x-SNAPSHOT</org.exoplatform.doc.doc-style.version>" "<org.exoplatform.doc.doc-style.version>4.3.x-SNAPSHOT</org.exoplatform.doc.doc-style.version>"
+  replaceInPom.sh "<org.gatein.portal.version>4.2.x-PLF-SNAPSHOT</org.gatein.portal.version>" "<org.gatein.portal.version>4.3.x-PLF-SNAPSHOT</org.gatein.portal.version>"
 
   printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ..."
   git commit -m"$ISSUE : Create $BRANCH branch and update projects versions" -a
   git push origin $TARGET_BRANCH --set-upstream
   git checkout develop
   popd
+
 }
 
-pushd ${SWF_FB_REPOS}
-
-createFB platform-ui plfui
-createFB commons commons
-createFB social soc
-createFB ecms ecms
-createFB wiki wiki
-createFB forum forum
-createFB calendar cal
-createFB integration integ
-createFB platform plf
-createFB platform-public-distributions pkgpub
-createFB platform-private-distributions pkgpriv
-
-popd
+updateProject social soc
