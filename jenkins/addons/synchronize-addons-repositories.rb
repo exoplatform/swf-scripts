@@ -183,7 +183,7 @@ class SyncAddonsRepos
       end
       self.log(INFO,repoName,"Done.")
       self.log(INFO,repoName,"Push develop branch content from exo-addons repository to blessed repository ...")
-      #s = system("git push blessed develop")
+      s = system("git push blessed develop")
       if !s
         abort("[ERROR] Push of develop branch updates to repository #{repoName} failed !!!\n")
       end
