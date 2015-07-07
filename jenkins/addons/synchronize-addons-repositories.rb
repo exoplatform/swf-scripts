@@ -168,7 +168,6 @@ class SyncAddonsRepos
   # chechout develop branch in exo-addons repository and push to develop branch in exoplatform repository
   def sync_addon_repo_to_blessed_repo(repoName)
     self.log(INFO,repoName,"Checkout develop branch (it is perhaps not the default) for #{repoName}...")
-    system("git config user.email 'mgreau@exoplatform.com' ")
     s = system("git checkout develop")
     if !s
       print("[ERROR] No develop branch in repository #{repoName}, Skip this repo!!!\n")
