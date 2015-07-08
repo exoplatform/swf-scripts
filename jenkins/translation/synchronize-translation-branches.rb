@@ -22,7 +22,7 @@ class SyncTranslationBranches
    # Branch name with last modifications
    SourceBranch = "develop"
    # Branch name to update with last modifications
-   TranslationBranch = "SWF-3331/4.3.x-translation"#"integration/4.3.x-translation"
+   TranslationBranch = "integration/4.3.x-translation"
 
    # Logs level
    INFO = "INFO"
