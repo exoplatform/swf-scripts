@@ -202,20 +202,19 @@ class SyncTranslationBranches
   # TODO: align this repos with others?
   def gatein_portal_specific_code_1(repoName, repoBlessedURL)
 
-    self.log(INFO,repoName,"Add blessed repository #{repoBlessedURL} for #{repoName} ...")
-    s = system("git remote add blessed #{repoBlessedURL}")
+    self.log(INFO,repoName,"Add #{EXOPlatformRemoteName} repository #{repoBlessedURL} for #{repoName} ...")
+    s = system("git remote add #{EXOPlatformRemoteName} #{repoBlessedURL}")
     if !s
-      abort("[ERROR] Adding blessed remote of repository #{repoName} failed !!!\n")
+      abort("[ERROR] Adding #{EXOPlatformRemoteName} remote of repository #{repoName} failed !!!\n")
     end
     self.log(INFO,repoName,"Done.")
+    s = system("git fetch #{EXOPlatformRemoteName} --prune")
 
   end
 
   # TODO: align this repos with others?
-  def gatein_portal_specific_code_2(repoName)  
+  def gatein_portal_specific_code_2(repoName)
     # branch
-    s = system("git fetch #{EXOPlatformRemoteName} --prune")
-    s = system("git checkout #{GateInSourceBranch}")
     ok = self.reset_branch(repoName, EXOPlatformRemoteName, GateInSourceBranch)
     if ok
       # push force to remote branch
