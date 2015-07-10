@@ -19,8 +19,17 @@ class SyncTranslationBranches
 
    # Github eXo Dev organization
    EXODevOrganizationURI = "git@github.com:exodev/"
+   EXODevRemoteName = "origin"
+
+   # Github eXo Platform organization
+   EXOPlatformOrganizationURI = "git@github.com:exoplatform/"
+   EXOPlatformRemoteName = "blessed"
+
    # Branch name with last modifications
    SourceBranch = "develop"
+   # Branch name specific to gatein
+   GateInSourceBranch = "stable/4.3.x-PLF"
+
    # Branch name to update with last modifications
    TranslationBranch = "integration/4.3.x-translation"
 
@@ -74,9 +83,9 @@ class SyncTranslationBranches
 
            self.log(INFO,translation_project["name"], "---STARTED--")
            if File.directory?(translation_project["name"])
-             self.configure_project_repo_urls(translation_project["name"], translation_project["ssh_url"])
+             self.configure_project_repo_urls(translation_project["name"], EXODevRemoteName, translation_project["ssh_url_origin"])
            else
-             self.clone_project_repo(translation_project["name"], translation_project["ssh_url"])
+             self.clone_project_repo(translation_project["name"], translation_project["ssh_url_origin"], translation_project["ssh_url_blessed"])
            end
            self.sync_project_branches(translation_project["name"])
            self.log(INFO,translation_project["name"], "---FINISHED---\n")
@@ -99,8 +108,9 @@ class SyncTranslationBranches
           |plf_project_name|
             plf_repo = {}
             plf_repo["name"] = plf_project_name
-            plf_repo["ssh_url"] = "#{EXODevOrganizationURI}#{plf_project_name}.git"
-            self.log(INFO,plf_repo["name"], "git ssh-url: #{plf_repo["ssh_url"]}")
+            plf_repo["ssh_url_origin"] = "#{EXODevOrganizationURI}#{plf_project_name}.git"
+            plf_repo["ssh_url_blessed"] = "#{EXOPlatformOrganizationURI}#{plf_project_name}.git"
+            self.log(INFO,plf_repo["name"], "git ssh-url origin/blessed: #{plf_repo["ssh_url_origin"]} / #{plf_repo["ssh_url_blessed"]}")
             @translation_projects.push(plf_repo)
     end
     print "[INFO][TRANSLATION_PROJECTS] --------\n"
@@ -108,25 +118,25 @@ class SyncTranslationBranches
 
 
   # Configure remote URL for a git repository
-  def configure_project_repo_urls(repoName, repoURL)
+  def configure_project_repo_urls(repoName, remoteName, repoURL)
     self.log(INFO,repoName,"Repository #{repoName} already cloned...")
     Dir.chdir repoName
-    self.log(INFO,repoName,"Setting origin url #{repoURL} for #{repoName}...")
-    s = system("git remote set-url origin #{repoURL}")
+    self.log(INFO,repoName,"Setting #{remoteName} url #{repoURL} for #{repoName}...")
+    s = system("git remote set-url #{remoteName} #{repoURL}")
     if !s
-      abort("[ERROR] Setting origin url of repository #{repoName} failed !!!\n")
+      abort("[ERROR] Setting #{remoteName} url of repository #{repoName} failed !!!\n")
     end
     self.log(INFO,repoName,"Done.")
-    self.log(INFO,repoName,"Fetching from origin for #{repoName}...")
-    s = system("git fetch origin --prune")
+    self.log(INFO,repoName,"Fetching from #{remoteName} for #{repoName}...")
+    s = system("git fetch #{remoteName} --prune")
     if !s
-      abort("[ERROR] Fetching from origin for repository #{repoName} failed !!!\n")
+      abort("[ERROR] Fetching from #{remoteName} for repository #{repoName} failed !!!\n")
     end
     self.log(INFO,repoName,"Done.")
   end
 
   # Clone the repo into the worspace filesystem folder
-  def clone_project_repo(repoName, repoURL)
+  def clone_project_repo(repoName, repoURL, repoURLBlessed)
     self.log(INFO,repoName,"Cloning : #{repoName} from #{repoURL}...")
     s = system("git clone --quiet #{repoURL}")
     if !s
@@ -134,19 +144,27 @@ class SyncTranslationBranches
     end
     self.log(INFO,repoName,"Done.")
     Dir.chdir repoName
+
+    if repoName == "gatein-portal"
+      self.gatein_portal_specific_code_1(repoName, repoURLBlessed)
+    end
   end
 
   # chechout develop branch in eXo Dev repository and push to the translation remote branch
   def sync_project_branches(repoName)
-    #develop branch
-    ok = self.reset_branch(repoName, SourceBranch)
-    if ok
-      # push force to remote branch
-      self.push_force_to_remote_branch(repoName, SourceBranch, TranslationBranch)
+    if repoName == "gatein-portal"
+      self.gatein_portal_specific_code_2(repoName)
+    else
+      #develop branch
+      ok = self.reset_branch(repoName, EXODevRemoteName ,SourceBranch)
+      if ok
+        # push force to remote branch
+        self.push_force_to_remote_branch(repoName, EXODevRemoteName, SourceBranch, TranslationBranch)
+      end
     end
   end
 
-  def reset_branch(repoName, branchName)
+  def reset_branch(repoName, remoteName, branchName)
     self.log(INFO,repoName,"Checkout #{branchName} branch (it is perhaps not the default) for #{repoName}...")
     s = system("git checkout #{branchName}")
     if !s
@@ -156,10 +174,10 @@ class SyncTranslationBranches
       return false
     else
       self.log(INFO,repoName,"Done.")
-      self.log(INFO,repoName,"Reset #{branchName} to origin/#{branchName} for #{repoName} ...")
-      s = system("git reset --hard origin/#{branchName}")
+      self.log(INFO,repoName,"Reset #{branchName} to #{remoteName}/#{branchName} for #{repoName} ...")
+      s = system("git reset --hard #{remoteName}/#{branchName}")
       if !s
-        abort("[ERROR] Reset #{branchName} to origin/#{branchName} for #{repoName} failed !!!\n")
+        abort("[ERROR] Reset #{branchName} to #{remoteName}/#{branchName} for #{repoName} failed !!!\n")
         return false
       end
       self.log(INFO,repoName,"Done.")
@@ -167,7 +185,7 @@ class SyncTranslationBranches
     end
   end
 
-  def push_force_to_remote_branch(repoName, sourceBranch, remoteBranch)
+  def push_force_to_remote_branch(repoName, remoteName, sourceBranch, remoteBranch)
     s = system("git checkout #{sourceBranch}")
     if !s
       print("[ERROR] No #{sourceBranch} in repository #{repoName}, Skip this repo!!!\n")
@@ -175,10 +193,35 @@ class SyncTranslationBranches
       # Let's process the next one
     else
       self.log(INFO,repoName,"Done.")
-      self.log(INFO,repoName,"Push force #{sourceBranch} to #{remoteBranch} for #{repoName} ...")
-      s = system("git push --force origin #{sourceBranch}:#{remoteBranch}")
+      self.log(INFO,repoName,"Push force #{sourceBranch} to #{remoteName} #{remoteBranch} for #{repoName} ...")
+      s = system("git push --force #{remoteName} #{sourceBranch}:#{remoteBranch}")
       self.log(INFO,repoName,"Push Done.")
     end
+  end
+
+  # TODO: align this repos with others?
+  def gatein_portal_specific_code_1(repoName, repoBlessedURL)
+
+    self.log(INFO,repoName,"Add blessed repository #{repoBlessedURL} for #{repoName} ...")
+    s = system("git remote add blessed #{repoBlessedURL}")
+    if !s
+      abort("[ERROR] Adding blessed remote of repository #{repoName} failed !!!\n")
+    end
+    self.log(INFO,repoName,"Done.")
+
+  end
+
+  # TODO: align this repos with others?
+  def gatein_portal_specific_code_2(repoName)  
+    # branch
+    s = system("git fetch #{EXOPlatformRemoteName} --prune")
+    s = system("git checkout #{GateInSourceBranch}")
+    ok = self.reset_branch(repoName, EXOPlatformRemoteName, GateInSourceBranch)
+    if ok
+      # push force to remote branch
+      self.push_force_to_remote_branch(repoName, EXODevRemoteName, GateInSourceBranch, TranslationBranch)
+    end
+
   end
 
   def log(level, repoName, msg)
