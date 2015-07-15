@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
-BRANCH=social-rest-api
-ISSUE=SWF-3312
+BRANCH=document-auto-versioning
+ISSUE=SWF-3347
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=4.3.x-SNAPSHOT
