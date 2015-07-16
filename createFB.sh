@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
-BRANCH=document-auto-versioning
-ISSUE=SWF-3347
+BRANCH=rest-api-doc
+ISSUE=SWF-3345
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=4.3.x-SNAPSHOT
