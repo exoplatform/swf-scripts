@@ -174,10 +174,15 @@ class SyncTranslationBranches
       return false
     else
       self.log(INFO,repoName,"Done.")
-      self.log(INFO,repoName,"Reset #{branchName} to #{remoteName}/#{branchName} for #{repoName} ...")
+      self.log(INFO,repoName,"Reset & Pull #{branchName} to #{remoteName}/#{branchName} for #{repoName} ...")
       s = system("git reset --hard #{remoteName}/#{branchName}")
       if !s
         abort("[ERROR] Reset #{branchName} to #{remoteName}/#{branchName} for #{repoName} failed !!!\n")
+        return false
+      end
+      s = system("git pull")
+      if !s
+        abort("[ERROR] Pull #{branchName} from #{remoteName}/#{branchName} for #{repoName} failed !!!\n")
         return false
       end
       self.log(INFO,repoName,"Done.")
