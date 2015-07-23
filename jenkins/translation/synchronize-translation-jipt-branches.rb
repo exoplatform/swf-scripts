@@ -41,7 +41,7 @@ class SyncTranslationJIPTBranches
    attr_reader :workspace
 
   def initialize
-    @plf_projects_names = [  'commons' , 'platform' , 'gatein-portal' ]
+    @plf_projects_names = [ 'commons', 'ecms', 'social' , 'calendar' , 'wiki' , 'forum' , 'integration' , 'platform' , 'gatein-portal' ]
     @translation_projects = []
     @workspace = ENV['WORKSPACE']
 
@@ -192,7 +192,7 @@ class SyncTranslationJIPTBranches
     else
       self.log(INFO,repoName,"Done.")
       self.log(INFO,repoName,"Push force #{sourceBranch} to #{remoteName} #{remoteBranch} for #{repoName} ...")
-      #s = system("git push --force #{remoteName} #{sourceBranch}:#{remoteBranch}")
+      s = system("git push --force #{remoteName} #{sourceBranch}:#{remoteBranch}")
       self.log(INFO,repoName,"Push Done.")
     end
   end
