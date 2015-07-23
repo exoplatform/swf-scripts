@@ -24,10 +24,8 @@ class SyncTranslationJIPTBranches
    # Branch name to update with last modifications
    TranslationJIPTBranch = "integration/4.3.x-translation-jipt"
 
-   #Hash for cherry-pick
-   SocialCommit = "52d79c4a7cb4bb68afa2821b9cffffc931d7f10b"
-   PlatformCommit = "d59d456c1a23947bf083883282c7bede8e59161f"
-   GateInCommit = "ef0e8839c93dee5c7fe3a5ab972f7539fdf11ae5"
+   #String Key from commit message for cherry-pick
+   CommitMessageKey = "Crowdin JIPT Fix"
 
    # Logs level
    INFO = "INFO"
@@ -147,13 +145,8 @@ class SyncTranslationJIPTBranches
     if ok
       ok = self.reset_branch(repoName, EXODevRemoteName, TranslationBranch)
       if ok
-        if repoName == "social"
-          ok = self.cherry_pick(repoName, TranslationBranch, SocialCommit)
-        elsif repoName == "platform"
-          ok = self.cherry_pick(repoName, TranslationBranch, PlatformCommit)
-        elsif repoName == "gatein-portal"
-          ok = self.cherry_pick(repoName, TranslationBranch, GateInCommit)
-        end
+        commitId = `git log --all --grep='#{CommitMessageKey}' --pretty=format:%H`
+        ok = self.cherry_pick(repoName, TranslationBranch, commitId)
         if ok
           # push force to remote branch
           self.push_force_to_remote_branch(repoName, EXODevRemoteName, TranslationBranch, TranslationJIPTBranch)
@@ -203,11 +196,11 @@ class SyncTranslationJIPTBranches
   end
 
   def cherry_pick(repoName, sourceBranch, hashCommit)
-      s = system("git checkout #{sourceBranch}")
       self.log(INFO,repoName,"Cherry pick commit #{hashCommit} to #{sourceBranch} for #{repoName}...")
+      s = system("git checkout #{sourceBranch}")
       s = system("git cherry-pick #{hashCommit}")
       if !s
-        print("[ERROR] No #{hashCommit} commit in repository #{repoName}, Skip this repo!!!\n")
+        print("[ERROR] Problem with #{hashCommit} commit in repository #{repoName}, Skip this repo!!!\n")
         self.log(INFO,repoName,"Done.")
         return false
         # Let's process the next one
