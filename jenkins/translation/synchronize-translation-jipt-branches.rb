@@ -41,7 +41,7 @@ class SyncTranslationJIPTBranches
    attr_reader :workspace
 
   def initialize
-    @plf_projects_names = [ 'commons', 'ecms', 'social' , 'calendar' , 'wiki' , 'forum' , 'integration' , 'platform' , 'gatein-portal' ]
+    @plf_projects_names = [  'commons' , 'platform' , 'gatein-portal' ]
     @translation_projects = []
     @workspace = ENV['WORKSPACE']
 
@@ -146,10 +146,12 @@ class SyncTranslationJIPTBranches
       ok = self.reset_branch(repoName, EXODevRemoteName, TranslationBranch)
       if ok
         commitId = `git log --all --grep='#{CommitMessageKey}' --pretty=format:%H`
-        ok = self.cherry_pick(repoName, TranslationBranch, commitId)
-        if ok
-          # push force to remote branch
-          self.push_force_to_remote_branch(repoName, EXODevRemoteName, TranslationBranch, TranslationJIPTBranch)
+        if commitId.length > 10
+          ok = self.cherry_pick(repoName, TranslationBranch, commitId)
+          if ok
+            # push force to remote branch
+            self.push_force_to_remote_branch(repoName, EXODevRemoteName, TranslationBranch, TranslationJIPTBranch)
+          end
         end
       end
     end
@@ -190,7 +192,7 @@ class SyncTranslationJIPTBranches
     else
       self.log(INFO,repoName,"Done.")
       self.log(INFO,repoName,"Push force #{sourceBranch} to #{remoteName} #{remoteBranch} for #{repoName} ...")
-      s = system("git push --force #{remoteName} #{sourceBranch}:#{remoteBranch}")
+      #s = system("git push --force #{remoteName} #{sourceBranch}:#{remoteBranch}")
       self.log(INFO,repoName,"Push Done.")
     end
   end
