@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/user-profile-redesign
+BRANCH=feature/oauth
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
