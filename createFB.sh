@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
-BRANCH=rest-api-doc
-ISSUE=SWF-3345
+BRANCH=forgot-password
+ISSUE=SWF-3416
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=4.3.x-SNAPSHOT
