@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/oauth
+BRANCH=feature/rest-api-doc
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
