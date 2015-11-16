@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/document-auto-versioning
+BRANCH=feature/wiki-rdbms
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
