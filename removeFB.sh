@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/rest-api-doc
+BRANCH=feature/document-auto-versioning
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
