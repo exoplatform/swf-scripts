@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/wiki-rdbms
+BRANCH=feature/task
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
