@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/task
+BRANCH=feature/social-rest-api
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
