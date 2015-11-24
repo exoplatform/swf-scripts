@@ -50,7 +50,13 @@ function createRB(){
   fi
   set -e
   printf "\e[1;33m# %s\e[m\n" "Modifying versions in the POMs ..."
-  replaceInPom.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_PLF_VERSION-SNAPSHOT</version>" ""
+
+  # If gatein-portal project
+  if [ "${repo_name}" = "gatein-portal" ]; then
+    replaceInPom.sh "<version>$ORIGIN_GATEIN_VERSION</version>" "<version>$TARGET_GATEIN_VERSION</version>" ""
+  else
+    replaceInPom.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_PLF_VERSION</version>" ""
+  fi;
 
   # PLF Projects
   replaceInPom.sh "<org.exoplatform.doc.doc-style.version>$ORIGIN_VERSION</org.exoplatform.doc.doc-style.version>" "<org.exoplatform.doc.doc-style.version>$TARGET_PLF_VERSION</org.exoplatform.doc.doc-style.version>"
@@ -71,7 +77,7 @@ function createRB(){
   replaceInPom.sh "<org.exoplatform.depmgt.version>$ORIGIN_DEPGMT_VERSION</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>$TARGET_DEPGMT_VERSION</org.exoplatform.depmgt.version>"
 
   ## Commit and Push Release Branch and update versions
-  printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ..."
+  printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to blessed ..."
   git commit -m"$ISSUE: Create $TARGET_BRANCH branch and update projects versions" -a
   git push blessed $TARGET_BRANCH --set-upstream
 
@@ -81,7 +87,12 @@ function createRB(){
   #
   #
   git checkout $ORIGIN_BRANCH
-  replaceInPom.sh "<version>$ORIGIN_VERSION</version>" "<version>$NEXT_DEVELOP_PLF_VERSION-SNAPSHOT</version>" ""
+  # If gatein-portal project
+  if [ "${repo_name}" = "gatein-portal" ]; then
+    replaceInPom.sh "<version>$ORIGIN_GATEIN_VERSION</version>" "<version>$NEXT_DEVELOP_GATEIN_VERSION</version>" ""
+  else
+      replaceInPom.sh "<version>$ORIGIN_VERSION</version>" "<version>$NEXT_DEVELOP_PLF_VERSION</version>" ""
+  fi;
 
   # PLF Projects
   replaceInPom.sh "<org.exoplatform.doc.doc-style.version>$ORIGIN_VERSION</org.exoplatform.doc.doc-style.version>" "<org.exoplatform.doc.doc-style.version>$NEXT_DEVELOP_PLF_VERSION</org.exoplatform.doc.doc-style.version>"
@@ -110,19 +121,19 @@ function createRB(){
 
 pushd ${SWF_FB_REPOS}
 
-createRB maven-sandbox-project
-#createRB gatein-portal
-#createRB docs-style
-#createRB platform-ui
-#createRB commons
-#createRB social
-#createRB ecms
-#createRB wiki
-#createRB forum
-#createRB calendar
-#createRB integration
-#createRB platform
-#createRB platform-public-distributions
-#createRB platform-private-distributions
+#createRB maven-sandbox-project
+createRB gatein-portal
+createRB docs-style
+createRB platform-ui
+createRB commons
+createRB social
+createRB ecms
+createRB wiki
+createRB forum
+createRB calendar
+createRB integration
+createRB platform
+createRB platform-public-distributions
+createRB platform-private-distributions
 
 popd
