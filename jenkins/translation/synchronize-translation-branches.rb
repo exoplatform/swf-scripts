@@ -18,8 +18,8 @@ require 'net/https'
 class SyncTranslationBranches
 
    # Github eXo Dev organization
-   EXODevOrganizationURI = "git@github.com:exodev/"
-   EXODevRemoteName = "origin"
+   EXODevOrganizationURI = "git@github.com:exoplatform/"
+   EXODevRemoteName = "blessed"
 
    # Github eXo Platform organization
    EXOPlatformOrganizationURI = "git@github.com:exoplatform/"
@@ -28,7 +28,7 @@ class SyncTranslationBranches
    # Branch name with last modifications
    SourceBranch = "develop"
    # Branch name specific to gatein
-   GateInSourceBranch = "stable/4.3.x-PLF"
+   GateInSourceBranch = "develop"
 
    # Branch name to update with last modifications
    TranslationBranch = "integration/4.3.x-translation"
