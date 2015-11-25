@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/social-rest-api
+BRANCH=feature/software-register
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
