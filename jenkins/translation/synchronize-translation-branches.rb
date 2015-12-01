@@ -18,8 +18,8 @@ require 'net/https'
 class SyncTranslationBranches
 
    # Github eXo Dev organization
-   EXODevOrganizationURI = "git@github.com:exoplatform/"
-   EXODevRemoteName = "blessed"
+   EXODevOrganizationURI = "git@github.com:exodev/"
+   EXODevRemoteName = "origin"
 
    # Github eXo Platform organization
    EXOPlatformOrganizationURI = "git@github.com:exoplatform/"
