@@ -26,9 +26,9 @@ class SyncTranslationBranches
    EXOPlatformRemoteName = "blessed"
 
    # Branch name with last modifications
-   SourceBranch = "develop"
+   SourceBranch = "release/4.3.x"
    # Branch name specific to gatein
-   GateInSourceBranch = "develop"
+   GateInSourceBranch = "release/4.3.x"
 
    # Branch name to update with last modifications
    TranslationBranch = "integration/4.3.x-translation"
