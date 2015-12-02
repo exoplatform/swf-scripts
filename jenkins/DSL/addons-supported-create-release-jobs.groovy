@@ -7,12 +7,12 @@ def jobNameSuffix = 'release-ci'
 def branchPrefix = 'release'
 def mavenGoals = 'install -Pexo-release'
 
-def supportedAddons = ['acme-sample':'1.2.x']
+def supportedAddons = ['acme-sample': '1.2.x']
 
 projects.each {
 
-      if (supportedAddons.containsKey(it.name)){
-         // All projects attributes
+    if (supportedAddons.containsKey(it.name)) {
+        // All projects attributes
         def projectName = it.name
         def projectVersion = supportedAddons["${projectName}"]
         def gitURL = it.git_url
@@ -21,67 +21,67 @@ projects.each {
         // Syntax for Release CI Jobs
         mavenJob("${jobNamePrefix}-${projectName}-${projectVersion}-${jobNameSuffix}") {
 
-          logRotator(15, 15)
+            logRotator(15, 15)
 
-          authorization {
-              permission('hudson.model.Item.Read', 'anonymous')
-              permission('hudson.model.Item.Build', 'exo-profile-addons-release-manager')
-          }
+            authorization {
+                permission('hudson.model.Item.Read', 'anonymous')
+                permission('hudson.model.Item.Build', 'exo-profile-addons-release-manager')
+            }
 
-          jdk('Oracle Java SDK 1.7.0 64bits')
+            jdk('Oracle Java SDK 1.7.0 64bits')
 
-          properties {
-              githubProjectUrl("${htmlURL}")
-              label('ci')
-          }
+            properties {
+                githubProjectUrl("${htmlURL}")
+                label('ci')
+            }
 
-          triggers {
-            snapshotDependencies(true)
-            githubPush()
-            scm("H * * * *")
-            cron("H 13 * * 6")
-          }
+            triggers {
+                snapshotDependencies(true)
+                githubPush()
+                scm("H * * * *")
+                cron("H 13 * * 6")
+            }
 
-          scm {
-      			git {
-      			    remote {
+            scm {
+                git {
+                    remote {
                         github("${organization}/${projectName}", 'ssh')
-      			    }
-                  branch("origin/${branchPrefix}/${projectVersion}")
+                    }
+                    branch("origin/${branchPrefix}/${projectVersion}")
 
-                  // Additional Behaviours
-                  relativeTargetDir("sources")
-      			  createTag(true)
-                  clean(true)
-                  pruneBranches(true)
-                  localBranch("${branchPrefix}/${projectVersion}")
+                    // Additional Behaviours
+                    relativeTargetDir("sources")
+                    createTag(true)
+                    clean(true)
+                    pruneBranches(true)
+                    localBranch("${branchPrefix}/${projectVersion}")
 
-      			}
+                }
 
-    	   }
-           mavenInstallation("maven-3.2.x")
-    	   rootPOM("sources/pom.xml")
-    	   goals("${mavenGoals}")
+            }
+            mavenInstallation("maven-3.2.x")
+            rootPOM("sources/pom.xml")
+            goals("${mavenGoals}")
 
-           wrappers {
-              timeout {
-                 absolute(120)
-                 failBuild()
-                 writeDescription('Build timed out (after {0} minutes). Marking the build as failed.')
-              }
-        	}
-
-           postBuildSteps('FAILURE') {
-                publishers {
-                  deployArtifacts{
-                    uniqueVersion(true)
-                  }
-                  mavenDeploymentLinker('.*zip$')
-                  allowBrokenBuildClaiming()
-                  extendedEmail('exo-swf-notifications@exoplatform.com', '$DEFAULT_SUBJECT', '$DEFAULT_CONTENT')
+            wrappers {
+                timeout {
+                    absolute(120)
+                    failBuild()
+                    writeDescription('Build timed out (after {0} minutes). Marking the build as failed.')
                 }
             }
-           }
 
-      }
+            postBuildSteps('FAILURE') {
+                publishers {
+                    deployArtifacts {
+                        uniqueVersion(true)
+                    }
+                    mavenDeploymentLinker('.*zip$')
+                    allowBrokenBuildClaiming()
+                    extendedEmail('exo-swf-notifications@exoplatform.com', '$DEFAULT_SUBJECT', '$DEFAULT_CONTENT')
+                }
+            }
+        }
+
+    }
 }
