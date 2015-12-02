@@ -7,7 +7,7 @@ def jobNameSuffix = 'release-ci'
 def branchPrefix = 'release'
 def mavenGoals = 'install -Pexo-release'
 
-def supportedAddons = ['acme-sample': '1.2.x']
+def supportedAddons = ['acme-sample': '4.3.x', 'answers': '1.1.x', 'cas-addon': '1.1.x', 'cmis-addon': '4.3.x', 'josso-addon': '1.1.x', 'openam-addon': '1.1.x', 'saml2-addon': '1.1.x', 'spnego-addon': '1.1.x', 'ide': '1.5.x' ]
 
 projects.each {
 
@@ -79,6 +79,11 @@ projects.each {
                     mavenDeploymentLinker('.*zip$')
                     allowBrokenBuildClaiming()
                     extendedEmail('exo-swf-notifications@exoplatform.com', '$DEFAULT_SUBJECT', '$DEFAULT_CONTENT')
+
+                    //
+                    configure { project ->
+                        project / 'publishers' << 'hudson.plugins.jira.JiraIssueUpdater'(plugin: 'jira@1.39')
+                    }
                 }
             }
         }
