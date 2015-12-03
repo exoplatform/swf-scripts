@@ -86,6 +86,7 @@ class SyncTranslationBranches
              self.configure_project_repo_urls(translation_project["name"], EXOPlatformRemoteName, translation_project["ssh_url_blessed"])
            else
              self.clone_project_repo(translation_project["name"], translation_project["ssh_url_origin"], translation_project["ssh_url_blessed"])
+             self.configure_project_repo_urls(translation_project["name"], EXOPlatformRemoteName, translation_project["ssh_url_blessed"])
            end
            self.sync_project_branches(translation_project["name"])
            self.log(INFO,translation_project["name"], "---FINISHED---\n")
