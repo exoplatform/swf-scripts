@@ -83,7 +83,7 @@ class SyncTranslationBranches
 
            self.log(INFO,translation_project["name"], "---STARTED--")
            if File.directory?(translation_project["name"])
-             self.configure_project_repo_urls(translation_project["name"], EXODevRemoteName, translation_project["ssh_url_origin"])
+             self.configure_project_repo_urls(translation_project["name"], EXOPlatformRemoteName, translation_project["ssh_url_blessed"])
            else
              self.clone_project_repo(translation_project["name"], translation_project["ssh_url_origin"], translation_project["ssh_url_blessed"])
            end
@@ -122,12 +122,13 @@ class SyncTranslationBranches
     self.log(INFO,repoName,"Repository #{repoName} already cloned...")
     Dir.chdir repoName
     self.log(INFO,repoName,"Setting #{remoteName} url #{repoURL} for #{repoName}...")
-    s = system("git remote set-url #{remoteName} #{repoURL}")
+    s = system("git remote add #{remoteName} #{repoURL}")
     if !s
       abort("[ERROR] Setting #{remoteName} url of repository #{repoName} failed !!!\n")
     end
     self.log(INFO,repoName,"Done.")
     self.log(INFO,repoName,"Fetching from #{remoteName} for #{repoName}...")
+    s = system("git remote update --prune")
     s = system("git fetch #{remoteName} --prune")
     if !s
       abort("[ERROR] Fetching from #{remoteName} for repository #{repoName} failed !!!\n")
