@@ -147,30 +147,21 @@ class SyncTranslationBranches
     end
     self.log(INFO,repoName,"Done.")
     Dir.chdir repoName
-
-    if repoName == "gatein-portal"
-      self.gatein_portal_specific_code_1(repoName, repoURLBlessed)
-    end
   end
 
   # chechout develop branch in eXo Dev repository and push to the translation remote branch
   def sync_project_branches(repoName)
-    if repoName == "gatein-portal"
-      self.gatein_portal_specific_code_2(repoName)
-    else
       #develop branch
       ok = self.reset_branch(repoName, EXODevRemoteName ,SourceBranch, EXOPlatformRemoteName)
       if ok
         # push force to remote branch
         self.push_force_to_remote_branch(repoName, EXODevRemoteName, SourceBranch, TranslationBranch)
       end
-    end
   end
 
   def reset_branch(repoName, exodevRemoteName, branchName, exoplatformRemoteName)
 
      # TODO: Choose right remoteName organization based on branch prefix name (ex: release/, stable/..)
-
     self.log(INFO,repoName,"Checkout #{branchName} branch (it is perhaps not the default) for #{repoName} from #{exoplatformRemoteName} ...")
     s = system("git checkout -b #{branchName} #{exoplatformRemoteName}/#{branchName}")
     if !s
@@ -210,29 +201,6 @@ class SyncTranslationBranches
     end
   end
 
-  # TODO: align this repos with others?
-  def gatein_portal_specific_code_1(repoName, repoBlessedURL)
-
-    self.log(INFO,repoName,"Add #{EXOPlatformRemoteName} repository #{repoBlessedURL} for #{repoName} ...")
-    s = system("git remote add #{EXOPlatformRemoteName} #{repoBlessedURL}")
-    if !s
-      abort("[ERROR] Adding #{EXOPlatformRemoteName} remote of repository #{repoName} failed !!!\n")
-    end
-    self.log(INFO,repoName,"Done.")
-    s = system("git fetch #{EXOPlatformRemoteName} --prune")
-
-  end
-
-  # TODO: align this repos with others?
-  def gatein_portal_specific_code_2(repoName)
-    # branch
-    ok = self.reset_branch(repoName, EXOPlatformRemoteName, GateInSourceBranch, EXOPlatformRemoteName)
-    if ok
-      # push force to remote branch
-      self.push_force_to_remote_branch(repoName, EXODevRemoteName, GateInSourceBranch, TranslationBranch)
-    end
-
-  end
 
   def log(level, repoName, msg)
      print "[#{level}][#{repoName}] #{msg} \n"
