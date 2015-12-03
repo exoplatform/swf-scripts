@@ -83,6 +83,7 @@ class SyncTranslationBranches
 
            self.log(INFO,translation_project["name"], "---STARTED--")
            if File.directory?(translation_project["name"])
+             Dir.chdir translation_project["name"]
              self.configure_project_repo_urls(translation_project["name"], EXOPlatformRemoteName, translation_project["ssh_url_blessed"])
            else
              self.clone_project_repo(translation_project["name"], translation_project["ssh_url_origin"], translation_project["ssh_url_blessed"])
@@ -121,7 +122,7 @@ class SyncTranslationBranches
   # Configure remote URL for a git repository
   def configure_project_repo_urls(repoName, remoteName, repoURL)
     self.log(INFO,repoName,"Repository #{repoName} already cloned...")
-    Dir.chdir repoName
+    #Dir.chdir repoName
     self.log(INFO,repoName,"Setting #{remoteName} url #{repoURL} for #{repoName}...")
     s = system("git remote add #{remoteName} #{repoURL}")
     if !s
