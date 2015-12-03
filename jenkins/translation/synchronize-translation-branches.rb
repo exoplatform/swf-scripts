@@ -156,7 +156,7 @@ class SyncTranslationBranches
       self.gatein_portal_specific_code_2(repoName)
     else
       #develop branch
-      ok = self.reset_branch(repoName, EXODevRemoteName ,SourceBranch)
+      ok = self.reset_branch(repoName, EXODevRemoteName ,SourceBranch, EXOPlatformRemoteName)
       if ok
         # push force to remote branch
         self.push_force_to_remote_branch(repoName, EXODevRemoteName, SourceBranch, TranslationBranch)
@@ -164,25 +164,28 @@ class SyncTranslationBranches
     end
   end
 
-  def reset_branch(repoName, remoteName, branchName)
-    self.log(INFO,repoName,"Checkout #{branchName} branch (it is perhaps not the default) for #{repoName}...")
-    s = system("git checkout #{branchName}")
+  def reset_branch(repoName, exodevRemoteName, branchName, exoplatformRemoteName)
+
+     # TODO: Choose right remoteName organization based on branch prefix name (ex: release/, stable/..)
+
+    self.log(INFO,repoName,"Checkout #{branchName} branch (it is perhaps not the default) for #{repoName} from #{exoplatformRemoteName} ...")
+    s = system("git checkout -b #{branchName} #{exoplatformRemoteName}/#{branchName}")
     if !s
-      print("[ERROR] No #{branchName} in repository #{repoName}, Skip this repo!!!\n")
+      print("[ERROR] No #{branchName} in #{exoplatformRemoteName} repository #{repoName}, Skip this repo!!!\n")
       self.log(INFO,repoName,"Done.")
       # Let's process the next one
       return false
     else
       self.log(INFO,repoName,"Done.")
-      self.log(INFO,repoName,"Reset & Pull #{branchName} to #{remoteName}/#{branchName} for #{repoName} ...")
-      s = system("git reset --hard #{remoteName}/#{branchName}")
+      self.log(INFO,repoName,"Reset & Pull #{branchName} to #{exoplatformRemoteName}/#{branchName} for #{repoName} ...")
+      s = system("git reset --hard #{exoplatformRemoteName}/#{branchName}")
       if !s
-        abort("[ERROR] Reset #{branchName} to #{remoteName}/#{branchName} for #{repoName} failed !!!\n")
+        abort("[ERROR] Reset #{branchName} to #{exoplatformRemoteName}/#{branchName} for #{repoName} failed !!!\n")
         return false
       end
       s = system("git pull")
       if !s
-        abort("[ERROR] Pull #{branchName} from #{remoteName}/#{branchName} for #{repoName} failed !!!\n")
+        abort("[ERROR] Pull #{branchName} from #{exoplatformRemoteName}/#{branchName} for #{repoName} failed !!!\n")
         return false
       end
       self.log(INFO,repoName,"Done.")
@@ -220,7 +223,7 @@ class SyncTranslationBranches
   # TODO: align this repos with others?
   def gatein_portal_specific_code_2(repoName)
     # branch
-    ok = self.reset_branch(repoName, EXOPlatformRemoteName, GateInSourceBranch)
+    ok = self.reset_branch(repoName, EXOPlatformRemoteName, GateInSourceBranch, EXOPlatformRemoteName)
     if ok
       # push force to remote branch
       self.push_force_to_remote_branch(repoName, EXODevRemoteName, GateInSourceBranch, TranslationBranch)
