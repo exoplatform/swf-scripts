@@ -47,7 +47,7 @@ class SyncTranslationBranches
    attr_reader :workspace
 
   def initialize
-    @plf_projects_names = [ 'commons', 'ecms', 'social' , 'calendar' , 'wiki' , 'forum' , 'integration' , 'platform' , 'gatein-portal' ]
+    @plf_projects_names = [ 'platform-ui', 'commons', 'ecms', 'social' , 'calendar' , 'wiki' , 'forum' , 'integration' , 'platform' , 'gatein-portal' ]
     @translation_projects = []
     @workspace = ENV['WORKSPACE']
 
