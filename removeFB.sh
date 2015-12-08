@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/software-register
+BRANCH=feature/upgrade-bootstrap-3
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
