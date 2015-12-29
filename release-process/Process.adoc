@@ -1,0 +1,22 @@
+= Release Process
+
+== Process for Releases Candidates
+
+. Update all properties related to the Release Process
+. Release Branch
+. [Git] Create Release Branch from develop
+. Develop
+.. [Git] Update Project versions to next SNAPSHOT version (ex: 4.4.x-SNAPSHOT)
+.. [Git] Update Dependencies (properties) to next SNAPSHOT versions (ex: POM Depgmt 12-SNAPSHOT)
+.. [CI] No need to update Job?
+. Release Branch
+.. [CI] Create a Job <project>-<version>-release-ci
+.. [Git][before-release] Update Dependencies (properties) to releases versions
+.. [Maven][prepare-release] mvn prepare:release
+.. [Shell] Send email
+.. [Nexus] Create Staging Repository
+.. [Maven] [perform-release] mvn perform-release
+.. [Nexus] Close Staging Repository
+.. [Shell] Send email
+.. [Git] Update Dependencies (properties) to SNAPSHOTS versions (same version as Release)
+..
