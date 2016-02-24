@@ -26,12 +26,12 @@ class SyncTranslationBranches
    EXOPlatformRemoteName = "blessed"
 
    # Branch name with last modifications
-   SourceBranch = "release/4.3.x"
+   SourceBranch = ENV['PLF_SOURCE_BRANCH']
    # Branch name specific to gatein
-   GateInSourceBranch = "release/4.3.x"
+   GateInSourceBranch = ENV['GATEIN_SOURCE_BRANCH']
 
    # Branch name to update with last modifications
-   TranslationBranch = "integration/4.3.x-translation"
+   TranslationBranch = ENV['TRANSLATION_BRANCH']
 
    # Logs level
    INFO = "INFO"
