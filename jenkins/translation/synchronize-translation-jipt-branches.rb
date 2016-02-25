@@ -41,7 +41,7 @@ class SyncTranslationJIPTBranches
    attr_reader :workspace
 
   def initialize
-    @plf_projects_names = [ 'commons', 'ecms', 'social' , 'calendar' , 'wiki' , 'forum' , 'integration' , 'platform' , 'gatein-portal' ]
+    @plf_projects_names = [ 'platform-ui', 'commons', 'ecms', 'social' , 'calendar' , 'wiki' , 'forum' , 'integration' , 'platform' , 'gatein-portal' ]
     @translation_projects = []
     @workspace = ENV['WORKSPACE']
 
@@ -145,14 +145,23 @@ class SyncTranslationJIPTBranches
     if ok
       ok = self.reset_branch(repoName, EXODevRemoteName, TranslationBranch)
       if ok
+        # Reset branch JIPT to branch translation
+        self.log(INFO,repoName,"Reset #{TranslationJIPTBranch} to #{TranslationBranch} for #{repoName} ...")
+        s = system("git reset --hard #{TranslationBranch}")
+        if !s
+          abort("[ERROR] Reset #{branchName} to #{remoteName}/#{branchName} for #{repoName} failed !!!\n")
+          return false
+        end
+
         commitId = `git log --all --grep='#{CommitMessageKey}' --pretty=format:%H`
         if commitId.length > 10
           ok = self.cherry_pick(repoName, TranslationBranch, commitId)
           if ok
-            # push force to remote branch
-            self.push_force_to_remote_branch(repoName, EXODevRemoteName, TranslationBranch, TranslationJIPTBranch)
+            self.log(INFO,repoName,"Commit Cherry-picked.")
           end
         end
+        # push force to remote branch
+        self.push_force_to_remote_branch(repoName, EXODevRemoteName, TranslationBranch, TranslationJIPTBranch)
       end
     end
   end
