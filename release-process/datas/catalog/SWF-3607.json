@@ -5,7 +5,7 @@
        "labels":"plf",
        "maven_property_version":"org.exoplatform.platform.distributions.private.trial.version",
        "release":{
-          "branch":"release/4.3.x",
+          "branch":"stable/4.3.x",
           "version":"4.3.1-M04",
           "current_snapshot_version":"4.3.x-SNAPSHOT",
           "next_snapshot_version":"4.3.x-SNAPSHOT",
