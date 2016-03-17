@@ -1,0 +1,514 @@
+[
+      {
+       "name":"platform-private-trial-distributions",
+       "git_organization":"exoplatform",
+       "labels":"plf",
+       "maven_property_version":"org.exoplatform.platform.distributions.private.trial.version",
+       "release":{
+          "branch":"release/4.3.x",
+          "version":"4.3.1-M04",
+          "current_snapshot_version":"4.3.x-SNAPSHOT",
+          "next_snapshot_version":"4.3.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"private"
+       }
+    },
+    {
+       "name":"chat-application",
+       "catalog":{
+          "id":"exo-chat"
+       },
+       "git_organization":"exoplatform",
+       "labels":"addons,trial",
+       "maven_property_version":"addon.exo.chat.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"develop",
+          "version":"1.3.0-M05",
+          "current_snapshot_version":"1.3.x-SNAPSHOT",
+          "next_snapshot_version":"1.3.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+       "name":"remote-edit",
+       "catalog":{
+          "id":"exo-remote-edit"
+       },
+       "git_organization":"exoplatform",
+       "labels":"addons,trial",
+       "maven_property_version":"addon.exo.remote.edit.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"release/1.1.x",
+          "version":"1.1.0",
+          "current_snapshot_version":"1.1.x-SNAPSHOT",
+          "next_snapshot_version":"1.1.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+       "name":"wcm-template-pack",
+       "catalog":{
+          "id":"exo-site-templates"
+       },
+       "git_organization":"exoplatform",
+       "labels":"addons,trial",
+       "maven_property_version":"addon.exo.site.templates.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"release/1.0.x",
+          "version":"1.0.0",
+          "current_snapshot_version":"1.0.x-SNAPSHOT",
+          "next_snapshot_version":"1.0.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+       "name":"task",
+       "catalog":{
+          "id":"exo-tasks"
+       },
+       "git_organization":"exoplatform",
+       "labels":"addons,trial",
+       "maven_property_version":"addon.exo.tasks.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"develop",
+          "version":"1.1.0-M04",
+          "current_snapshot_version":"1.1.x-SNAPSHOT",
+          "next_snapshot_version":"1.1.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+       "name":"weemo-extension",
+       "catalog":{
+          "id":"exo-video-calls"
+       },
+       "git_organization":"exoplatform",
+       "labels":"addons,trial",
+       "maven_property_version":"addon.exo.video.calls.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"release/1.3.x",
+          "version":"1.3.0",
+          "current_snapshot_version":"1.3.x-SNAPSHOT",
+          "next_snapshot_version":"1.3.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+      "name":"platform-private-distributions",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.platform.distributions.private.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 12
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"private"
+      }
+   },
+    {
+      "name":"platform-public-distributions",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.platform.distributions.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 11
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+    {
+      "name":"platform",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.platform.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 10
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"integration",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.integ.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 9
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"calendar",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.calendar.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 8
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"forum",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.forum.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 7
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"wiki",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.wiki.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 6
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"social",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.social.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 5
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"ecms",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.ecms.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 4
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"commons",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.commons.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 3
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"platform-ui",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.platform-ui.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 2
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"docs-style",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.doc.doc-style.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M04",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+   {
+      "name":"maven-depmgt-pom",
+      "git_organization":"exoplatform",
+      "labels":"pom",
+      "maven_property_version":"org.exoplatform.depmgt.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+      "release":{
+         "branch":"stable/11.x",
+         "version":"11",
+         "current_snapshot_version":"11.x-SNAPSHOT",
+         "next_snapshot_version":"11.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+  {
+     "name":"gatein-portal",
+     "git_organization":"exoplatform",
+     "labels":"gatein",
+     "maven_property_version":"org.gatein.portal.version",
+     "container": {
+       "image": "exoplatform/exor-maven32-java7-gtn:1.0.0",
+       "step": 1
+     },
+     "release":{
+        "branch":"stable/4.3.x",
+        "version":"4.3.0-PLF",
+        "current_snapshot_version":"4.3.x-PLF-SNAPSHOT",
+        "next_snapshot_version":"4.3.x-PLF-SNAPSHOT",
+        "patches":"",
+        "patches_after_release":"",
+        "nexus_host":"exoplatform",
+        "nexus_staging_profile":"public"
+     }
+  },
+  {
+    "name":"jcr-services",
+    "git_organization":"exoplatform",
+    "labels":"cf",
+    "maven_property_version":"org.exoplatform.jcr-services.version",
+    "container": {
+      "image": "exoplatform/exor-maven30-java6:1.0.0",
+      "step": 5
+    },
+    "release":{
+       "branch":"stable/1.16.x",
+       "version":"1.16.6-GA",
+       "current_snapshot_version":"1.16.x-SNAPSHOT",
+       "next_snapshot_version":"1.16.x-SNAPSHOT",
+       "patches":"",
+       "patches_after_release":"",
+       "nexus_host":"jboss",
+       "nexus_staging_profile":"jboss"
+    }
+  },
+  {
+    "name":"jcr",
+    "git_organization":"exoplatform",
+    "labels":"cf",
+    "maven_property_version":"org.exoplatform.jcr.version",
+    "container": {
+      "image": "exoplatform/exor-maven30-java6:1.0.0",
+      "step": 4
+    },
+    "release":{
+       "branch":"stable/1.16.x",
+       "version":"1.16.6-GA",
+       "current_snapshot_version":"1.16.x-SNAPSHOT",
+       "next_snapshot_version":"1.16.x-SNAPSHOT",
+       "patches":"",
+       "patches_after_release":"",
+       "nexus_host":"jboss",
+       "nexus_staging_profile":"jboss"
+    }
+  },
+  {
+    "name":"ws",
+    "git_organization":"exoplatform",
+    "labels":"cf",
+    "maven_property_version":"org.exoplatform.ws.version",
+    "container": {
+      "image": "exoplatform/exor-maven30-java6:1.0.0",
+      "step": 3
+    },
+    "release":{
+       "branch":"stable/2.4.x",
+       "version":"2.4.4-GA",
+       "current_snapshot_version":"2.4.x-SNAPSHOT",
+       "next_snapshot_version":"2.4.x-SNAPSHOT",
+       "patches":"",
+       "patches_after_release":"",
+       "nexus_host":"jboss",
+       "nexus_staging_profile":"jboss"
+    }
+  },
+  {
+    "name":"core",
+    "git_organization":"exoplatform",
+    "labels":"cf",
+    "maven_property_version":"org.exoplatform.core.version",
+    "container": {
+      "image": "exoplatform/exor-maven30-java6:1.0.0",
+      "step": 2
+    },
+    "release":{
+       "branch":"stable/2.6.x",
+       "version":"2.6.4-GA",
+       "current_snapshot_version":"2.6.x-SNAPSHOT",
+       "next_snapshot_version":"2.6.x-SNAPSHOT",
+       "patches":"",
+       "patches_after_release":"",
+       "nexus_host":"jboss",
+       "nexus_staging_profile":"jboss"
+    }
+  },
+  {
+    "name":"kernel",
+    "git_organization":"exoplatform",
+    "labels":"cf",
+    "maven_property_version":"org.exoplatform.kernel.version",
+    "container": {
+      "image": "exoplatform/exor-maven30-java6:1.0.0",
+      "step": 1
+    },
+    "release":{
+       "branch":"stable/2.5.x",
+       "version":"2.5.4-GA",
+       "current_snapshot_version":"2.5.x-SNAPSHOT",
+       "next_snapshot_version":"2.5.x-SNAPSHOT",
+       "patches":"",
+       "patches_after_release":"",
+       "nexus_host":"jboss",
+       "nexus_staging_profile":"jboss"
+    }
+ }
+]
+
