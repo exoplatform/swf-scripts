@@ -1,4 +1,11 @@
 = Scripts used by SWF Team
+ifdef::env-github[]
+:outfilesuffix: .adoc
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:warning-caption: :warning:
+:important-caption: :heavy_exclamation_mark:
+endif::[]
 
 This repository contains various files and scripts used for SWF management. +
 Those files are organized like below:
