@@ -400,7 +400,7 @@
        "step": 1
      },
      "release":{
-        "branch":"stable/4.3.x",
+        "branch":"stable/4.3.x-PLF",
         "version":"4.3.1-M06-PLF",
         "current_snapshot_version":"4.3.x-PLF-SNAPSHOT",
         "next_snapshot_version":"4.3.x-PLF-SNAPSHOT",
