@@ -1,5 +1,21 @@
 [
    {
+       "name":"platform-private-trial-distributions",
+       "git_organization":"exoplatform",
+       "labels":"plf",
+       "maven_property_version":"org.exoplatform.platform.distributions.private.trial.version",
+       "release":{
+          "branch":"bitnami/4.3.x",
+          "version":"4.3.1-Bitnami01",
+          "current_snapshot_version":"4.3.x-SNAPSHOT",
+          "next_snapshot_version":"4.3.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"private"
+       }
+    },
+   {
       "name":"maven-sandbox-project",
       "git_organization":"exoplatform",
       "labels":"go",
