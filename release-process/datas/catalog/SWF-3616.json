@@ -1,0 +1,111 @@
+[
+    {
+       "name":"wiki-rdbms",
+       "catalog":{
+          "id":"exo-wiki-rdbms"
+       },
+       "git_organization":"exo-addons",
+       "labels":"addons",
+       "maven_property_version":"addon.exo.wiki.rdbms.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"master",
+          "version":"1.0.0-RC01",
+          "current_snapshot_version":"1.0.x-SNAPSHOT",
+          "next_snapshot_version":"1.0.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+       "name":"exo-es-search",
+       "catalog":{
+          "id":"exo-es-search"
+       },
+       "git_organization":"exo-addons",
+       "labels":"addons",
+       "maven_property_version":"exo.es.search.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"master",
+          "version":"1.0.0-RC01",
+          "current_snapshot_version":"1.0.x-SNAPSHOT",
+          "next_snapshot_version":"1.0.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+       "name":"exo-es-embedded",
+       "catalog":{
+          "id":"exo-es-embedded"
+       },
+       "git_organization":"exo-addons",
+       "labels":"addons",
+       "maven_property_version":"addon.exo.es.embedded.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"master",
+          "version":"1.0.0-RC01",
+          "current_snapshot_version":"1.0.x-SNAPSHOT",
+          "next_snapshot_version":"1.0.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+      "name":"platform",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.platform.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 10
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-M06",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   },
+  {
+    "name":"kernel",
+    "git_organization":"exoplatform",
+    "labels":"cf",
+    "maven_property_version":"org.exoplatform.kernel.version",
+    "container": {
+      "image": "exoplatform/exor-maven30-java6:1.0.0",
+      "step": 1
+    },
+    "release":{
+       "branch":"stable/2.5.x",
+       "version":"2.5.4-GA",
+       "current_snapshot_version":"2.5.x-SNAPSHOT",
+       "next_snapshot_version":"2.5.x-SNAPSHOT",
+       "patches":"",
+       "patches_after_release":"",
+       "nexus_host":"jboss",
+       "nexus_staging_profile":"jboss"
+    }
+ }
+]
