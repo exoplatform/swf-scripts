@@ -421,7 +421,7 @@
     },
     "release":{
        "branch":"stable/1.16.x",
-       "version":"1.16.7-M03",
+       "version":"1.16.7-M02",
        "current_snapshot_version":"1.16.x-SNAPSHOT",
        "next_snapshot_version":"1.16.x-SNAPSHOT",
        "patches":"",
@@ -441,7 +441,7 @@
     },
     "release":{
        "branch":"stable/1.16.x",
-       "version":"1.16.7-M03",
+       "version":"1.16.7-M02",
        "current_snapshot_version":"1.16.x-SNAPSHOT",
        "next_snapshot_version":"1.16.x-SNAPSHOT",
        "patches":"",
