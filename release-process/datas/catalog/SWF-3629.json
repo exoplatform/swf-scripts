@@ -4,6 +4,10 @@
        "git_organization":"exoplatform",
        "labels":"plf",
        "maven_property_version":"org.exoplatform.platform.distributions.private.trial.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+       },
        "release":{
           "branch":"stable/4.3.x",
           "version":"4.3.1-RC01",
