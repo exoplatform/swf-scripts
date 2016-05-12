@@ -1,5 +1,28 @@
 [
     {
+       "name":"space-categories",
+       "catalog":{
+          "id":"exo-space-categories"
+       },
+       "git_organization":"exo-addons",
+       "labels":"addons",
+       "maven_property_version":"addon.exo.space.categories.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"master",
+          "version":"1.0.0",
+          "current_snapshot_version":"1.0.x-SNAPSHOT",
+          "next_snapshot_version":"1.0.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },    
+    {
        "name":"wiki-rdbms",
        "catalog":{
           "id":"exo-wiki-rdbms"
