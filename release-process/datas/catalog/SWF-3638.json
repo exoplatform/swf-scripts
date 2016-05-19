@@ -12,7 +12,7 @@
         "step": 1
       },
        "release":{
-          "branch":"develop",
+          "branch":"stable/1.3.x",
           "version":"1.3.0-RC02",
           "current_snapshot_version":"1.3.x-SNAPSHOT",
           "next_snapshot_version":"1.3.x-SNAPSHOT",
