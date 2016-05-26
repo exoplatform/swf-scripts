@@ -1,0 +1,68 @@
+[
+    {
+       "name":"chat-application",
+       "catalog":{
+          "id":"exo-chat"
+       },
+       "git_organization":"exoplatform",
+       "labels":"addons,trial",
+       "maven_property_version":"addon.exo.chat.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.1.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"develop",
+          "version":"1.4.0-M01",
+          "current_snapshot_version":"1.4.x-SNAPSHOT",
+          "next_snapshot_version":"1.4.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+       "name":"task",
+       "catalog":{
+          "id":"exo-tasks"
+       },
+       "git_organization":"exoplatform",
+       "labels":"addons,trial",
+       "maven_property_version":"addon.exo.tasks.version",
+       "container": {
+        "image": "exoplatform/exor-maven32-java7:1.1.0",
+        "step": 1
+      },
+       "release":{
+          "branch":"develop",
+          "version":"1.2.0-M01",
+          "current_snapshot_version":"1.2.x-SNAPSHOT",
+          "next_snapshot_version":"1.2.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    },
+    {
+      "name":"platform",
+      "git_organization":"exoplatform",
+      "labels":"plf",
+      "maven_property_version":"org.exoplatform.platform.version",
+      "container": {
+        "image": "exoplatform/exor-maven32-java7:1.0.0",
+        "step": 1
+      },
+      "release":{
+         "branch":"stable/4.3.x",
+         "version":"4.3.1-RC01",
+         "current_snapshot_version":"4.3.x-SNAPSHOT",
+         "next_snapshot_version":"4.3.x-SNAPSHOT",
+         "patches":"",
+         "patches_after_release":"",
+         "nexus_host":"exoplatform",
+         "nexus_staging_profile":"public"
+      }
+   }
+]
