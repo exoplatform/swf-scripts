@@ -582,5 +582,25 @@
        "nexus_host":"jboss",
        "nexus_staging_profile":"jboss"
     }
+ },
+  {
+    "name":"cf-parent",
+    "git_organization":"exoplatform",
+    "labels":"cf",
+    "maven_property_version":"org.exoplatform.cf-parent.version",
+    "container": {
+      "image": "exoplatform/release:jdk8-maven30",
+      "step": 1
+    },
+    "release":{
+       "branch":"develop",
+       "version":"15-M01",
+       "current_snapshot_version":"15-SNAPSHOT",
+       "next_snapshot_version":"15-SNAPSHOT",
+       "patches":"",
+       "patches_after_release":"",
+       "nexus_host":"jboss",
+       "nexus_staging_profile":"jboss"
+    }
  }
 ]
