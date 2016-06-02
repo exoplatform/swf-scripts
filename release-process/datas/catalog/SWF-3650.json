@@ -453,10 +453,10 @@
         "step": 1
       },
       "release":{
-         "branch":"stable/11.x",
-         "version":"11.1-M01",
-         "current_snapshot_version":"11.x-SNAPSHOT",
-         "next_snapshot_version":"11.x-SNAPSHOT",
+         "branch":"develop",
+         "version":"12-M01",
+         "current_snapshot_version":"12-SNAPSHOT",
+         "next_snapshot_version":"12-SNAPSHOT",
          "patches":"",
          "patches_after_release":"",
          "nexus_host":"exoplatform",
@@ -489,7 +489,7 @@
      "labels":"gatein",
      "maven_property_version":"org.gatein.portal.version",
      "container": {
-       "image": "exoplatform/release:jdk8-maven32",
+       "image": "exoplatform/release:jdk8-maven30",
        "step": 1
      },
      "release":{
