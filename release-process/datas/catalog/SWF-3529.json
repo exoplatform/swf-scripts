@@ -11,8 +11,8 @@
       "release":{  
           "branch": "develop",
           "version": "2.8.0-M05",
-          "current_snapshot_version":"2.8.x-SNAPSHOT",
-          "next_snapshot_version":"2.8.x-SNAPSHOT",
+          "current_snapshot_version":"2.8-SNAPSHOT",
+          "next_snapshot_version":"2.8-SNAPSHOT",
           "patches":"",
           "patches_after_release":"",
           "nexus_host":"exoplatform",
