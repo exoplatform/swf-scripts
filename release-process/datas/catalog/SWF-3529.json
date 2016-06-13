@@ -10,7 +10,7 @@
       },
       "release":{  
           "branch": "master",
-          "version": "2.8.0-M05",
+          "version": "2.8.0-M06",
           "current_snapshot_version":"2.8-SNAPSHOT",
           "next_snapshot_version":"2.8-SNAPSHOT",
           "patches":"",
