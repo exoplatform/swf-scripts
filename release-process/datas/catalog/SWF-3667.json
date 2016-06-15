@@ -512,7 +512,7 @@
       "labels":"pom",
       "maven_property_version":"org.exoplatform.addons.parent.version",
       "container": {
-        "image": "exoplatform/release:jdk8-maven32",
+        "image": "exoplatform/release:jdk8-maven32-release",
         "step": 1
       },
       "release":{
