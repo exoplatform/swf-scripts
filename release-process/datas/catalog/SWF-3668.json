@@ -1,0 +1,25 @@
+[
+    {
+       "name":"chat-application",
+       "catalog":{
+          "id":"exo-chat"
+       },
+       "git_organization":"exoplatform",
+       "labels":"addons,trial",
+       "maven_property_version":"addon.exo.chat.version",
+       "container": {
+        "image": "exoplatform/release:jdk7-maven32",
+        "step": 1
+      },
+       "release":{
+          "branch":"stable/1.3.x",
+          "version":"1.3.0-RC03",
+          "current_snapshot_version":"1.3.x-SNAPSHOT",
+          "next_snapshot_version":"1.3.x-SNAPSHOT",
+          "patches":"",
+          "patches_after_release":"",
+          "nexus_host":"exoplatform",
+          "nexus_staging_profile":"addons"
+       }
+    }
+]
