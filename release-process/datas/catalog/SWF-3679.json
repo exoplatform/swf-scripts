@@ -550,7 +550,7 @@
      "name":"gatein-pc",
      "git_organization":"exoplatform",
      "labels":"gatein",
-     "maven_property_version":"org.gatein.portal.version",
+     "maven_property_version":"org.gatein.pc.version",
      "container": {
        "image": "exoplatform/release:jdk7-maven32",
        "step": 1
