@@ -4,7 +4,7 @@
          "catalog":{
             "id":"exo-answers"
          },
-         "git_organization":"exo-addons",
+         "git_organization":"exoplatform",
          "labels":"addons",
          "maven_property_version":"addon.exo.answers.version",
          "container": {
