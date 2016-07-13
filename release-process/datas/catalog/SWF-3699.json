@@ -13,7 +13,7 @@
         },
          "release":{
             "branch":"develop",
-            "version":"1.2.0-M02",
+            "version":"1.2.0-M01",
             "current_snapshot_version":"1.2.x-SNAPSHOT",
             "next_snapshot_version":"1.2.x-SNAPSHOT",
             "patches":"",
