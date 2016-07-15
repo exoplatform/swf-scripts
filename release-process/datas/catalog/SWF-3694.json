@@ -16,7 +16,7 @@
           "patches":"",
           "patches_after_release":"",
           "nexus_host":"exoplatform",
-          "nexus_staging_profile":"private"
+          "nexus_staging_profile":"privatetrial"
        }
     },
     {
