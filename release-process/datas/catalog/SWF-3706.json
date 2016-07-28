@@ -477,7 +477,7 @@
       },
       "release":{
          "branch":"develop",
-         "version":"12-M05",
+         "version":"12-M06",
          "current_snapshot_version":"12-SNAPSHOT",
          "next_snapshot_version":"12-SNAPSHOT",
          "patches":"",
