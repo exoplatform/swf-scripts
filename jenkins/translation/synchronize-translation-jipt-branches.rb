@@ -19,10 +19,16 @@ class SyncTranslationJIPTBranches
    EXODevRemoteName = "origin"
 
    # Branch name with last modifications
-   TranslationBranch = "integration/4.3.x-translation"
+   # ie: integration/4.3.x-translation
+   TranslationBranch = ENV['TRANSLATION_BRANCH']
 
    # Branch name to update with last modifications
-   TranslationJIPTBranch = "integration/4.3.x-translation-jipt"
+   # ie: integration/4.3.x-translation-jipt
+   TranslationJIPTBranch = ENV['TRANSLATION_JIPT_BRANCH']
+
+   # projects list separated by comma
+   # ie: "platform-ui, commons, ecms"
+   ProjectsNames = ENV['PROJECTS_LIST']
 
    #String Key from commit message for cherry-pick
    CommitMessageKey = "Crowdin JIPT Fix"
@@ -41,7 +47,7 @@ class SyncTranslationJIPTBranches
    attr_reader :workspace
 
   def initialize
-    @plf_projects_names = [ 'platform-ui', 'commons', 'ecms', 'social' , 'calendar' , 'wiki' , 'forum' , 'integration' , 'platform' , 'gatein-portal' ]
+    @plf_projects_names = ProjectsNames.split(",")
     @translation_projects = []
     @workspace = ENV['WORKSPACE']
 
