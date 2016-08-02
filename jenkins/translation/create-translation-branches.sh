@@ -1,9 +1,11 @@
 #!/bin/bash -eu
 
-VERSION=4.4.x
-ISSUE=SWF-3708
+# Script to create Translation branches:
+# * X-x.x-translation
+# * X-x.x-translation-jipt
+VERSION=4.4.x-translation
 ORIGIN_BRANCH=develop
-TARGET_BRANCH=integration/$VERSION-translation-jipt
+TARGET_BRANCH=integration/$VERSION
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
