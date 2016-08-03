@@ -10,15 +10,15 @@ endif::[]
 This repository contains various files and scripts used for SWF management. +
 Those files are organized like below:
 
-* *users* directory contains:
-** scripts executed by users on their laptop (prerequisites required)
+* *git-workflow* directory contains:
+** scripts executed by SWF admins on their laptop (prerequisites required) related to *git branches process*
+* *github* directory contains:
+** scripts to clone GitHub repositories
 * *jenkins* directory contains:
-** scripts/files used by Jenkins CI
-
+** scripts/files used by *Jenkins CI* jobs
+++
 [IMPORTANT]
 Be careful when you want to update these scripts, it will directly impacted Jenkins Jobs
-
-* *release-process*:
-** JSON catalog used by Docker Containers to process CF, PLF and Add-ons Releases
-[NOTE]
-This is the entrypoint for eXo Weekly Releases
+++
+* *maven*:
+** Scripts to update POM parent version or dependencies versions

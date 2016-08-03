@@ -26,7 +26,7 @@ updateProject (){
   git reset --hard $REMOTE_BRANCH
 	git branch --set-upstream-to=$REMOTE/$LOCAL_BRANCH $LOCAL_BRANCH
 
-  replaceInPom.sh "$REPLACE_WHAT" "$REPLACE_BY"
+  $SCRIPTDIR/../replaceInPom.sh "$REPLACE_WHAT" "$REPLACE_BY"
   git diff
   pause "Press [Enter] key to continue... We will commit with message : $COMMIT_MSG"
   git commit -m "$COMMIT_MSG" -a || true

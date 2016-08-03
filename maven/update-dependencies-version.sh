@@ -1,11 +1,11 @@
 #!/bin/bash -ue
 
 REMOTE=origin
-LOCAL_BRANCH=feature/oauth
+LOCAL_BRANCH=feature/doc-preview-search
 REMOTE_BRANCH=$REMOTE/$LOCAL_BRANCH
-REPLACE_WHAT="<org.gatein.portal.version>4.3.x-PLF-SNAPSHOT</org.gatein.portal.version>"
-REPLACE_BY="<org.gatein.portal.version>4.3.x-PLF-oauth-SNAPSHOT</org.gatein.portal.version>"
-COMMIT_MSG="SWF-3275: update gatein-portal version"
+REPLACE_WHAT="<org.exoplatform.platform-ui.version>4.4.x-SNAPSHOT</org.exoplatform.platform-ui.version>"
+REPLACE_BY="<org.exoplatform.platform-ui.version>4.4.x-doc-preview-search-SNAPSHOT</org.exoplatform.platform-ui.version>"
+COMMIT_MSG="SWF-3682: Update platform-ui version to 4.4.x-doc-preview-search-SNAPSHOT"
 
 
 function pause(){
@@ -20,7 +20,7 @@ updateProject (){
   git checkout $LOCAL_BRANCH
   git reset --hard $REMOTE_BRANCH
 
-  replaceInPom.sh "$REPLACE_WHAT" "$REPLACE_BY"
+  $SCRIPTDIR/../replaceInPom.sh "$REPLACE_WHAT" "$REPLACE_BY"
   git diff
   pause "Press [Enter] key to continue... We will commit with message : $COMMIT_MSG"
   git commit -m "$COMMIT_MSG" -a || true
