@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/upgrade-bootstrap-3
+BRANCH=integration/4.3.x-translation-jipt
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -8,7 +8,7 @@ CURRENTDIR=$(pwd)
 SWF_FB_REPOS=${SWF_FB_REPOS:-$CURRENTDIR}
 #echo "FB source dirs = ${SWF_FB_REPOS}"
 
-function deleteFB(){
+function deleteGitBranch(){
   echo "########################################"
   echo "##### repo : $(basename $1)"
   echo "########################################"
@@ -20,17 +20,17 @@ function deleteFB(){
 }
 
 pushd ${SWF_FB_REPOS}
-#deleteFB maven-depmgt-pom
-deleteFB platform-ui
-deleteFB commons
-deleteFB social
-deleteFB ecms
-deleteFB wiki
-deleteFB forum
-deleteFB calendar
-deleteFB integration
-deleteFB platform
-deleteFB platform-public-distributions
-deleteFB platform-private-distributions
+deleteGitBranch gatein-portal
+deleteGitBranch platform-ui
+deleteGitBranch commons
+deleteGitBranch social
+deleteGitBranch ecms
+deleteGitBranch wiki
+deleteGitBranch forum
+deleteGitBranch calendar
+deleteGitBranch integration
+deleteGitBranch platform
+deleteGitBranch platform-public-distributions
+deleteGitBranch platform-private-distributions
 popd
 exit
