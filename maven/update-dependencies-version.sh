@@ -1,12 +1,13 @@
 #!/bin/bash -ue
 
-REMOTE=origin
-LOCAL_BRANCH=feature/doc-preview-search
+REMOTE=blessed
+LOCAL_BRANCH=stable/4.4.x
 REMOTE_BRANCH=$REMOTE/$LOCAL_BRANCH
-REPLACE_WHAT="<org.exoplatform.platform-ui.version>4.4.x-SNAPSHOT</org.exoplatform.platform-ui.version>"
-REPLACE_BY="<org.exoplatform.platform-ui.version>4.4.x-doc-preview-search-SNAPSHOT</org.exoplatform.platform-ui.version>"
-COMMIT_MSG="SWF-3682: Update platform-ui version to 4.4.x-doc-preview-search-SNAPSHOT"
+REPLACE_WHAT="<org.exoplatform.depmgt.version>12-SNAPSHOT</org.exoplatform.depmgt.version>"
+REPLACE_BY="<org.exoplatform.depmgt.version>12.x-SNAPSHOT</org.exoplatform.depmgt.version>"
+COMMIT_MSG="SWF-3882: Update maven-depmgt-pom to 12.x-SNAPSHOT"
 
+SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 
 function pause(){
    read -p "$*"
@@ -18,9 +19,10 @@ updateProject (){
   git remote update
 
   git checkout $LOCAL_BRANCH
+  git pullr
   git reset --hard $REMOTE_BRANCH
 
-  $SCRIPTDIR/../replaceInPom.sh "$REPLACE_WHAT" "$REPLACE_BY"
+  $SCRIPTDIR/../replaceInFile.sh "$REPLACE_WHAT" "$REPLACE_BY" "pom.xml -not -wholename \"*/target/*\""
   git diff
   pause "Press [Enter] key to continue... We will commit with message : $COMMIT_MSG"
   git commit -m "$COMMIT_MSG" -a || true
