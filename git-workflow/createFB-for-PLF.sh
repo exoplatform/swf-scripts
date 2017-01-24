@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=doc-preview-search
-ISSUE=SWF-3682
+BRANCH=forum-redesign
+ISSUE=SWF-3786
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=4.4.x-SNAPSHOT
