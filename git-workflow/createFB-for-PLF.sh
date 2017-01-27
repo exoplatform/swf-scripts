@@ -2,12 +2,12 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=forum-redesign
-ISSUE=SWF-3786
+BRANCH=enterprise-skin
+ISSUE=SWF-3881
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
-ORIGIN_VERSION=4.4.x-SNAPSHOT
-TARGET_VERSION_PREFIX=4.4.x-$BRANCH
+ORIGIN_VERSION=4.5.x-SNAPSHOT
+TARGET_VERSION_PREFIX=4.5.x-$BRANCH
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -45,22 +45,23 @@ function createFB(){
   fi
   set -e
   printf "\e[1;33m# %s\e[m\n" "Modifying versions in the POMs ..."
-  $SCRIPTDIR/../replaceInPom.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION_PREFIX-SNAPSHOT</version>" ""
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.platform-ui.version>$ORIGIN_VERSION</org.exoplatform.platform-ui.version>" "<org.exoplatform.platform-ui.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform-ui.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.commons.version>$ORIGIN_VERSION</org.exoplatform.commons.version>" "<org.exoplatform.commons.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.commons.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.ecms.version>$ORIGIN_VERSION</org.exoplatform.ecms.version>" "<org.exoplatform.ecms.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.ecms.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.social.version>$ORIGIN_VERSION</org.exoplatform.social.version>" "<org.exoplatform.social.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.social.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.forum.version>$ORIGIN_VERSION</org.exoplatform.forum.version>" "<org.exoplatform.forum.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.forum.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.wiki.version>$ORIGIN_VERSION</org.exoplatform.wiki.version>" "<org.exoplatform.wiki.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.wiki.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.calendar.version>$ORIGIN_VERSION</org.exoplatform.calendar.version>" "<org.exoplatform.calendar.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.calendar.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.integ.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.distributions.version>"
-  #replaceInPom.sh "<org.exoplatform.depmgt.version>12-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>12-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"
+  $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION_PREFIX-SNAPSHOT</version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform-ui.version>$ORIGIN_VERSION</org.exoplatform.platform-ui.version>" "<org.exoplatform.platform-ui.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform-ui.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.doc.doc-style.version>$ORIGIN_VERSION</org.exoplatform.doc.doc-style.version>" "<org.exoplatform.doc.doc-style.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.doc.doc-style.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.commons.version>$ORIGIN_VERSION</org.exoplatform.commons.version>" "<org.exoplatform.commons.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.commons.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.ecms.version>$ORIGIN_VERSION</org.exoplatform.ecms.version>" "<org.exoplatform.ecms.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.ecms.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.social.version>$ORIGIN_VERSION</org.exoplatform.social.version>" "<org.exoplatform.social.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.social.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.forum.version>$ORIGIN_VERSION</org.exoplatform.forum.version>" "<org.exoplatform.forum.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.forum.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.wiki.version>$ORIGIN_VERSION</org.exoplatform.wiki.version>" "<org.exoplatform.wiki.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.wiki.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.calendar.version>$ORIGIN_VERSION</org.exoplatform.calendar.version>" "<org.exoplatform.calendar.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.calendar.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.integ.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.distributions.version>" "pom.xml -not -wholename \"*/target/*\""
+  #replaceInFile.sh "<org.exoplatform.depmgt.version>12-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>12-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"
   # for PLF Trial
-  #replaceInPom.sh "<addon.exo.tasks.version>1.2.x-SNAPSHOT</addon.exo.tasks.version>" "<addon.exo.tasks.version>1.2.x-$BRANCH-SNAPSHOT</addon.exo.tasks.version>"
-  #replaceInPom.sh "<version>1.2.x-SNAPSHOT</version>" "<version>1.2.x-$BRANCH-SNAPSHOT</version>" ""
-  #replaceInPom.sh "<version>1.1.x-SNAPSHOT</version>" "<version>1.1.x-$BRANCH-SNAPSHOT</version>" ""
+  #replaceInFile.sh "<addon.exo.tasks.version>1.2.x-SNAPSHOT</addon.exo.tasks.version>" "<addon.exo.tasks.version>1.2.x-$BRANCH-SNAPSHOT</addon.exo.tasks.version>"
+  #replaceInFile.sh "<version>1.2.x-SNAPSHOT</version>" "<version>1.2.x-$BRANCH-SNAPSHOT</version>" ""
+  #replaceInFile.sh "<version>1.1.x-SNAPSHOT</version>" "<version>1.1.x-$BRANCH-SNAPSHOT</version>" ""
 
   printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ..."
   git commit -m "$ISSUE: Create $BRANCH branch and update projects versions (phase 2)" -a
@@ -82,5 +83,6 @@ createFB integration
 createFB platform
 createFB platform-public-distributions
 createFB platform-private-distributions
+createFB enterprise-skin
 
 popd
