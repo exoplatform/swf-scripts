@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=integration/4.3.x-translation-jipt
+BRANCH=feature/enterprise-skin
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -20,8 +20,16 @@ function deleteGitBranch(){
 }
 
 pushd ${SWF_FB_REPOS}
-deleteGitBranch gatein-portal
-deleteGitBranch platform-ui
+#deleteGitBranch gatein-wci
+#deleteGitBranch kernel
+#deleteGitBranch core
+#deleteGitBranch ws
+#deleteGitBranch jcr
+#deleteGitBranch jcr-services
+#deleteGitBranch gatein-pc
+#deleteGitBranch gatein-sso
+#deleteGitBranch gatein-portal
+#deleteGitBranch platform-ui
 deleteGitBranch commons
 deleteGitBranch social
 deleteGitBranch ecms
@@ -32,5 +40,6 @@ deleteGitBranch integration
 deleteGitBranch platform
 deleteGitBranch platform-public-distributions
 deleteGitBranch platform-private-distributions
+deleteGitBranch platform-private-trial-distributions
 popd
 exit
