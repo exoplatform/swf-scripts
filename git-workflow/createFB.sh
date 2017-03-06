@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=jcache
-ISSUE=SWF-3902
+BRANCH=commons-rdbms
+ISSUE=SWF-3897
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
