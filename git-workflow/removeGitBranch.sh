@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/enterprise-skin
+BRANCH=feature/jcache
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -20,16 +20,17 @@ function deleteGitBranch(){
 }
 
 pushd ${SWF_FB_REPOS}
-#deleteGitBranch gatein-wci
-#deleteGitBranch kernel
-#deleteGitBranch core
-#deleteGitBranch ws
-#deleteGitBranch jcr
-#deleteGitBranch jcr-services
-#deleteGitBranch gatein-pc
-#deleteGitBranch gatein-sso
-#deleteGitBranch gatein-portal
-#deleteGitBranch platform-ui
+deleteGitBranch gatein-wci
+deleteGitBranch kernel
+deleteGitBranch core
+deleteGitBranch ws
+deleteGitBranch jcr
+deleteGitBranch jcr-services
+deleteGitBranch gatein-pc
+deleteGitBranch gatein-sso
+deleteGitBranch gatein-portal
+deleteGitBranch maven-depmgt-pom
+deleteGitBranch platform-ui
 deleteGitBranch commons
 deleteGitBranch social
 deleteGitBranch ecms
