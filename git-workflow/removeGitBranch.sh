@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/jcache
+BRANCH=feature/commons-rdbms
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -19,7 +19,7 @@ function deleteGitBranch(){
   popd
 }
 
-pushd ${SWF_FB_REPOS}
+#pushd ${SWF_FB_REPOS}
 deleteGitBranch gatein-wci
 deleteGitBranch kernel
 deleteGitBranch core
@@ -30,6 +30,7 @@ deleteGitBranch gatein-pc
 deleteGitBranch gatein-sso
 deleteGitBranch gatein-portal
 deleteGitBranch maven-depmgt-pom
+deleteGitBranch docs-style
 deleteGitBranch platform-ui
 deleteGitBranch commons
 deleteGitBranch social
