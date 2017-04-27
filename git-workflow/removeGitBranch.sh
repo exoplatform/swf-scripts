@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/commons-rdbms
+BRANCH=feature/jbosseap-7
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
