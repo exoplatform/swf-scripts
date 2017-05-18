@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=upgrade-groovy
-ISSUE=SWF-3955
+BRANCH=select-picture-microblog
+ISSUE=SWF-3961
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
