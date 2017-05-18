@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH=feature/jbosseap-7
+BRANCH=feature/elasticsearch-5
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -13,7 +13,10 @@ function deleteGitBranch(){
   echo "##### repo : $(basename $1)"
   echo "########################################"
   pushd $1
+  git reset --hard origin/develop
+  git clean -df
   git checkout develop
+
   git branch -D $BRANCH || true
   git push origin --delete $BRANCH || true
   popd

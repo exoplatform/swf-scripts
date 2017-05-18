@@ -2,12 +2,12 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=enterprise-skin
-ISSUE=SWF-3881
+BRANCH=5.0.x
+ISSUE=SWF-3869
 ORIGIN_BRANCH=develop
-TARGET_BRANCH=feature/$BRANCH
+TARGET_BRANCH=update/$BRANCH
 ORIGIN_VERSION=4.5.x-SNAPSHOT
-TARGET_VERSION_PREFIX=4.5.x-$BRANCH
+TARGET_VERSION_PREFIX=5.0.x
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -57,6 +57,7 @@ function createFB(){
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.integ.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.exoplatform.platform.distributions.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.gatein.portal.version>4.5.x-PLF-SNAPSHOT</org.gatein.portal.version>" "<org.gatein.portal.version>$TARGET_VERSION_PREFIX-SNAPSHOT</org.gatein.portal.version>" "pom.xml -not -wholename \"*/target/*\""
   #replaceInFile.sh "<org.exoplatform.depmgt.version>12-SNAPSHOT</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>12-$BRANCH-SNAPSHOT</org.exoplatform.depmgt.version>"
   # for PLF Trial
   #replaceInFile.sh "<addon.exo.tasks.version>1.2.x-SNAPSHOT</addon.exo.tasks.version>" "<addon.exo.tasks.version>1.2.x-$BRANCH-SNAPSHOT</addon.exo.tasks.version>"
@@ -64,14 +65,15 @@ function createFB(){
   #replaceInFile.sh "<version>1.1.x-SNAPSHOT</version>" "<version>1.1.x-$BRANCH-SNAPSHOT</version>" ""
 
   printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ..."
-  git commit -m "$ISSUE: Create $BRANCH branch and update projects versions (phase 2)" -a
-  git push origin $TARGET_BRANCH --set-upstream
-  git checkout develop
+  git commit -m "$ISSUE: Update PLF components versions to 5.0.x-SNAPSHOT" -a
+  #git push origin $TARGET_BRANCH --set-upstream
+  #git checkout develop
   popd
 }
 
 pushd ${SWF_FB_REPOS}
 
+createFB docs-style
 createFB platform-ui
 createFB commons
 createFB social
@@ -83,6 +85,7 @@ createFB integration
 createFB platform
 createFB platform-public-distributions
 createFB platform-private-distributions
-createFB enterprise-skin
+createFB platform-private-trial-distributions
+#createFB enterprise-skin
 
 popd

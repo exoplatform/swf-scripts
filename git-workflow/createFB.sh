@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=commons-rdbms
-ISSUE=SWF-3897
+BRANCH=infinispan-8
+ISSUE=SWF-3913
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
@@ -87,34 +87,34 @@ function createFB(){
   printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ..."
   git commit -m "$ISSUE: Create FB $BRANCH and update projects versions/dependencies" -a
   git push origin $TARGET_BRANCH --set-upstream
-  #git checkout develop
+  git checkout develop
   popd
 }
 
 pushd ${SWF_FB_REPOS}
 
-createFB gatein-wci
-createFB kernel
-createFB core
-createFB ws
-createFB jcr
-createFB jcr-services
+#createFB gatein-wci
+#createFB kernel
+#createFB core
+#createFB ws
+#createFB jcr
+#createFB jcr-services
 createFB gatein-pc
-createFB gatein-sso
-createFB gatein-portal
-createFB maven-depmgt-pom
-createFB docs-style
-createFB platform-ui
-createFB commons
-createFB social
-createFB ecms
-createFB wiki
-createFB forum
-createFB calendar
-createFB integration
-createFB platform
-createFB platform-public-distributions
-createFB platform-private-distributions
-createFB platform-private-trial-distributions
-
+#createFB gatein-sso
+#createFB gatein-portal
+#createFB maven-depmgt-pom
+#createFB docs-style
+#createFB platform-ui
+#createFB commons
+#createFB social
+#createFB ecms
+#createFB wiki
+#createFB forum
+#createFB calendar
+#createFB integration
+#createFB platform
+#createFB platform-public-distributions
+#createFB platform-private-distributions
+#createFB platform-private-trial-distributions
+#
 popd
