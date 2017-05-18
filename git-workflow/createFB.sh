@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=infinispan-8
-ISSUE=SWF-3913
+BRANCH=upgrade-groovy
+ISSUE=SWF-3955
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
@@ -93,28 +93,28 @@ function createFB(){
 
 pushd ${SWF_FB_REPOS}
 
-#createFB gatein-wci
-#createFB kernel
-#createFB core
-#createFB ws
-#createFB jcr
-#createFB jcr-services
+createFB gatein-wci
+createFB kernel
+createFB core
+createFB ws
+createFB jcr
+createFB jcr-services
 createFB gatein-pc
-#createFB gatein-sso
-#createFB gatein-portal
-#createFB maven-depmgt-pom
-#createFB docs-style
-#createFB platform-ui
-#createFB commons
-#createFB social
-#createFB ecms
-#createFB wiki
-#createFB forum
-#createFB calendar
-#createFB integration
-#createFB platform
-#createFB platform-public-distributions
-#createFB platform-private-distributions
-#createFB platform-private-trial-distributions
-#
+createFB gatein-sso
+createFB gatein-portal
+createFB maven-depmgt-pom
+createFB docs-style
+createFB platform-ui
+createFB commons
+createFB social
+createFB ecms
+createFB wiki
+createFB forum
+createFB calendar
+createFB integration
+createFB platform
+createFB platform-public-distributions
+createFB platform-private-distributions
+createFB platform-private-trial-distributions
+
 popd
