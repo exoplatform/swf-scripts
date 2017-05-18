@@ -1,11 +1,11 @@
 #!/bin/bash -ue
 
-REMOTE=blessed
-LOCAL_BRANCH=stable/4.4.x
+REMOTE=origin
+LOCAL_BRANCH=feature/enterprise-skin
 REMOTE_BRANCH=$REMOTE/$LOCAL_BRANCH
-REPLACE_WHAT="<org.exoplatform.depmgt.version>12-SNAPSHOT</org.exoplatform.depmgt.version>"
-REPLACE_BY="<org.exoplatform.depmgt.version>12.x-SNAPSHOT</org.exoplatform.depmgt.version>"
-COMMIT_MSG="SWF-3882: Update maven-depmgt-pom to 12.x-SNAPSHOT"
+REPLACE_WHAT="<org.exoplatform.gatein.portal.version>5.0.x-SNAPSHOT</org.exoplatform.gatein.portal.version>"
+REPLACE_BY="<org.exoplatform.gatein.portal.version>5.0.x-enterprise-skin-SNAPSHOT</org.exoplatform.gatein.portal.version>"
+COMMIT_MSG="SWF-3881: [FB enterprise-skin] update GateIn Portal dependency version"
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 
@@ -16,10 +16,9 @@ function pause(){
 updateProject (){
   echo "================================================================================"
   pushd $1
-  git remote update
-
+  git remote update --prune
   git checkout $LOCAL_BRANCH
-  git pullr
+  git clean -df && git pullr
   git reset --hard $REMOTE_BRANCH
 
   $SCRIPTDIR/../replaceInFile.sh "$REPLACE_WHAT" "$REPLACE_BY" "pom.xml -not -wholename \"*/target/*\""
