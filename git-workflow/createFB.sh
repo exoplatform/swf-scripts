@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=select-picture-microblog
-ISSUE=SWF-3961
+BRANCH=multi-upload
+ISSUE=SWF-3963
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
