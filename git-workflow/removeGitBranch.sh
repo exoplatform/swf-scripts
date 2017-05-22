@@ -1,6 +1,7 @@
 #!/bin/bash -eu
 
-BRANCH=feature/elasticsearch-5
+BRANCH_TO_DELETE=feature/upgrade-groovy
+DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -13,12 +14,12 @@ function deleteGitBranch(){
   echo "##### repo : $(basename $1)"
   echo "########################################"
   pushd $1
-  git reset --hard origin/develop
+  git reset --hard origin/$DEFAULT_BRANCH
   git clean -df
-  git checkout develop
+  git checkout $DEFAULT_BRANCH
 
-  git branch -D $BRANCH || true
-  git push origin --delete $BRANCH || true
+  git branch -D $BRANCH_TO_DELETE || true
+  git push origin --delete $BRANCH_TO_DELETE || true
   popd
 }
 
