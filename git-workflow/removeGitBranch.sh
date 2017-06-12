@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/upgrade-groovy
+BRANCH_TO_DELETE=feature/jcr-services-merge
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
@@ -29,7 +29,6 @@ deleteGitBranch kernel
 deleteGitBranch core
 deleteGitBranch ws
 deleteGitBranch jcr
-deleteGitBranch jcr-services
 deleteGitBranch gatein-pc
 deleteGitBranch gatein-sso
 deleteGitBranch gatein-portal
