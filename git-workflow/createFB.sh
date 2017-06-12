@@ -11,6 +11,9 @@ TARGET_VERSION=5.0.x-$BRANCH-SNAPSHOT
 # Maven DEPMGT
 DEPMGT_ORIGIN_VERSION=13-SNAPSHOT
 DEPMGT_TARGET_VERSION=13.x-$BRANCH-SNAPSHOT
+# GateIn DEPMGT
+GATEIN_DEP_ORIGIN_VERSION=1.5.x-SNAPSHOT
+GATEIN_DEP_TARGET_VERSION=1.5.x-$BRANCH-SNAPSHOT
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
@@ -55,6 +58,9 @@ function createFB(){
   $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\""
 
   # Project dependencies
+  ## GateIn Dep
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.gatein.dep.version>$ORIGIN_VERSION</org.exoplatform.gatein.dep.version>" "<org.exoplatform.gatein.dep.version>$TARGET_VERSION</org.exoplatform.gatein.dep.version>" "pom.xml -not -wholename \"*/target/*\""
+
   ## GateIn WCI
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.gatein.wci.version>$ORIGIN_VERSION</org.exoplatform.gatein.wci.version>" "<org.exoplatform.gatein.wci.version>$TARGET_VERSION</org.exoplatform.gatein.wci.version>" "pom.xml -not -wholename \"*/target/*\""
 
@@ -93,12 +99,12 @@ function createFB(){
 
 pushd ${SWF_FB_REPOS}
 
+createFB gatein-dep
 createFB gatein-wci
 createFB kernel
 createFB core
 createFB ws
 createFB jcr
-createFB jcr-services
 createFB gatein-pc
 createFB gatein-sso
 createFB gatein-portal
