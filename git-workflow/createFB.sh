@@ -37,21 +37,21 @@ function createFB(){
   git checkout $ORIGIN_BRANCH
   git reset --hard HEAD
   git pull
-  printf "\e[1;33m# %s\e[m\n" "Testing if ${TARGET_BRANCH} branch doesn't already exists and reuse it ..."
+  printf "\e[1;33m# %s\e[m\n" "Testing if ${TARGET_BRANCH} branch doesn't already exists and reuse it ($repo_name) ..."
   set +e
   git checkout $TARGET_BRANCH
   if [ "$?" -ne "0" ]; then
     git checkout -b $TARGET_BRANCH
   else
-    printf "\e[1;35m# %s\e[m\n" "WARNING : the ${TARGET_BRANCH} branch already exists so we will delete it (you have 5 seconds to cancel with CTRL+C) ..."
+    printf "\e[1;35m# %s\e[m\n" "WARNING : the ${TARGET_BRANCH} branch already exists so we will delete it (you have 5 seconds to cancel with CTRL+C) ($repo_name) ..."
     sleep 5
     git checkout $ORIGIN_BRANCH
     git branch -D $TARGET_BRANCH
     git checkout -b $TARGET_BRANCH
   fi
   set -e
-  printf "\e[1;33m# %s\e[m\n" "Modifying versions in the POMs ..."
-  
+  printf "\e[1;33m# %s\e[m\n" "Modifying versions in the POMs ($repo_name) ..."
+
   # Project version
   $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\""
   # project version for maven-depmgt-pom
@@ -91,8 +91,8 @@ function createFB(){
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION</org.exoplatform.integ.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION</org.exoplatform.platform.distributions.version>" "pom.xml -not -wholename \"*/target/*\""
-  
-  printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ..."
+
+  printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ($repo_name) ..."
   git commit -m "$ISSUE: Create FB $BRANCH and update projects versions/dependencies" -a
   git push origin $TARGET_BRANCH --set-upstream
   git checkout develop
