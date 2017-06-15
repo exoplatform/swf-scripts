@@ -39,6 +39,7 @@ function createFB(){
   git pull
   printf "\e[1;33m# %s\e[m\n" "Testing if ${TARGET_BRANCH} branch doesn't already exists and reuse it ($repo_name) ..."
   set +e
+  GIT_PUSH_PARAMS=""
   git checkout $TARGET_BRANCH
   if [ "$?" -ne "0" ]; then
     git checkout -b $TARGET_BRANCH
@@ -48,6 +49,7 @@ function createFB(){
     git checkout $ORIGIN_BRANCH
     git branch -D $TARGET_BRANCH
     git checkout -b $TARGET_BRANCH
+    GIT_PUSH_PARAMS="--force"
   fi
   set -e
   printf "\e[1;33m# %s\e[m\n" "Modifying versions in the POMs ($repo_name) ..."
@@ -94,7 +96,7 @@ function createFB(){
 
   printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ($repo_name) ..."
   git commit -m "$ISSUE: Create FB $BRANCH and update projects versions/dependencies" -a
-  git push origin $TARGET_BRANCH --set-upstream
+  git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
   git checkout develop
   popd
 }
