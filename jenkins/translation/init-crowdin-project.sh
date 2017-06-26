@@ -5,8 +5,10 @@
 # Usage:
 # * init-crowdin-project.sh <crowdin_project_name> <crowdin_project_key>
 
-VERSION=4.4.x
-GIT_SOURCE_BRANCH=stable/$VERSION
+PLF_VERSION=4.4.x
+CHAT_ADDON_VERSION=1.4.x
+TASK_ADDON_VERSION=1.2.x
+
 CROWDIN_PROJECT_NAME=$1
 CROWDIN_PROJECT_KEY=$2
 LANGUAGES=en,ar,ca,nl,fr,de,el,it,ja,fa,pl,pt-BR,ru,zh-CN,sl,es-ES,tr,uk,vi,sq
@@ -15,12 +17,19 @@ CROWDIN_MAVEN_PLUGIN_VERSION=1.2.x-SNAPSHOT
 
 set -e
 mkdir -p sources
-arr=("gatein-portal" "platform-ui" "commons" "ecms" "social" "wiki" "forum" "calendar" "integration" "platform" "platform-public-distributions" "platform-private-distributions")
-for project in "${arr[@]}"
+projects=("gatein-portal:${PLF_VERSION}" "platform-ui:${PLF_VERSION}" "commons:${PLF_VERSION}" "ecms:${PLF_VERSION}" "social:${PLF_VERSION}" "wiki:${PLF_VERSION}" "forum:${PLF_VERSION}" "calendar:${PLF_VERSION}" "integration:${PLF_VERSION}" "platform:${PLF_VERSION}" "platform-public-distributions:${PLF_VERSION}" "platform-private-distributions:${PLF_VERSION}" "chat-application:${CHAT_ADDON_VERSION}" "task:${TASK_ADDON_VERSION}")
+for projectWithVersion in "${projects[@]}"
 do
-  echo "Clone git repo $project of origin repository"
+  projectInfo=(${projectWithVersion//:/ })
+  project=${projectInfo[0]}
+  version=${projectInfo[1]}
+  gitBranch=stable/$version
+  echo "############################################################################"
+  echo "# Project exoplatform/$project - branch $gitBranch"
+  echo "############################################################################"
+  echo "Clone git repo exoplatform/$project - branch $gitBranch"
   pushd sources && /usr/bin/git clone git@github.com:exoplatform/$project.git
-  cd $project && /usr/bin/git branch ${GIT_SOURCE_BRANCH} origin/${GIT_SOURCE_BRANCH} && git checkout ${GIT_SOURCE_BRANCH}
+  cd $project && /usr/bin/git branch ${gitBranch} origin/${gitBranch} && git checkout ${gitBranch}
   echo "Upload translations of repo $project in Crowdin"
   mvn org.exoplatform.translation.crowdin:crowdin-maven-plugin:${CROWDIN_MAVEN_PLUGIN_VERSION}:upload-translation -Dexo.crowdin.project.key=${CROWDIN_PROJECT_KEY} -Dexo.crowdin.project.id=${CROWDIN_PROJECT_NAME} -Dexo.crowdin.autoApprovedImported=true -Dlangs=${LANGUAGES}
   popd
