@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=multi-tag-search
-ISSUE=SWF-4061
+BRANCH=organizationservice-cache
+ISSUE=SWF-4063
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
