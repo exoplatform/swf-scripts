@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=spaces-administrators
-ISSUE=SWF-4011
+BRANCH=upgrade-ckeditor
+ISSUE=SWF-4060
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
