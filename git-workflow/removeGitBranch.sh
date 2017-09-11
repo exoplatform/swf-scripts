@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/like-comment
+BRANCH_TO_DELETE=feature/multi-tag-search
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
@@ -47,5 +47,5 @@ deleteGitBranch platform
 deleteGitBranch platform-public-distributions
 deleteGitBranch platform-private-distributions
 deleteGitBranch platform-private-trial-distributions
-popd
+#popd
 exit
