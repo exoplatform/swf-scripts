@@ -24,6 +24,7 @@ function deleteGitBranch(){
 }
 
 #pushd ${SWF_FB_REPOS}
+deleteGitBranch gatein-dep
 deleteGitBranch gatein-wci
 deleteGitBranch kernel
 deleteGitBranch core
