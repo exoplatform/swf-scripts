@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=organizationservice-cache
-ISSUE=SWF-4063
+BRANCH=reply-to-comment
+ISSUE=SWF-4073
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
@@ -103,19 +103,19 @@ function createFB(){
 
 pushd ${SWF_FB_REPOS}
 
-createFB gatein-dep
-createFB gatein-wci
-createFB kernel
-createFB core
-createFB ws
-createFB jcr
-createFB gatein-pc
-createFB gatein-sso
-createFB gatein-portal
-createFB maven-depmgt-pom
-createFB docs-style
-createFB platform-ui
-createFB commons
+# createFB gatein-dep
+# createFB gatein-wci
+# createFB kernel
+# createFB core
+# createFB ws
+# createFB jcr
+# createFB gatein-pc
+# createFB gatein-sso
+# createFB gatein-portal
+# createFB maven-depmgt-pom
+# createFB docs-style
+# createFB platform-ui
+# createFB commons
 createFB social
 createFB ecms
 createFB wiki
