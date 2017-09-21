@@ -44,6 +44,13 @@ deleteGitBranch forum
 deleteGitBranch calendar
 deleteGitBranch integration
 deleteGitBranch platform
+
+deleteGitBranch answers
+deleteGitBranch chat-application
+deleteGitBranch task
+deleteGitBranch remote-edit
+deleteGitBranch wcm-template-pack
+
 deleteGitBranch platform-public-distributions
 deleteGitBranch platform-private-distributions
 deleteGitBranch platform-private-trial-distributions

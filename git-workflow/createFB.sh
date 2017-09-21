@@ -14,24 +14,42 @@ DEPMGT_TARGET_VERSION=13.x-$BRANCH-SNAPSHOT
 # GateIn DEPMGT
 GATEIN_DEP_ORIGIN_VERSION=1.5.x-SNAPSHOT
 GATEIN_DEP_TARGET_VERSION=1.5.x-$BRANCH-SNAPSHOT
+# Add-on eXo Answers
+ADDON_ANSWERS_ORIGIN_VERSION=1.3.x-SNAPSHOT
+ADDON_ANSWERS_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo Chat
+ADDON_CHAT_ORIGIN_VERSION=1.6.x-SNAPSHOT
+ADDON_CHAT_TARGET_VERSION=1.6.x-$BRANCH-SNAPSHOT
+# Add-on eXo Task
+ADDON_TASK_ORIGIN_VERSION=1.3.x-SNAPSHOT
+ADDON_TASK_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo Remote Edit
+ADDON_REMOTE_EDIT_ORIGIN_VERSION=1.3.x-SNAPSHOT
+ADDON_REMOTE_EDIT_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo Web Pack
+ADDON_WEB_PACK_ORIGIN_VERSION=1.2.x-SNAPSHOT
+ADDON_WEB_PACK_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
+
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
 CURRENTDIR=$(pwd)
 
 SWF_FB_REPOS=${SWF_FB_REPOS:-$CURRENTDIR}
 
-function createFB(){
+function repoInit() {
   local repo_name=$1
   printf "\e[1;33m########################################\e[m\n"
   printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
   printf "\e[1;33m########################################\e[m\n"
   pushd ${repo_name}
+}
 
-  # Remove all branches but the origin one
-#  git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
+function repoCleanup() {
+  local repo_name=$1
+  # git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
   printf "\e[1;33m# %s\e[m\n" "Cleaning of ${repo_name} repository ..."
-  #git checkout $ORIGIN_BRANCH
-  #git branch -D $TARGET_BRANCH
+  # git checkout $ORIGIN_BRANCH
+  # git branch -D $TARGET_BRANCH
   git remote update --prune
   git reset --hard HEAD
   git checkout $ORIGIN_BRANCH
@@ -51,17 +69,27 @@ function createFB(){
     git checkout -b $TARGET_BRANCH
     GIT_PUSH_PARAMS="--force"
   fi
+}
+
+function replaceProjectVersion(){
+  local repo_name=$1
+  printf "\e[1;33m# %s\e[m\n" "Modifying versions in the project POMs ($repo_name) ..."
   set -e
-  printf "\e[1;33m# %s\e[m\n" "Modifying versions in the POMs ($repo_name) ..."
+  case $repo_name in
+    gatein-dep) $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+    maven-depmgt-pom) $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+    answers) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ANSWERS_ORIGIN_VERSION</version>" "<version>$ADDON_ANSWERS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+    chat-application) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CHAT_ORIGIN_VERSION</version>" "<version>$ADDON_CHAT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+    task) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_TASK_ORIGIN_VERSION</version>" "<version>$ADDON_TASK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+    remote-edit) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</version>" "<version>$ADDON_REMOTE_EDIT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+    wcm-template-pack) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_PACK_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_PACK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+    *) $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+  esac
+}
 
-  # Project version
-  $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\""
-  # project version for maven-depmgt-pom
-  $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\""
-  # project version for gatein-dep
-  $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\""
+function replaceProjectDeps(){
+  printf "\e[1;33m# %s\e[m\n" "Modifying dependencies versions in the project POMs ($repo_name) ..."
 
-  # Project dependencies
   ## GateIn Dep
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.gatein.dep.version>$GATEIN_DEP_ORIGIN_VERSION</org.exoplatform.gatein.dep.version>" "<org.exoplatform.gatein.dep.version>$GATEIN_DEP_TARGET_VERSION</org.exoplatform.gatein.dep.version>" "pom.xml -not -wholename \"*/target/*\""
 
@@ -93,7 +121,33 @@ function createFB(){
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION</org.exoplatform.integ.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION</org.exoplatform.platform.distributions.version>" "pom.xml -not -wholename \"*/target/*\""
+}
 
+function replaceProjectAddons(){
+  printf "\e[1;33m# %s\e[m\n" "Modifying add-ons versions in the packaging project POMs ($repo_name) ..."
+
+  $SCRIPTDIR/../replaceInFile.sh "<addon.exo.answers.version>$ADDON_ANSWERS_ORIGIN_VERSION</addon.exo.answers.version>" "<addon.exo.answers.version>$ADDON_ANSWERS_TARGET_VERSION</addon.exo.answers.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<addon.exo.remote.edit.version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</addon.exo.remote.edit.version>" "<addon.exo.remote.edit.version>$ADDON_REMOTE_EDIT_TARGET_VERSION</addon.exo.remote.edit.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<addon.exo.web.pack.version>$ADDON_WEB_PACK_ORIGIN_VERSION</addon.exo.web.pack.version>" "<addon.exo.web.pack.version>$ADDON_WEB_PACK_TARGET_VERSION</addon.exo.web.pack.version>" "pom.xml -not -wholename \"*/target/*\""
+}
+
+function createFB(){
+  local repo_name=$1
+
+  repoInit ${repo_name}
+  # Remove all branches but the origin one
+  repoCleanup ${repo_name}
+
+  replaceProjectVersion ${repo_name}
+  replaceProjectDeps ${repo_name}
+
+  # Replace add-on versions in distributions project
+  case $repo_name in
+    *-distributions) replaceProjectAddons ${repo_name};;
+  esac
+  
   printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ($repo_name) ..."
   git commit -m "$ISSUE: Create FB $BRANCH and update projects versions/dependencies" -a
   git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
@@ -103,19 +157,19 @@ function createFB(){
 
 pushd ${SWF_FB_REPOS}
 
-# createFB gatein-dep
-# createFB gatein-wci
-# createFB kernel
-# createFB core
-# createFB ws
-# createFB jcr
-# createFB gatein-pc
-# createFB gatein-sso
-# createFB gatein-portal
-# createFB maven-depmgt-pom
-# createFB docs-style
-# createFB platform-ui
-# createFB commons
+createFB gatein-dep
+createFB gatein-wci
+createFB kernel
+createFB core
+createFB ws
+createFB jcr
+createFB gatein-pc
+createFB gatein-sso
+createFB gatein-portal
+createFB maven-depmgt-pom
+createFB docs-style
+createFB platform-ui
+createFB commons
 createFB social
 createFB ecms
 createFB wiki
@@ -123,6 +177,13 @@ createFB forum
 createFB calendar
 createFB integration
 createFB platform
+
+createFB answers
+createFB chat-application
+createFB task
+createFB remote-edit
+createFB wcm-template-pack
+
 createFB platform-public-distributions
 createFB platform-private-distributions
 createFB platform-private-trial-distributions
