@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=reply-to-comment
-ISSUE=SWF-4073
+BRANCH=jquery-upgrade
+ISSUE=SWF-4090
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
