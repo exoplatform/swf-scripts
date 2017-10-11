@@ -45,6 +45,7 @@ deleteGitBranch calendar
 deleteGitBranch integration
 deleteGitBranch platform
 
+deleteGitBranch exo-es-embedded
 deleteGitBranch answers
 deleteGitBranch chat-application
 deleteGitBranch task

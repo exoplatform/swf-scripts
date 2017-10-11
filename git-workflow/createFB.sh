@@ -14,6 +14,9 @@ DEPMGT_TARGET_VERSION=13.x-$BRANCH-SNAPSHOT
 # GateIn DEPMGT
 GATEIN_DEP_ORIGIN_VERSION=1.5.x-SNAPSHOT
 GATEIN_DEP_TARGET_VERSION=1.5.x-$BRANCH-SNAPSHOT
+# Add-on eXo ElasticSearch Embedded
+ADDON_ES_EMBED_ORIGIN_VERSION=2.0.x-SNAPSHOT
+ADDON_ES_EMBED_TARGET_VERSION=2.0.x-$BRANCH-SNAPSHOT
 # Add-on eXo Answers
 ADDON_ANSWERS_ORIGIN_VERSION=1.3.x-SNAPSHOT
 ADDON_ANSWERS_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
@@ -78,6 +81,7 @@ function replaceProjectVersion(){
   case $repo_name in
     gatein-dep) $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
     maven-depmgt-pom) $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+    exo-es-embedded) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ES_EMBED_ORIGIN_VERSION</version>" "<version>$ADDON_ES_EMBED_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
     answers) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ANSWERS_ORIGIN_VERSION</version>" "<version>$ADDON_ANSWERS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
     chat-application) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CHAT_ORIGIN_VERSION</version>" "<version>$ADDON_CHAT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
     task) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_TASK_ORIGIN_VERSION</version>" "<version>$ADDON_TASK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
@@ -126,6 +130,7 @@ function replaceProjectDeps(){
 function replaceProjectAddons(){
   printf "\e[1;33m# %s\e[m\n" "Modifying add-ons versions in the packaging project POMs ($repo_name) ..."
 
+  $SCRIPTDIR/../replaceInFile.sh "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_ORIGIN_VERSION</addon.exo.es.embedded.version>" "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_TARGET_VERSION</addon.exo.es.embedded.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<addon.exo.answers.version>$ADDON_ANSWERS_ORIGIN_VERSION</addon.exo.answers.version>" "<addon.exo.answers.version>$ADDON_ANSWERS_TARGET_VERSION</addon.exo.answers.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -178,6 +183,7 @@ createFB calendar
 createFB integration
 createFB platform
 
+createFB exo-es-embedded
 createFB answers
 createFB chat-application
 createFB task
