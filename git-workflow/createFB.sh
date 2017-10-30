@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=elasticsearch-56
-ISSUE=SWF-4128
+BRANCH=multiupload-breadcrumb
+ISSUE=SWF-4151
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.0.x-SNAPSHOT
