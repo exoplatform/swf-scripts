@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/reply-to-comment
+BRANCH_TO_DELETE=feature/enterprise-skin
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
