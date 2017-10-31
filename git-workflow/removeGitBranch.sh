@@ -55,5 +55,7 @@ deleteGitBranch wcm-template-pack
 deleteGitBranch platform-public-distributions
 deleteGitBranch platform-private-distributions
 deleteGitBranch platform-private-trial-distributions
+
+deleteGitBranch enterprise-skin
 #popd
 exit
