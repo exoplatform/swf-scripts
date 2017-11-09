@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/enterprise-skin
+BRANCH_TO_DELETE=feature/select-picture-microblog
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
