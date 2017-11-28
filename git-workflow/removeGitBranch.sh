@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/multiupload-breadcrumb
+BRANCH_TO_DELETE=feature/humberger-menu
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
