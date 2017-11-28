@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/select-picture-microblog
+BRANCH_TO_DELETE=feature/multiupload-breadcrumb
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
@@ -51,11 +51,11 @@ deleteGitBranch chat-application
 deleteGitBranch task
 deleteGitBranch remote-edit
 deleteGitBranch wcm-template-pack
+deleteGitBranch enterprise-skin
 
 deleteGitBranch platform-public-distributions
 deleteGitBranch platform-private-distributions
 deleteGitBranch platform-private-trial-distributions
 
-deleteGitBranch enterprise-skin
 #popd
 exit
