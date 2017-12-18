@@ -32,6 +32,9 @@ ADDON_REMOTE_EDIT_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
 # Add-on eXo Web Pack
 ADDON_WEB_PACK_ORIGIN_VERSION=1.2.x-SNAPSHOT
 ADDON_WEB_PACK_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
+# Add-on eXo Web Conferencing
+ADDON_WEB_CONFERENCING_ORIGIN_VERSION=1.1.x-SNAPSHOT
+ADDON_WEB_CONFERENCING_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
 
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
@@ -87,6 +90,7 @@ function replaceProjectVersion(){
     task) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_TASK_ORIGIN_VERSION</version>" "<version>$ADDON_TASK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
     remote-edit) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</version>" "<version>$ADDON_REMOTE_EDIT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
     wcm-template-pack) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_PACK_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_PACK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
+    web-conferencing) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
     *) $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"";;
   esac
 }
@@ -137,6 +141,7 @@ function replaceProjectAddons(){
   $SCRIPTDIR/../replaceInFile.sh "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</addon.exo.remote-edit.version>" "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_TARGET_VERSION</addon.exo.remote-edit.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-pack.version>$ADDON_WEB_PACK_ORIGIN_VERSION</addon.exo.web-pack.version>" "<addon.exo.web-pack.version>$ADDON_WEB_PACK_TARGET_VERSION</addon.exo.web-pack.version>" "pom.xml -not -wholename \"*/target/*\""
   $SCRIPTDIR/../replaceInFile.sh "<addon.exo.enterprise-skin.version>$ORIGIN_VERSION</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>$TARGET_VERSION</addon.exo.enterprise-skin.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-conferencing.version>$ORIGIN_VERSION</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>$TARGET_VERSION</addon.exo.web-conferencing.version>" "pom.xml -not -wholename \"*/target/*\""
 }
 
 function createFB(){
@@ -191,6 +196,7 @@ createFB task
 createFB remote-edit
 createFB wcm-template-pack
 createFB enterprise-skin
+createFB web-conferencing
 
 createFB platform-public-distributions
 createFB platform-private-distributions
