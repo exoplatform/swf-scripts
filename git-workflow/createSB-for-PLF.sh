@@ -255,7 +255,7 @@ function createSBFromDevelop(){
   # < 5.0.0
   $SCRIPTDIR/../replaceInPom.sh "<addon.exo.web.pack.version>${WCM_TEMPLATE_CURRENT_VERSION}</addon.exo.web.pack.version>" "<addon.exo.web.pack.version>${WCM_TEMPLATE_NEXT_VERSION}</addon.exo.web.pack.version>"
   $SCRIPTDIR/../replaceInPom.sh "<addon.exo.web-conferencing.version>${WEB_CONF_CURRENT_VERSION}</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>${WEB_CONF_NEXT_VERSION}</addon.exo.web-conferencing.version>"
-  $SCRIPTDIR/../replaceInPom.sh "<addon.exo.enterprise-skin.version>${CURRENT_DEVELOP_VERSION}</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>${NEXT_DEVELOP_VERSION_PREFIX}</addon.exo.enterprise-skin.version>"
+  $SCRIPTDIR/../replaceInPom.sh "<addon.exo.enterprise-skin.version>${CURRENT_DEVELOP_VERSION}</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>${NEXT_DEVELOP_VERSION}</addon.exo.enterprise-skin.version>"
   $SCRIPTDIR/../replaceInPom.sh "<addon.exo.chat.version>${CHAT_APPLICATION_CURRENT_VERSION}</addon.exo.chat.version>" "<addon.exo.chat.version>${CHAT_APPLICATION_NEXT_VERSION}</addon.exo.chat.version>"
   
   git commit -m "$ISSUE: Update projects versions to ${nextVersion}" -a
