@@ -302,12 +302,12 @@ createSBFromDevelop cmis-addon exo-addons
 createSBFromDevelop crash-addon exo-addons
 createSBFromDevelop exo-es-embedded exo-addons
 createSBFromDevelop enterprise-skin exoplatform
-createSBFromDevelop openam-addon exoplatform
-createSBFromDevelop remote-edit exoplatform
+createSBFromDevelop openam-addon exo-addons
+createSBFromDevelop remote-edit exo-addons
 createSBFromDevelop saml2-addon exoplatform
-createSBFromDevelop spnego-addon exoplatform
+createSBFromDevelop spnego-addon exo-addons
 createSBFromDevelop task exo-addons
-createSBFromDevelop wcm-template-pack exoplatform
+createSBFromDevelop wcm-template-pack exo-addons
 createSBFromDevelop web-conferencing exo-addons
 
 ## Distrib
