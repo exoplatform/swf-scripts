@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/space-profile-banner
+BRANCH_TO_DELETE=feature/files-in-es
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
