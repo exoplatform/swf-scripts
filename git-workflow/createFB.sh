@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=harmonize-cache
-ISSUE=SWF-4257
+BRANCH=upgrade-jboss-71
+ISSUE=SWF-4292
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.1.x-SNAPSHOT
