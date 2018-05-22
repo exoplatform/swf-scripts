@@ -2,16 +2,19 @@
 
 # Script to create Translation branches:
 # * X-x.x-translation
-VERSION=5.0.x-translation
+VERSION=5.1.x-translation
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=integration/$VERSION
 
-SCRIPTDIR=$(cd $(dirname "$0"); pwd)
+SCRIPTDIR=$(
+  cd $(dirname "$0")
+  pwd
+)
 CURRENTDIR=$(pwd)
 
 SWF_TB_REPOS=${SWF_TB_REPOS:-$CURRENTDIR}
 
-function createTranslationBranche(){
+function createTranslationBranche() {
   local repo_name=$1
   printf "\e[1;33m########################################\e[m\n"
   printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
@@ -31,10 +34,12 @@ function createTranslationBranche(){
     git checkout -b $TARGET_BRANCH
   else
     printf "\e[1;35m# %s\e[m\n" "WARNING : the ${TARGET_BRANCH} branch already exists so we reuse it (you have 5 seconds to cancel with CTRL+C) ..."
-    sleep 5
+    # sleep 5
+    git reset --hard $ORIGIN_BRANCH
+    GIT_OPT="--force"
   fi
   set -e
-  git push origin $TARGET_BRANCH --set-upstream
+  git push ${GIT_OPT} origin $TARGET_BRANCH --set-upstream
   git checkout develop
   popd
 }
@@ -53,5 +58,9 @@ createTranslationBranche integration
 createTranslationBranche platform
 createTranslationBranche platform-public-distributions
 createTranslationBranche platform-private-distributions
+createTranslationBranche task
+createTranslationBranche chat-application
+createTranslationBranche wcm-template-pack
+createTranslationBranche web-conferencing
 
 popd
