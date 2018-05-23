@@ -5,15 +5,15 @@
 # Usage:
 # * init-crowdin-project.sh <crowdin_project_name> <crowdin_project_key>
 
-PLF_VERSION=4.4.x
-CHAT_ADDON_VERSION=1.4.x
-TASK_ADDON_VERSION=1.2.x
-VIDEO_CALL_ADDON_VERSION=1.4.x
-WEB_PACK_ADDON_VERSION=1.1.x
+PLF_VERSION=5.0.x
+CHAT_ADDON_VERSION=2.0.x
+TASK_ADDON_VERSION=2.0.x
+WEB_CONFERENCING_ADDON_VERSION=1.1.x
+WEB_PACK_ADDON_VERSION=2.0.x
 
 CROWDIN_PROJECT_NAME=$1
 CROWDIN_PROJECT_KEY=$2
-LANGUAGES=en,ar,ca,nl,fr,de,el,it,ja,fa,pl,pt-BR,ru,zh-CN,sl,es-ES,tr,uk,vi,sq
+LANGUAGES=en,ar,az,ca,ceb,cs,nl,fr,de,el,it,ja,fa,fil,fi,hi,hu,id,kab,ko,lt,ms,no,pcm,pl,pt-BR,pt-PT,ro,ru,sk,sl,sv-SE,tl,th,ut-IN,zh-CN,zh-TW,es-ES,tr,uk,vi
 
 CROWDIN_MAVEN_PLUGIN_VERSION=1.2.x-SNAPSHOT
 
@@ -30,17 +30,19 @@ function initTranslation() {
   echo "# Project $gitRepo - branch $gitBranch"
   echo "############################################################################"
   echo "Clone git repo exoplatform/$project - branch $gitBranch"
-  pushd sources && /usr/bin/git clone git@github.com:$gitRepo.git
-  cd $project && /usr/bin/git branch ${gitBranch} origin/${gitBranch} && git checkout ${gitBranch}
+  pushd $project
+  /usr/bin/git branch ${gitBranch} origin/${gitBranch} && git checkout ${gitBranch}
+  /usr/bin/git checkout ${gitBranch} && git reset --hard origin/${gitBranch}
   echo "Upload translations of repo $gitRepo in Crowdin"
-  mvn org.exoplatform.translation.crowdin:crowdin-maven-plugin:${CROWDIN_MAVEN_PLUGIN_VERSION}:upload-translation -Dexo.crowdin.project.key=${CROWDIN_PROJECT_KEY} -Dexo.crowdin.project.id=${CROWDIN_PROJECT_NAME} -Dexo.crowdin.autoApprovedImported=true -Dlangs=${LANGUAGES}
+  mvn clean
+  mvn org.exoplatform.translation.crowdin:crowdin-maven-plugin:${CROWDIN_MAVEN_PLUGIN_VERSION}:upload-translation -Dexo.crowdin.project.key=${CROWDIN_PROJECT_KEY} -Dexo.crowdin.project.id=${CROWDIN_PROJECT_NAME} -Dexo.crowdin.autoApprovedImported=true -Dlangs="${LANGUAGES}"
   popd
 }
 
 set -e
 mkdir -p sources
 
-projects=("gatein-portal:${PLF_VERSION}" "platform-ui:${PLF_VERSION}" "commons:${PLF_VERSION}" "ecms:${PLF_VERSION}" "social:${PLF_VERSION}" "wiki:${PLF_VERSION}" "forum:${PLF_VERSION}" "calendar:${PLF_VERSION}" "integration:${PLF_VERSION}" "platform:${PLF_VERSION}" "platform-public-distributions:${PLF_VERSION}" "platform-private-distributions:${PLF_VERSION}" "chat-application:${CHAT_ADDON_VERSION}" "task:${TASK_ADDON_VERSION}" "weemo-extension:${VIDEO_CALL_ADDON_VERSION}" "wcm-template-pack:${WEB_PACK_ADDON_VERSION}")
+projects=("gatein-portal:${PLF_VERSION}" "platform-ui:${PLF_VERSION}" "commons:${PLF_VERSION}" "ecms:${PLF_VERSION}" "social:${PLF_VERSION}" "wiki:${PLF_VERSION}" "forum:${PLF_VERSION}" "calendar:${PLF_VERSION}" "integration:${PLF_VERSION}" "platform:${PLF_VERSION}" "platform-public-distributions:${PLF_VERSION}" "platform-private-distributions:${PLF_VERSION}" "chat-application:${CHAT_ADDON_VERSION}" "task:${TASK_ADDON_VERSION}" "wcm-template-pack:${WEB_PACK_ADDON_VERSION}" "web-conferencing:${WEB_CONFERENCING_ADDON_VERSION}") 
 
 for projectWithVersion in "${projects[@]}"
 do
