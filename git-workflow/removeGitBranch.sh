@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/files-in-es
+BRANCH_TO_DELETE=feature/improve-user-synchronization
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(cd $(dirname "$0"); pwd)
@@ -52,6 +52,7 @@ deleteGitBranch task
 deleteGitBranch remote-edit
 deleteGitBranch wcm-template-pack
 deleteGitBranch enterprise-skin
+deleteGitBranch web-conferencing
 
 deleteGitBranch platform-public-distributions
 deleteGitBranch platform-private-distributions
