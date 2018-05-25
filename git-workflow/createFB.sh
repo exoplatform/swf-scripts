@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=harmonize-cache
-ISSUE=SWF-4257
+BRANCH=edit-activities-comments
+ISSUE=SWF-4350
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.1.x-SNAPSHOT
