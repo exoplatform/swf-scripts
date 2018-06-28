@@ -18,18 +18,19 @@ done
 REMOTE=origin
 LOCAL_BRANCH=develop
 
-PREVIOUS_VERSION=17-M01
-NEXT_VERSION=17-RC01
+PREVIOUS_VERSION=9-M02
+NEXT_VERSION=9-RC01
 ISSUE=SWF-4382
-PROJECT=cf-parent
+PROJECT=addons-parent-pom
 
-# REMOTE_BRANCH=$REMOTE/$LOCAL_BRANCH
 #REPLACE_WHAT="<org.gatein.portal.version>3.5.10.Final-SNAPSHOT</org.gatein.portal.version>"
 #REPLACE_BY="<org.gatein.portal.version>3.5.11.Final-SNAPSHOT</org.gatein.portal.version>"
 #COMMIT_MSG="Update Gatein 3.5.10.Final-SNAPSHOT -> 3.5.10.Final-SNAPSHOT"
+
 REPLACE_WHAT="<version>${PREVIOUS_VERSION}</version>"
 REPLACE_BY="<version>${NEXT_VERSION}</version>"
 COMMIT_MSG="${ISSUE}: Upgrade ${PROJECT} ${PREVIOUS_VERSION} -> ${NEXT_VERSION}"
+
 #REPLACE_WHAT="<version>13-SNAPSHOT</version>"
 #REPLACE_BY="<version>13</version>"
 #COMMIT_MSG="Use maven-parent-pom 13"
