@@ -17,13 +17,19 @@ done
 
 REMOTE=origin
 LOCAL_BRANCH=develop
+
+PREVIOUS_VERSION=17-M01
+NEXT_VERSION=17-RC01
+ISSUE=SWF-4382
+PROJECT=cf-parent
+
 # REMOTE_BRANCH=$REMOTE/$LOCAL_BRANCH
 #REPLACE_WHAT="<org.gatein.portal.version>3.5.10.Final-SNAPSHOT</org.gatein.portal.version>"
 #REPLACE_BY="<org.gatein.portal.version>3.5.11.Final-SNAPSHOT</org.gatein.portal.version>"
 #COMMIT_MSG="Update Gatein 3.5.10.Final-SNAPSHOT -> 3.5.10.Final-SNAPSHOT"
-REPLACE_WHAT="<version>18-M02</version>"
-REPLACE_BY="<version>18-RC01</version>"
-COMMIT_MSG="SWF-4382: Upgrade maven-parent-pom 18-M02 -> 18-RC01"
+REPLACE_WHAT="<version>${PREVIOUS_VERSION}</version>"
+REPLACE_BY="<version>${NEXT_VERSION}</version>"
+COMMIT_MSG="${ISSUE}: Upgrade ${PROJECT} ${PREVIOUS_VERSION} -> ${NEXT_VERSION}"
 #REPLACE_WHAT="<version>13-SNAPSHOT</version>"
 #REPLACE_BY="<version>13</version>"
 #COMMIT_MSG="Use maven-parent-pom 13"
@@ -72,38 +78,38 @@ if $PUSH_CHANGES; then
 fi
 
 # Supported
-# updateProject juzu master
+updateProject juzu master
 
-# updateProject gatein-wci
-# updateProject kernel
-# updateProject core
-# updateProject ws
-# updateProject jcr
-# updateProject gatein-dep
-# updateProject gatein-sso
-# updateProject gatein-pc
-# updateProject gatein-portal
+updateProject gatein-wci
+updateProject kernel
+updateProject core
+updateProject ws
+updateProject jcr
+updateProject gatein-dep
+updateProject gatein-sso
+updateProject gatein-pc
+updateProject gatein-portal
 
-# ## PLF
-# updateProject docs-style
-# updateProject platform-ui
-# updateProject commons
-# updateProject ecms
-# updateProject social
-# updateProject wiki
-# updateProject forum
-# updateProject calendar
-# updateProject integration
-# updateProject platform
+## PLF
+updateProject docs-style
+updateProject platform-ui
+updateProject commons
+updateProject ecms
+updateProject social
+updateProject wiki
+updateProject forum
+updateProject calendar
+updateProject integration
+updateProject platform
 
-# ## Addons
-# updateProject addons-manager
-# updateProject answers
-# updateProject cas-addon
-# updateProject chat-application
-# updateProject cmis-addon
-# # updateProject crash-addon
-# updateProject exo-es-embedded
+## Addons
+updateProject addons-manager
+updateProject answers
+updateProject cas-addon
+updateProject chat-application
+updateProject cmis-addon
+# updateProject crash-addon
+updateProject exo-es-embedded
 
 updateProject enterprise-skin
 updateProject openam-addon
