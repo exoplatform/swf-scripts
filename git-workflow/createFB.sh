@@ -35,6 +35,9 @@ ADDON_WEB_PACK_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
 # Add-on eXo Web Conferencing
 ADDON_WEB_CONFERENCING_ORIGIN_VERSION=1.2.x-SNAPSHOT
 ADDON_WEB_CONFERENCING_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
+# Add-on eXo Push notifications
+ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
 
 SCRIPTDIR=$(
 	cd $(dirname "$0")
@@ -89,6 +92,7 @@ function replaceProjectVersion() {
 	exo-es-embedded) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ES_EMBED_ORIGIN_VERSION</version>" "<version>$ADDON_ES_EMBED_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	gatein-dep) $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	maven-depmgt-pom) $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	push-notifications) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</version>" "<version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	remote-edit) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</version>" "<version>$ADDON_REMOTE_EDIT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	task) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_TASK_ORIGIN_VERSION</version>" "<version>$ADDON_TASK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	wcm-template-pack) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_PACK_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_PACK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -144,6 +148,7 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-pack.version>$ADDON_WEB_PACK_ORIGIN_VERSION</addon.exo.web-pack.version>" "<addon.exo.web-pack.version>$ADDON_WEB_PACK_TARGET_VERSION</addon.exo.web-pack.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.enterprise-skin.version>$ORIGIN_VERSION</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>$TARGET_VERSION</addon.exo.enterprise-skin.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-conferencing.version>$ORIGIN_VERSION</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>$TARGET_VERSION</addon.exo.web-conferencing.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</addon.exo.push-notifications.version>" "pom.xml -not -wholename \"*/target/*\""
 }
 
 function createFB() {
@@ -191,13 +196,14 @@ createFB calendar
 createFB integration
 createFB platform
 
-createFB exo-es-embedded
 createFB answers
 createFB chat-application
+createFB enterprise-skin
+createFB exo-es-embedded
+createFB push-notifications
 createFB task
 createFB remote-edit
 createFB wcm-template-pack
-createFB enterprise-skin
 createFB web-conferencing
 
 createFB platform-public-distributions
