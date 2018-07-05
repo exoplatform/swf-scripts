@@ -1,26 +1,29 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/upgrade-jboss-71
+BRANCH_TO_DELETE=feature/idm-data-import
 DEFAULT_BRANCH=develop
 
-SCRIPTDIR=$(cd $(dirname "$0"); pwd)
+SCRIPTDIR=$(
+	cd $(dirname "$0")
+	pwd
+)
 CURRENTDIR=$(pwd)
 
 SWF_FB_REPOS=${SWF_FB_REPOS:-$CURRENTDIR}
 #echo "FB source dirs = ${SWF_FB_REPOS}"
 
-function deleteGitBranch(){
-  echo "########################################"
-  echo "##### repo : $(basename $1)"
-  echo "########################################"
-  pushd $1
-  git reset --hard origin/$DEFAULT_BRANCH
-  git clean -df
-  git checkout $DEFAULT_BRANCH
+function deleteGitBranch() {
+	echo "########################################"
+	echo "##### repo : $(basename $1)"
+	echo "########################################"
+	pushd $1
+	git reset --hard origin/$DEFAULT_BRANCH
+	git clean -df
+	git checkout $DEFAULT_BRANCH
 
-  git branch -D $BRANCH_TO_DELETE || true
-  git push origin --delete $BRANCH_TO_DELETE || true
-  popd
+	git branch -D $BRANCH_TO_DELETE || true
+	git push origin --delete $BRANCH_TO_DELETE || true
+	popd
 }
 
 #pushd ${SWF_FB_REPOS}
@@ -45,13 +48,14 @@ deleteGitBranch calendar
 deleteGitBranch integration
 deleteGitBranch platform
 
-deleteGitBranch exo-es-embedded
 deleteGitBranch answers
 deleteGitBranch chat-application
-deleteGitBranch task
-deleteGitBranch remote-edit
-deleteGitBranch wcm-template-pack
 deleteGitBranch enterprise-skin
+deleteGitBranch exo-es-embedded
+deleteGitBranch push-notifications
+deleteGitBranch remote-edit
+deleteGitBranch task
+deleteGitBranch wcm-template-pack
 deleteGitBranch web-conferencing
 
 deleteGitBranch platform-public-distributions
