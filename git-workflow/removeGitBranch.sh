@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/idm-data-import
+BRANCH_TO_DELETE=feature/improve-chat-ux
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(
