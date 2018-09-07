@@ -201,8 +201,8 @@ createFB chat-application
 createFB enterprise-skin
 createFB exo-es-embedded
 createFB push-notifications
-createFB task
 createFB remote-edit
+createFB task
 createFB wcm-template-pack
 createFB web-conferencing
 
