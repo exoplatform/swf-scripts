@@ -219,7 +219,7 @@ function createSBFromDevelop() {
 	esac
 	echo "Create stable branch ${stableBranch}"
 	git checkout -f -B ${stableBranch}
-	# git push origin ${stableBranch}
+	#git push origin ${stableBranch}
 
 	echo "Prepare next version ${nextVersion}"
 	git checkout $masterBranch
@@ -273,13 +273,13 @@ function createSBFromDevelop() {
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.chat.version>${CHAT_APPLICATION_CURRENT_VERSION}</addon.exo.chat.version>" "<addon.exo.chat.version>${CHAT_APPLICATION_NEXT_VERSION}</addon.exo.chat.version>"
 
 	git commit -m "$ISSUE: Update projects versions to ${nextVersion}" -a
-	# git push ${devRemoteName} ${masterBranch}
+	#git push ${devRemoteName} ${masterBranch}
 
 	popd
 }
 
 # Not yet supported
-# createSBFromDevelop cf-parent
+# createSBFromDevelop cf-parent exoplatform
 # createSBFromDevelop maven-depmgt-pom
 
 # Supported
@@ -317,7 +317,7 @@ createSBFromDevelop exo-es-embedded exo-addons
 createSBFromDevelop enterprise-skin exoplatform
 createSBFromDevelop openam-addon exo-addons
 createSBFromDevelop remote-edit exo-addons
-createSBFromDevelop saml2-addon exoplatform
+createSBFromDevelop saml2-addon exo-addons
 createSBFromDevelop spnego-addon exo-addons
 createSBFromDevelop task exo-addons
 createSBFromDevelop wcm-template-pack exo-addons
