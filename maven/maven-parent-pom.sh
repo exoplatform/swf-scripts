@@ -62,16 +62,16 @@ updateProject (){
   git diff
   pause "(project: $1) Press [Enter] key to continue... We will commit with message : $COMMIT_MSG"
   git commit -m "$COMMIT_MSG" -a || true
-  git push $REMOTE
+  # git push $REMOTE
 
   popd
 }
 
 # CF projects
-# updateProject kernel                                stable/5.0.x
-# updateProject core                                  stable/5.0.x
-# updateProject ws                                    stable/5.0.x
-# updateProject jcr                                   stable/5.0.x
+ updateProject kernel                                stable/5.0.x
+ updateProject core                                  stable/5.0.x
+ updateProject ws                                    stable/5.0.x
+ updateProject jcr                                   stable/5.0.x
 
 # PLF projects
 # updateProject docs-style                            stable/5.0.x
