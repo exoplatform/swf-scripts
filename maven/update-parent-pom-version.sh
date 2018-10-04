@@ -18,10 +18,10 @@ done
 REMOTE=origin
 LOCAL_BRANCH=develop
 
-PREVIOUS_VERSION=18-SNAPSHOT
-NEXT_VERSION=18-M01
+PREVIOUS_VERSION=19-SNAPSHOT
+NEXT_VERSION=19-M01
 ISSUE=SWF-4468
-PROJECT=cf-parent
+PROJECT=maven-parent-pom
 
 #REPLACE_WHAT="<org.gatein.portal.version>3.5.10.Final-SNAPSHOT</org.gatein.portal.version>"
 #REPLACE_BY="<org.gatein.portal.version>3.5.11.Final-SNAPSHOT</org.gatein.portal.version>"
@@ -72,7 +72,7 @@ updateProject() {
 			echo
 			echo "===== push disabled : issued command will be |git push $REMOTE $branch|"
 			echo
-			
+
 		fi
 	fi
 	popd
