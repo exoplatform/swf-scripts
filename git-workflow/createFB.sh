@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=edit-activities-comments
-ISSUE=SWF-4350
+BRANCH=secure-jcr-folders
+ISSUE=SWF-4322
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.2.x-SNAPSHOT
