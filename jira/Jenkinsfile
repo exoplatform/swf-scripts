@@ -1,0 +1,31 @@
+pipeline {
+    parameters {
+        string(name: 'dockerImage', defaultValue: 'golang')
+        string(name: 'dockerImageVersion', defaultValue: '1.11.4-stretch')
+        string(name: 'jiraCredentialsId', defaultValue: 'jiraCredentials')
+        string(name: 'projects', defaultValue:'ITOP,SWF,ACC,RELEASE,ACCOUNTS,QAF,DOCKER,TQA')
+    }
+
+    agent { node { label 'ci-docker' } } 
+
+    triggers { 
+        cron('H 9 * * 1') // Each monday between 09:00 and 10:00 
+    }
+
+    stages {
+            stage('Releasing projects ${projects}') {
+                steps {
+                    script {
+                        def dockerImage = docker.image("${params.dockerImage}:${env.dockerImageVersion}");
+                        withCredentials([usernamePassword(credentialsId: jiraCredentialsId, usernameVariable: 'username', passwordVariable: 'password')]) {
+                            dockerImage.inside("-e GOCACHE=/tmp/gocache -e username=${username} -e password=${password} -v ${WORKSPACE}/jira:/src -w /src") {
+                                for (project in env.projects.split(",")) {
+                                    sh "cd /src && go run new_version.go ${project}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
