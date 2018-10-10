@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=spaces-administration
-ISSUE=SWF-4477
+BRANCH=wiki-editor
+ISSUE=SWF-4478
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.2.x-SNAPSHOT
