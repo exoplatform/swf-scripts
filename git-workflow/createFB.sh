@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=secure-jcr-folders
-ISSUE=SWF-4322
+BRANCH=spaces-administration
+ISSUE=SWF-4477
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.2.x-SNAPSHOT
