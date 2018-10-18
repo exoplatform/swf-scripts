@@ -1,15 +1,20 @@
 #!/bin/bash -eu
 # Script to init a new Crowdin project (mainly used to init maintenance project)
+# Copy the translations from develop to the stable project
+# To launch on blessed repositories
 # Requirements:
 # * Crowdin project must be created, and configured with the right languages
 # Usage:
 # * init-crowdin-project.sh <crowdin_project_name> <crowdin_project_key>
 
-PLF_VERSION=5.0.x
-CHAT_ADDON_VERSION=2.0.x
-TASK_ADDON_VERSION=2.0.x
+
+# Stable versions
+PLF_VERSION=5.1.x
+CHAT_ADDON_VERSION=2.1.x
+TASK_ADDON_VERSION=2.1.x
 WEB_CONFERENCING_ADDON_VERSION=1.1.x
-WEB_PACK_ADDON_VERSION=2.0.x
+WEB_PACK_ADDON_VERSION=2.1.x
+PUSH_NOTIFICATIONS_ADDON_VERSION=1.0.x
 
 CROWDIN_PROJECT_NAME=$1
 CROWDIN_PROJECT_KEY=$2
@@ -42,7 +47,7 @@ function initTranslation() {
 set -e
 mkdir -p sources
 
-projects=("gatein-portal:${PLF_VERSION}" "platform-ui:${PLF_VERSION}" "commons:${PLF_VERSION}" "ecms:${PLF_VERSION}" "social:${PLF_VERSION}" "wiki:${PLF_VERSION}" "forum:${PLF_VERSION}" "calendar:${PLF_VERSION}" "integration:${PLF_VERSION}" "platform:${PLF_VERSION}" "platform-public-distributions:${PLF_VERSION}" "platform-private-distributions:${PLF_VERSION}" "chat-application:${CHAT_ADDON_VERSION}" "task:${TASK_ADDON_VERSION}" "wcm-template-pack:${WEB_PACK_ADDON_VERSION}" "web-conferencing:${WEB_CONFERENCING_ADDON_VERSION}") 
+projects=("gatein-portal:${PLF_VERSION}" "platform-ui:${PLF_VERSION}" "commons:${PLF_VERSION}" "ecms:${PLF_VERSION}" "social:${PLF_VERSION}" "wiki:${PLF_VERSION}" "forum:${PLF_VERSION}" "calendar:${PLF_VERSION}" "integration:${PLF_VERSION}" "platform:${PLF_VERSION}" "platform-public-distributions:${PLF_VERSION}" "platform-private-distributions:${PLF_VERSION}" "chat-application:${CHAT_ADDON_VERSION}" "push-notifications:${PUSH_NOTIFICATIONS_ADDON_VERSION}" "task:${TASK_ADDON_VERSION}" "wcm-template-pack:${WEB_PACK_ADDON_VERSION}" "web-conferencing:${WEB_CONFERENCING_ADDON_VERSION}") 
 
 for projectWithVersion in "${projects[@]}"
 do
