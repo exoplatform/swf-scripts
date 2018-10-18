@@ -2,7 +2,7 @@
 
 # Script to create Translation branches:
 # * X-x.x-translation
-VERSION=5.1.x-translation
+VERSION=5.2.x-translation
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=integration/$VERSION
 
@@ -28,6 +28,8 @@ function createTranslationBranche() {
   git reset --hard HEAD
   git pull
   printf "\e[1;33m# %s\e[m\n" "Testing if ${TARGET_BRANCH} branch doesn't already exists and reuse it ..."
+  GIT_OPT=""
+
   set +e
   git checkout $TARGET_BRANCH
   if [ "$?" -ne "0" ]; then
@@ -62,5 +64,7 @@ createTranslationBranche task
 createTranslationBranche chat-application
 createTranslationBranche wcm-template-pack
 createTranslationBranche web-conferencing
+createTranslationBranche lecko
+createTranslationBranche push-notifications
 
 popd
