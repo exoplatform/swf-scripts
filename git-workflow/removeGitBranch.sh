@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/improve-chat-ux
+BRANCH_TO_DELETE=feature/push-notifications
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(
