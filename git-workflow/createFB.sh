@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=wiki-editor
-ISSUE=SWF-4478
+BRANCH=create-event
+ISSUE=SWF-4553
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.2.x-SNAPSHOT
@@ -17,9 +17,6 @@ GATEIN_DEP_TARGET_VERSION=1.7.x-$BRANCH-SNAPSHOT
 # Add-on eXo ElasticSearch Embedded
 ADDON_ES_EMBED_ORIGIN_VERSION=2.2.x-SNAPSHOT
 ADDON_ES_EMBED_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
-# Add-on eXo Answers
-ADDON_ANSWERS_ORIGIN_VERSION=2.2.x-SNAPSHOT
-ADDON_ANSWERS_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
 # Add-on eXo Chat
 ADDON_CHAT_ORIGIN_VERSION=2.2.x-SNAPSHOT
 ADDON_CHAT_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
@@ -38,6 +35,9 @@ ADDON_WEB_CONFERENCING_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
 # Add-on eXo Push notifications
 ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+# Add-on eXo Lecko
+ADDON_LECKO_ORIGIN_VERSION=1.3.x-SNAPSHOT
+ADDON_LECKO_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
 
 SCRIPTDIR=$(
 	cd $(dirname "$0")
@@ -74,7 +74,7 @@ function repoCleanup() {
 		git checkout -b $TARGET_BRANCH
 	else
 		printf "\e[1;35m# %s\e[m\n" "WARNING : the ${TARGET_BRANCH} branch already exists so we will delete it (you have 5 seconds to cancel with CTRL+C) ($repo_name) ..."
-		sleep 5
+		# sleep 5
 		git checkout $ORIGIN_BRANCH
 		git branch -D $TARGET_BRANCH
 		git checkout -b $TARGET_BRANCH
@@ -87,10 +87,10 @@ function replaceProjectVersion() {
 	printf "\e[1;33m# %s\e[m\n" "Modifying versions in the project POMs ($repo_name) ..."
 	set -e
 	case $repo_name in
-	answers) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ANSWERS_ORIGIN_VERSION</version>" "<version>$ADDON_ANSWERS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	chat-application) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CHAT_ORIGIN_VERSION</version>" "<version>$ADDON_CHAT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	exo-es-embedded) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ES_EMBED_ORIGIN_VERSION</version>" "<version>$ADDON_ES_EMBED_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	gatein-dep) $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	lecko) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LECKO_ORIGIN_VERSION</version>" "<version>$ADDON_LECKO_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	maven-depmgt-pom) $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	push-notifications) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</version>" "<version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	remote-edit) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</version>" "<version>$ADDON_REMOTE_EDIT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -141,7 +141,7 @@ function replaceProjectAddons() {
 	printf "\e[1;33m# %s\e[m\n" "Modifying add-ons versions in the packaging project POMs ($repo_name) ..."
 
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_ORIGIN_VERSION</addon.exo.es.embedded.version>" "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_TARGET_VERSION</addon.exo.es.embedded.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.answers.version>$ADDON_ANSWERS_ORIGIN_VERSION</addon.exo.answers.version>" "<addon.exo.answers.version>$ADDON_ANSWERS_TARGET_VERSION</addon.exo.answers.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.lecko.version>$ADDON_LECKO_ORIGIN_VERSION</addon.exo.lecko.version>" "<addon.exo.lecko.version>$ADDON_LECKO_TARGET_VERSION</addon.exo.lecko.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</addon.exo.remote-edit.version>" "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_TARGET_VERSION</addon.exo.remote-edit.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -196,10 +196,10 @@ createFB calendar
 createFB integration
 createFB platform
 
-createFB answers
 createFB chat-application
 createFB enterprise-skin
 createFB exo-es-embedded
+createFB lecko
 createFB push-notifications
 createFB remote-edit
 createFB task
