@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=create-event
-ISSUE=SWF-4553
+BRANCH=login-history-jpa
+ISSUE=SWF-4624
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.2.x-SNAPSHOT
