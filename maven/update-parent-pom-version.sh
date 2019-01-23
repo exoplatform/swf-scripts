@@ -112,12 +112,15 @@ updateProject platform # stable/5.1.x
 
 ## Addons
 updateProject addons-manager # stable/1.3.x
-updateProject answers # stable/2.1.x
+# Not supported starting from 5.2.0
+# updateProject answers # stable/2.1.x
 updateProject cas-addon # stable/2.1.x
 updateProject chat-application # stable/2.1.x
 updateProject cmis-addon # stable/5.1.x
+# Not supported starting 5.1.x
 # updateProject crash-addon
 updateProject exo-es-embedded # stable/2.1.x
+# Supported since 5.2.0
 updateProject lecko # stable/5.1.x
 
 updateProject enterprise-skin # stable/5.1.x
