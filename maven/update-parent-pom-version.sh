@@ -18,10 +18,10 @@ done
 REMOTE=origin
 LOCAL_BRANCH=develop
 
-PREVIOUS_VERSION=10-SNAPSHOT
-NEXT_VERSION=10-M01
-ISSUE=SWF-4468
-PROJECT=addons-parent-pom
+PREVIOUS_VERSION=19-M01
+NEXT_VERSION=19-RC01
+ISSUE=SWF-4652
+PROJECT=maven-parent-pom
 
 #REPLACE_WHAT="<org.gatein.portal.version>3.5.10.Final-SNAPSHOT</org.gatein.portal.version>"
 #REPLACE_BY="<org.gatein.portal.version>3.5.11.Final-SNAPSHOT</org.gatein.portal.version>"
@@ -118,6 +118,7 @@ updateProject chat-application # stable/2.1.x
 updateProject cmis-addon # stable/5.1.x
 # updateProject crash-addon
 updateProject exo-es-embedded # stable/2.1.x
+updateProject lecko # stable/5.1.x
 
 updateProject enterprise-skin # stable/5.1.x
 updateProject openam-addon # stable/2.1.x
