@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/push-notifications
+BRANCH_TO_DELETE=feature/spaces-administration
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(
@@ -48,10 +48,11 @@ deleteGitBranch calendar
 deleteGitBranch integration
 deleteGitBranch platform
 
-deleteGitBranch answers
+# deleteGitBranch answers # Not after 5.1
 deleteGitBranch chat-application
 deleteGitBranch enterprise-skin
 deleteGitBranch exo-es-embedded
+deleteGitBranch lecko
 deleteGitBranch push-notifications
 deleteGitBranch remote-edit
 deleteGitBranch task
