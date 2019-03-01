@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/spaces-administration
+BRANCH_TO_DELETE=feature/login-history-jpa
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(
