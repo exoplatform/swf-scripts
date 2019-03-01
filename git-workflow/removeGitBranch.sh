@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/login-history-jpa
+BRANCH_TO_DELETE=feature/edit-activities-comments
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(
