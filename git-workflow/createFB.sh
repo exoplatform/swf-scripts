@@ -5,7 +5,7 @@
 BRANCH=ACC210
 ISSUE=SWF-4697
 ORIGIN_BRANCH=5.1.2
-TARGET_BRANCH=project/$BRANCH
+TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.1.2
 TARGET_VERSION=5.1.x-$BRANCH-SNAPSHOT
 
@@ -175,7 +175,7 @@ function createFB() {
 
 	printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ($repo_name) ..."
 	git commit -m "$ISSUE: Create FB $BRANCH and update projects versions/dependencies" -a
-	git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
+	#git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
 	git checkout develop
 	popd
 }
