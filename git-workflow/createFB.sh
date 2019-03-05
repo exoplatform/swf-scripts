@@ -2,42 +2,49 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=spaces-groups-binding
-ISSUE=SWF-4625
-ORIGIN_BRANCH=feature/spaces-administration
-TARGET_BRANCH=feature/$BRANCH
-ORIGIN_VERSION=5.2.x-spaces-administration-SNAPSHOT
-TARGET_VERSION=5.2.x-$BRANCH-SNAPSHOT
+BRANCH=ACC210
+ISSUE=SWF-4697
+ORIGIN_BRANCH=5.1.2
+TARGET_BRANCH=project/$BRANCH
+ORIGIN_VERSION=5.1.2
+TARGET_VERSION=5.1.x-$BRANCH-SNAPSHOT
+
 # Maven DEPMGT
-DEPMGT_ORIGIN_VERSION=15.x-spaces-administration-SNAPSHOT
-DEPMGT_TARGET_VERSION=15.x-$BRANCH-SNAPSHOT
+DEPMGT_ORIGIN_VERSION=14.2
+DEPMGT_TARGET_VERSION=14.2.x-$BRANCH-SNAPSHOT
 # GateIn DEPMGT
-GATEIN_DEP_ORIGIN_VERSION=1.7.x-spaces-administration-SNAPSHOT
-GATEIN_DEP_TARGET_VERSION=1.7.x-$BRANCH-SNAPSHOT
+GATEIN_DEP_ORIGIN_VERSION=1.6.2
+GATEIN_DEP_TARGET_VERSION=1.6.x-$BRANCH-SNAPSHOT
 # Add-on eXo ElasticSearch Embedded
-ADDON_ES_EMBED_ORIGIN_VERSION=2.2.x-spaces-administration-SNAPSHOT
-ADDON_ES_EMBED_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
+ADDON_ES_EMBED_ORIGIN_VERSION=2.1.2
+ADDON_ES_EMBED_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
 # Add-on eXo Chat
-ADDON_CHAT_ORIGIN_VERSION=2.2.x-spaces-administration-SNAPSHOT
-ADDON_CHAT_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
+ADDON_CHAT_ORIGIN_VERSION=2.1.2
+ADDON_CHAT_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
 # Add-on eXo Task
-ADDON_TASK_ORIGIN_VERSION=2.2.x-spaces-administration-SNAPSHOT
-ADDON_TASK_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
+ADDON_TASK_ORIGIN_VERSION=2.1.2
+ADDON_TASK_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
 # Add-on eXo Remote Edit
-ADDON_REMOTE_EDIT_ORIGIN_VERSION=2.2.x-spaces-administration-SNAPSHOT
-ADDON_REMOTE_EDIT_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
+ADDON_REMOTE_EDIT_ORIGIN_VERSION=2.1.2
+ADDON_REMOTE_EDIT_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
 # Add-on eXo Web Pack
-ADDON_WEB_PACK_ORIGIN_VERSION=2.2.x-spaces-administration-SNAPSHOT
-ADDON_WEB_PACK_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
+ADDON_WEB_PACK_ORIGIN_VERSION=2.1.2
+ADDON_WEB_PACK_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
 # Add-on eXo Web Conferencing
 ADDON_WEB_CONFERENCING_ORIGIN_VERSION=1.3.x-spaces-administration-SNAPSHOT
 ADDON_WEB_CONFERENCING_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
 # Add-on eXo Push notifications
 ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION=1.1.x-spaces-administration-SNAPSHOT
 ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
-# Add-on eXo Lecko
-ADDON_LECKO_ORIGIN_VERSION=1.3.x-spaces-administration-SNAPSHOT
-ADDON_LECKO_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo Lecko not available for 5.1.x
+#ADDON_LECKO_ORIGIN_VERSION=1.3.x-spaces-administration-SNAPSHOT
+#ADDON_LECKO_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
+
+#Add-on Answers
+ADDON_ANSWERS_ORIGIN_VERSION=2.1.2
+ADDON_ANSWER_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+
+
 
 SCRIPTDIR=$(
 	cd $(dirname "$0")
@@ -90,7 +97,7 @@ function replaceProjectVersion() {
 	chat-application) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CHAT_ORIGIN_VERSION</version>" "<version>$ADDON_CHAT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	exo-es-embedded) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ES_EMBED_ORIGIN_VERSION</version>" "<version>$ADDON_ES_EMBED_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	gatein-dep) $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	lecko) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LECKO_ORIGIN_VERSION</version>" "<version>$ADDON_LECKO_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	answers) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ANSWERS_ORIGIN_VERSION</version>" "<version>$ADDON_ANSWERS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	maven-depmgt-pom) $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	push-notifications) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</version>" "<version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	remote-edit) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</version>" "<version>$ADDON_REMOTE_EDIT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -141,7 +148,7 @@ function replaceProjectAddons() {
 	printf "\e[1;33m# %s\e[m\n" "Modifying add-ons versions in the packaging project POMs ($repo_name) ..."
 
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_ORIGIN_VERSION</addon.exo.es.embedded.version>" "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_TARGET_VERSION</addon.exo.es.embedded.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.lecko.version>$ADDON_LECKO_ORIGIN_VERSION</addon.exo.lecko.version>" "<addon.exo.lecko.version>$ADDON_LECKO_TARGET_VERSION</addon.exo.lecko.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.answers.version>$ADDON_ANSWERS_ORIGIN_VERSION</addon.exo.answers.version>" "<addon.exo.answers.version>$ADDON_ANSWERS_TARGET_VERSION</addon.exo.answers.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</addon.exo.remote-edit.version>" "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_TARGET_VERSION</addon.exo.remote-edit.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -199,7 +206,7 @@ createFB platform
 createFB chat-application
 createFB enterprise-skin
 createFB exo-es-embedded
-createFB lecko
+createFB answers
 createFB push-notifications
 createFB remote-edit
 createFB task
