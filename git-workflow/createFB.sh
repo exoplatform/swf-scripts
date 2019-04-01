@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=jdk11
-ISSUE=SWF-4730
+BRANCH=company-branding
+ISSUE=SWF-4731
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.3.x-SNAPSHOT
@@ -168,7 +168,7 @@ function createFB() {
 
 	printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ($repo_name) ..."
 	git commit -m "$ISSUE: Create FB $BRANCH and update projects versions/dependencies" -a
-	echo git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
+	git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
 	git checkout develop
 	popd
 }
