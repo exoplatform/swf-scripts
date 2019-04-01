@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=company-branding
-ISSUE=SWF-4731
+BRANCH=portal-rdbms
+ISSUE=SWF-3584
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.3.x-SNAPSHOT
@@ -183,7 +183,7 @@ createFB ws
 createFB jcr
 createFB gatein-pc
 createFB gatein-sso
-createFB gatein-portal
+# createFB gatein-portal
 createFB maven-depmgt-pom
 createFB docs-style
 createFB platform-ui
