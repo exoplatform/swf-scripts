@@ -204,6 +204,7 @@ createFB exo-es-embedded
 createFB lecko
 createFB push-notifications
 createFB remote-edit
+createFB openam-addon
 createFB saml2-addon
 createFB spnego-addon
 createFB task
