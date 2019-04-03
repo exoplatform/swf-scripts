@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=portal-rdbms
-ISSUE=SWF-3584
+BRANCH=spaces-groups-binding
+ISSUE=SWF-4625
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.3.x-SNAPSHOT
@@ -168,7 +168,7 @@ function createFB() {
 
 	printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ($repo_name) ..."
 	git commit -m "$ISSUE: Create FB $BRANCH and update projects versions/dependencies" -a
-	git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
+	# git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
 	git checkout develop
 	popd
 }
@@ -183,12 +183,12 @@ createFB ws
 createFB jcr
 createFB gatein-pc
 createFB gatein-sso
-# createFB gatein-portal
+createFB gatein-portal
 createFB maven-depmgt-pom
 createFB docs-style
 createFB platform-ui
 createFB commons
-createFB social
+# createFB social
 createFB ecms
 createFB wiki
 createFB forum
