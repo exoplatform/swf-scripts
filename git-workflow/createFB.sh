@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=spaces-groups-binding
-ISSUE=SWF-4625
+BRANCH=wiki-editor
+ISSUE=SWF-4478
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.3.x-SNAPSHOT
@@ -186,14 +186,14 @@ createFB gatein-sso
 createFB gatein-portal
 createFB maven-depmgt-pom
 createFB docs-style
-createFB platform-ui
-createFB commons
-# createFB social
+# createFB platform-ui
+# createFB commons
+createFB social
 createFB ecms
-createFB wiki
+# createFB wiki
 createFB forum
 createFB calendar
-createFB integration
+# createFB integration
 createFB platform
 
 createFB cas-addon
