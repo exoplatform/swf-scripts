@@ -92,6 +92,7 @@ result.each {
       end  
       print "[INFO] Done.\n"      
     end
+
     print "[INFO] Checkout develop branch (it is perhaps not the default) for ",repoName," ...\n"
     s = system("git checkout develop")
     if !s
@@ -120,17 +121,49 @@ result.each {
       next
     end
     print "[INFO] Done.\n"      
+
     print "[INFO] Reset develop to origin/develop for ",repoName," ...\n"
     s = system("git reset --hard origin/develop") 
     if !s
       abort("[ERROR] Reset develop to origin/develop for #{repoName} failed !!!\n")
     end
     print "[INFO] Done.\n"
+
     print "[INFO] Push develop branch content from dev repository to blessed repository ...\n"
     s = system("git push blessed develop")
     if !s
       abort("[ERROR] Push of develop branch updates to repository #{repoName} failed !!!\n")
     end  
+    print "[INFO] Done.\n"
+
+    # Synchronisation of project branches
+    s=`git branch -r`
+    s.each_line do |remoteBranch|
+        remoteBranch.gsub!(/\n/, "")
+        if remoteBranch =~ /origin\/project/
+            localBranch = "#{remoteBranch}"
+            localBranch.slice! "origin/"
+    
+            print "[INFO] Checkout #{localBranch}\n"
+            s = system("git checkout #{localBranch}")
+            if !s
+                print("[WARN] Checkout #{remoteBranch} branch of repository #{repoName} failed !!! Skip this branch\n")
+                next
+            end
+    
+            print "[INFO] Reset #{localBranch} to #{remoteBranch}\n"
+            s = system("git reset --hard #{remoteBranch}")
+            if !s
+                abort("[ERROR] Reset #{localBranch} to #{remoteBranch} for #{repoName} failed !!!\n")
+            end
+            print "[INFO] Push #{localBranch} branch content from dev repository to blessed repository ...\n"
+            s = system("git push --force blessed #{localBranch}")
+            if !s
+              abort("[ERROR] Push of master branch updates to repository #{repoName} failed !!!\n")
+            end  
+        end
+    end
+    
     print "[INFO] Done.\n"
 }
 

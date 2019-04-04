@@ -89,7 +89,10 @@ class SyncAddonsRepos
            else
              self.clone_addon_repo(addon_repo["name"], addon_repo["ssh_url"], addon_repo["ssh_url_fork_parent"])
            end
-           self.sync_addon_repo_to_blessed_repo(addon_repo["name"])
+           self.sync_develop_branch(addon_repo["name"])
+
+           self.sync_project_branches(addon_repo["name"])
+
            self.log(INFO,addon_repo["name"], "---FINISHED---\n")
 
            Dir.chdir here
@@ -122,7 +125,6 @@ class SyncAddonsRepos
     }
     print "[INFO][SUPPORTED_ADDONS] --------\n"
   end
-
 
   # Configure remote URL for a git repository
   def configure_addon_repo_urls(repoName, repoAddonURL, repoBlessedURL)
@@ -165,29 +167,67 @@ class SyncAddonsRepos
     self.log(INFO,repoName,"Done.")
   end
 
-  # chechout develop branch in exo-addons repository and push to develop branch in exoplatform repository
-  def sync_addon_repo_to_blessed_repo(repoName)
-    self.log(INFO,repoName,"Checkout develop branch (it is perhaps not the default) for #{repoName}...")
-    s = system("git checkout develop")
+  # chechout a branch in exo-addons repository and push to the same branch in exoplatform repository
+  def sync_addon_branch_to_blessed_repo(repoName, remoteBranch, localBranch, pushForce = false)
+    self.log(INFO,repoName,"Checkout #{remoteBranch} branch (it is perhaps not the default) for #{repoName}...")
+    s = system("git checkout #{remoteBranch}")
     if !s
-      print("[ERROR] No develop branch in repository #{repoName}, Skip this repo!!!\n")
+      print("[ERROR] No #{remoteBranch} branch in repository #{repoName}, Skip this repo!!!\n")
       self.log(INFO,repoName,"Done.")
       # Let's process the next one
     else
       self.log(INFO,repoName,"Done.")
-      self.log(INFO,repoName,"Reset develop to origin/develop for #{repoName} ...")
-      s = system("git reset --hard origin/develop")
+      self.log(INFO,repoName,"Reset #{localBranch} to #{remoteBranch} for #{repoName} ...")
+      s = system("git reset --hard #{remoteBranch}")
       if !s
-        abort("[ERROR] Reset develop to origin/develop for #{repoName} failed !!!\n")
+        abort("[ERROR] Reset #{localBranch} to #{remoteBranch} for #{repoName} failed !!!\n")
       end
       self.log(INFO,repoName,"Done.")
-      self.log(INFO,repoName,"Push develop branch content from exo-addons repository to blessed repository ...")
-      s = system("git push blessed develop")
+      self.log(INFO,repoName,"Push #{localBranch} branch content from exo-addons repository to blessed repository ...")
+
+      forceParam = ""
+      if pushForce
+        forceParam = "--force"
+      end
+
+      s = system("git push #{forceParam} blessed #{localBranch}")
       if !s
-        abort("[ERROR] Push of develop branch updates to repository #{repoName} failed !!!\n")
+        abort("[ERROR] Push of #{localBranch} branch updates to repository #{repoName} failed !!!\n")
       end
       self.log(INFO,repoName,"Done.")
     end
+  end
+
+  # Search for the project branches matching /project/...
+  def get_repository_project_branches(repoName)
+    self.log(INFO, repoName, "Searching for project branches...")
+    branches = []
+    b=`git branch -r`
+    b.each_line do |remoteBranch|
+      remoteBranch.gsub!(/\n/, "")
+      if remoteBranch =~ /origin\/project/
+        localBranch = "#{remoteBranch}"
+        localBranch.slice! "origin/"
+        branches << localBranch.strip! || localBranch
+      end
+    end
+    self.log(INFO, repoName, "Project branches found : #{branches}")
+    self.log(INFO, repoName, "Done.")
+    return branches
+  end
+
+  # sync project branches from exo_addons repository and push to exoplatorm repository
+  def sync_project_branches(repoName)
+    projectBranches = get_repository_project_branches(repoName)
+    projectBranches.each do |branch|
+      self.log(INFO, repoName, "Synchronize project branch #{branch}")
+      sync_addon_branch_to_blessed_repo(repoName, "origin/#{branch}", branch, true)
+    end
+  end
+
+  # chechout develop branch in exo-addons repository and push to develop branch in exoplatform repository
+  def sync_develop_branch(repoName)
+    sync_addon_branch_to_blessed_repo(repoName, "origin/develop", "develop", false)
   end
 
   def show_supported_addons
