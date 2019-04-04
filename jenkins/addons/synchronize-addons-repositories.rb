@@ -170,7 +170,7 @@ class SyncAddonsRepos
   # chechout a branch in exo-addons repository and push to the same branch in exoplatform repository
   def sync_addon_branch_to_blessed_repo(repoName, remoteBranch, localBranch, pushForce = false)
     self.log(INFO,repoName,"Checkout #{remoteBranch} branch (it is perhaps not the default) for #{repoName}...")
-    s = system("git checkout #{remoteBranch}")
+    s = system("git checkout #{localBranch}")
     if !s
       print("[ERROR] No #{remoteBranch} branch in repository #{repoName}, Skip this repo!!!\n")
       self.log(INFO,repoName,"Done.")
