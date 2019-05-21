@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=space-templates
-ISSUE=SWF-4761
+BRANCH=kill-shindig
+ISSUE=SWF-4795
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.3.x-SNAPSHOT
@@ -14,42 +14,52 @@ DEPMGT_TARGET_VERSION=16.x-$BRANCH-SNAPSHOT
 # GateIn DEPMGT
 GATEIN_DEP_ORIGIN_VERSION=1.8.x-SNAPSHOT
 GATEIN_DEP_TARGET_VERSION=1.8.x-$BRANCH-SNAPSHOT
-# Add-on eXo ElasticSearch Embedded
-ADDON_ES_EMBED_ORIGIN_VERSION=2.3.x-SNAPSHOT
-ADDON_ES_EMBED_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
-# Add-on eXo Chat
-ADDON_CHAT_ORIGIN_VERSION=2.3.x-SNAPSHOT
-ADDON_CHAT_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
-# Add-on eXo Task
-ADDON_TASK_ORIGIN_VERSION=2.3.x-SNAPSHOT
-ADDON_TASK_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
-# Add-on eXo Remote Edit
-ADDON_REMOTE_EDIT_ORIGIN_VERSION=2.3.x-SNAPSHOT
-ADDON_REMOTE_EDIT_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
-# Add-on eXo Web Pack
-ADDON_WEB_PACK_ORIGIN_VERSION=2.3.x-SNAPSHOT
-ADDON_WEB_PACK_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
-# Add-on eXo Web Conferencing
-ADDON_WEB_CONFERENCING_ORIGIN_VERSION=1.4.x-SNAPSHOT
-ADDON_WEB_CONFERENCING_TARGET_VERSION=1.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo Push notifications
-ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION=1.2.x-SNAPSHOT
-ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
-# Add-on eXo Lecko
-ADDON_LECKO_ORIGIN_VERSION=1.4.x-SNAPSHOT
-ADDON_LECKO_TARGET_VERSION=1.4.x-$BRANCH-SNAPSHOT
 # Add-on eXo Cas
 ADDON_CAS_ORIGIN_VERSION=2.3.x-SNAPSHOT
 ADDON_CAS_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo Chat
+ADDON_CHAT_ORIGIN_VERSION=2.3.x-SNAPSHOT
+ADDON_CHAT_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo ElasticSearch Embedded
+ADDON_ES_EMBED_ORIGIN_VERSION=2.3.x-SNAPSHOT
+ADDON_ES_EMBED_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo Kudos
+ADDON_KUDOS_ORIGIN_VERSION=1.1.x-SNAPSHOT
+ADDON_KUDOS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+# Add-on eXo Lecko
+ADDON_LECKO_ORIGIN_VERSION=1.4.x-SNAPSHOT
+ADDON_LECKO_TARGET_VERSION=1.4.x-$BRANCH-SNAPSHOT
 # Add-on eXo Openam
 ADDON_OPENAM_ORIGIN_VERSION=2.3.x-SNAPSHOT
 ADDON_OPENAM_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo Remote Edit
+ADDON_REMOTE_EDIT_ORIGIN_VERSION=2.3.x-SNAPSHOT
+ADDON_REMOTE_EDIT_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo Perk Store
+ADDON_PERK_STORE_ORIGIN_VERSION=1.1.x-SNAPSHOT
+ADDON_PERK_STORE_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+# Add-on eXo Push notifications
+ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION=1.2.x-SNAPSHOT
+ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
 # Add-on eXo saml2
 ADDON_SAML2_ORIGIN_VERSION=2.3.x-SNAPSHOT
 ADDON_SAML2_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
 # Add-on eXo spnego
 ADDON_SPNEGO_ORIGIN_VERSION=2.3.x-SNAPSHOT
 ADDON_SPNEGO_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
+# Add-on eXo Task
+ADDON_TASK_ORIGIN_VERSION=2.3.x-SNAPSHOT
+ADDON_TASK_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
+# Add-on Wallet
+ADDON_WALLET_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDON_WALLET_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+# Add-on eXo Web Conferencing
+ADDON_WEB_CONFERENCING_ORIGIN_VERSION=1.4.x-SNAPSHOT
+ADDON_WEB_CONFERENCING_TARGET_VERSION=1.4.x-$BRANCH-SNAPSHOT
+# Add-on eXo Web Pack
+ADDON_WEB_PACK_ORIGIN_VERSION=2.3.x-SNAPSHOT
+ADDON_WEB_PACK_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
+
 # Add-on manager
 ADDONS_MANAGER_ORIGIN_VERSION=1.5.x-SNAPSHOT
 ADDONS_MANAGER_TARGET_VERSION=1.5.x-$BRANCH-SNAPSHOT
@@ -102,22 +112,25 @@ function replaceProjectVersion() {
 	printf "\e[1;33m# %s\e[m\n" "Modifying versions in the project POMs ($repo_name) ..."
 	set -e
 	case $repo_name in
+	addons-manager) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_MANAGER_ORIGIN_VERSION</version>" "<version>$ADDONS_MANAGER_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	answers) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ANSWERS_ORIGIN_VERSION</version>" "<version>$ADDON_ANSWERS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	cas-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CAS_ORIGIN_VERSION</version>" "<version>$ADDON_CAS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	chat-application) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CHAT_ORIGIN_VERSION</version>" "<version>$ADDON_CHAT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	exo-es-embedded) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ES_EMBED_ORIGIN_VERSION</version>" "<version>$ADDON_ES_EMBED_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	gatein-dep) $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	kudos) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_KUDOS_ORIGIN_VERSION</version>" "<version>$ADDON_KUDOS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	lecko) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LECKO_ORIGIN_VERSION</version>" "<version>$ADDON_LECKO_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	maven-depmgt-pom) $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	openam-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_OPENAM_ORIGIN_VERSION</version>" "<version>$ADDON_OPENAM_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	perk-store) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PERK_STORE_ORIGIN_VERSION</version>" "<version>$ADDON_PERK_STORE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	push-notifications) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</version>" "<version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	remote-edit) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</version>" "<version>$ADDON_REMOTE_EDIT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	task) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_TASK_ORIGIN_VERSION</version>" "<version>$ADDON_TASK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	wcm-template-pack) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_PACK_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_PACK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	web-conferencing) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	lecko) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LECKO_ORIGIN_VERSION</version>" "<version>$ADDON_LECKO_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	cas-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CAS_ORIGIN_VERSION</version>" "<version>$ADDON_CAS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	openam-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_OPENAM_ORIGIN_VERSION</version>" "<version>$ADDON_OPENAM_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	saml2-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_SAML2_ORIGIN_VERSION</version>" "<version>$ADDON_SAML2_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	spnego-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_SPNEGO_ORIGIN_VERSION</version>" "<version>$ADDON_SPNEGO_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	addons-manager) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_MANAGER_ORIGIN_VERSION</version>" "<version>$ADDONS_MANAGER_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	task) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_TASK_ORIGIN_VERSION</version>" "<version>$ADDON_TASK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	wcm-template-pack) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_PACK_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_PACK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	wallet) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WALLET_ORIGIN_VERSION</version>" "<version>$ADDON_WALLET_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	web-conferencing) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	*) $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	esac
 }
@@ -164,18 +177,21 @@ function replaceProjectAddons() {
 
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_ORIGIN_VERSION</addon.exo.es.embedded.version>" "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_TARGET_VERSION</addon.exo.es.embedded.version>" "pom.xml -not -wholename \"*/target/*\""
 #	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.answers.version>$ADDON_ANSWERS_ORIGIN_VERSION</addon.exo.answers.version>" "<addon.exo.answers.version>$ADDON_ANSWERS_TARGET_VERSION</addon.exo.answers.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.lecko.version>$ADDON_LECKO_ORIGIN_VERSION</addon.exo.lecko.version>" "<addon.exo.lecko.version>$ADDON_LECKO_TARGET_VERSION</addon.exo.lecko.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</addon.exo.remote-edit.version>" "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_TARGET_VERSION</addon.exo.remote-edit.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-pack.version>$ADDON_WEB_PACK_ORIGIN_VERSION</addon.exo.web-pack.version>" "<addon.exo.web-pack.version>$ADDON_WEB_PACK_TARGET_VERSION</addon.exo.web-pack.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.enterprise-skin.version>$ORIGIN_VERSION</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>$TARGET_VERSION</addon.exo.enterprise-skin.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-conferencing.version>$ORIGIN_VERSION</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>$TARGET_VERSION</addon.exo.web-conferencing.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.cas-addon.version>$ADDON_CAS_ORIGIN_VERSION</addon.exo.cas-addon.version>" "<addon.exo.cas-addon.version>$ADDON_CAS_TARGET_VERSION</addon.exo.cas-addon.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.enterprise-skin.version>$ORIGIN_VERSION</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>$TARGET_VERSION</addon.exo.enterprise-skin.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.kudos.version>$ADDON_KUDOS_ORIGIN_VERSION</addon.exo.kudos.version>" "<addon.exo.kudos.version>$ADDON_KUDOS_TARGET_VERSION</addon.exo.kudos.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.lecko.version>$ADDON_LECKO_ORIGIN_VERSION</addon.exo.lecko.version>" "<addon.exo.lecko.version>$ADDON_LECKO_TARGET_VERSION</addon.exo.lecko.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.openam-addon.version>$ADDON_OPENAM_ORIGIN_VERSION</addon.exo.openam-addon.version>" "<addon.exo.openam-addon.version>$ADDON_OPENAM_TARGET_VERSION</addon.exo.openam-addon.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.perk-store.version>$ADDON_PERK_STORE_ORIGIN_VERSION</addon.exo.perk-store.version>" "<addon.exo.perk-store.version>$ADDON_PERK_STORE_TARGET_VERSION</addon.exo.perk-store.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</addon.exo.push-notifications.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</addon.exo.remote-edit.version>" "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_TARGET_VERSION</addon.exo.remote-edit.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.saml2-addon.version>$ADDON_SAML2_ORIGIN_VERSION</addon.exo.saml2-addon.version>" "<addon.exo.saml2-addon.version>$ADDON_SAML2_TARGET_VERSION</addon.exo.saml2-addon.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.spnego-addon.version>$ADDON_SPNEGO_ORIGIN_VERSION</addon.exo.spnego-addon.version>" "<addon.exo.spnego-addon.version>$ADDON_SPNEGO_TARGET_VERSION</addon.exo.spnego-addon.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</addon.exo.push-notifications.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.wallet.version>$ADDON_WALLET_ORIGIN_VERSION</addon.exo.wallet.version>" "<addon.exo.wallet.version>$ADDON_WALLET_TARGET_VERSION</addon.exo.wallet.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-pack.version>$ADDON_WEB_PACK_ORIGIN_VERSION</addon.exo.web-pack.version>" "<addon.exo.web-pack.version>$ADDON_WEB_PACK_TARGET_VERSION</addon.exo.web-pack.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-conferencing.version>$ORIGIN_VERSION</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>$TARGET_VERSION</addon.exo.web-conferencing.version>" "pom.xml -not -wholename \"*/target/*\""
 }
 
 function createFB() {
@@ -224,24 +240,27 @@ createFB integration
 createFB platform
 
 createFB addons-manager
+createFB cas-addon
 createFB chat-application
+createFB cmis-addon
 createFB enterprise-skin
 createFB exo-es-embedded
+createFB kudos
+createFB lecko
+createFB openam-addon
+createFB perk-store
 createFB push-notifications
 createFB remote-edit
+createFB saml2-addon
+createFB spnego-addon
 createFB task
+createFB wallet
 createFB wcm-template-pack
 createFB web-conferencing
 
-createFB cas-addon
-createFB cmis-addon
-createFB openam-addon
-createFB saml2-addon
-createFB spnego-addon
 createFB platform-public-distributions
 createFB platform-private-distributions
 createFB platform-private-trial-distributions
-createFB lecko
 popd
 
 echo
