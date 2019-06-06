@@ -2,7 +2,7 @@
 
 # Script to create Translation branches:
 # * X-x.x-translation
-VERSION=5.2.x-translation
+VERSION=5.3.x-translation
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=integration/$VERSION
 
