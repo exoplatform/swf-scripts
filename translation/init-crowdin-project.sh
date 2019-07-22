@@ -15,6 +15,9 @@ TASK_ADDON_VERSION=2.2.x
 WEB_CONFERENCING_ADDON_VERSION=1.3.x
 WEB_PACK_ADDON_VERSION=2.2.x
 PUSH_NOTIFICATIONS_ADDON_VERSION=1.1.x
+WALLET_ADDON_VERSION=1.0.x
+KUDOS_ADDON_VERSION=1.1.x
+PERKSTORE_ADDON_VERSION=1.1.x
 
 CROWDIN_PROJECT_NAME=$1
 CROWDIN_PROJECT_KEY=$2
@@ -47,7 +50,7 @@ function initTranslation() {
 set -e
 mkdir -p sources
 
-projects=("gatein-portal:${PLF_VERSION}" "platform-ui:${PLF_VERSION}" "commons:${PLF_VERSION}" "ecms:${PLF_VERSION}" "social:${PLF_VERSION}" "wiki:${PLF_VERSION}" "forum:${PLF_VERSION}" "calendar:${PLF_VERSION}" "integration:${PLF_VERSION}" "platform:${PLF_VERSION}" "platform-public-distributions:${PLF_VERSION}" "platform-private-distributions:${PLF_VERSION}" "chat-application:${CHAT_ADDON_VERSION}" "push-notifications:${PUSH_NOTIFICATIONS_ADDON_VERSION}" "task:${TASK_ADDON_VERSION}" "wcm-template-pack:${WEB_PACK_ADDON_VERSION}" "web-conferencing:${WEB_CONFERENCING_ADDON_VERSION}") 
+projects=("gatein-portal:${PLF_VERSION}" "platform-ui:${PLF_VERSION}" "commons:${PLF_VERSION}" "ecms:${PLF_VERSION}" "social:${PLF_VERSION}" "wiki:${PLF_VERSION}" "forum:${PLF_VERSION}" "calendar:${PLF_VERSION}" "integration:${PLF_VERSION}" "platform:${PLF_VERSION}" "platform-public-distributions:${PLF_VERSION}" "platform-private-distributions:${PLF_VERSION}" "chat-application:${CHAT_ADDON_VERSION}" "push-notifications:${PUSH_NOTIFICATIONS_ADDON_VERSION}" "task:${TASK_ADDON_VERSION}" "wcm-template-pack:${WEB_PACK_ADDON_VERSION}" "web-conferencing:${WEB_CONFERENCING_ADDON_VERSION}" "wallet:${WALLET_ADDON_VERSION}" "kudos:${KUDOS_ADDON_VERSION}" "perk-store:${PERKSTORE_ADDON_VERSION}") 
 
 for projectWithVersion in "${projects[@]}"
 do
@@ -56,6 +59,7 @@ do
   version=${projectInfo[1]}
   gitRepo=exoplatform/$project
   gitBranch=stable/$version
+  # gitBranch=develop
 
   initTranslation $gitRepo $gitBranch
 done

@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-# Script to create Translation branches:
+# Script to create Translation branches on exodev:
 # * X-x.x-translation
 VERSION=5.3.x-translation
 ORIGIN_BRANCH=develop
