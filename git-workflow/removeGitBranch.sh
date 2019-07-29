@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/edit-activities-comments
+BRANCH_TO_DELETE=feature/space-templates
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(
@@ -49,12 +49,17 @@ deleteGitBranch integration
 deleteGitBranch platform
 
 # deleteGitBranch answers # Not after 5.1
+deleteGitBranch cas-addon
 deleteGitBranch chat-application
+deleteGitBranch cmis-addon
 deleteGitBranch enterprise-skin
 deleteGitBranch exo-es-embedded
 deleteGitBranch lecko
+deleteGitBranch openam-addon
 deleteGitBranch push-notifications
 deleteGitBranch remote-edit
+deleteGitBranch saml2-addon
+deleteGitBranch spnego-addon
 deleteGitBranch task
 deleteGitBranch wcm-template-pack
 deleteGitBranch web-conferencing
@@ -62,6 +67,8 @@ deleteGitBranch web-conferencing
 deleteGitBranch platform-public-distributions
 deleteGitBranch platform-private-distributions
 deleteGitBranch platform-private-trial-distributions
+
+deleteGitBranch addons-manager
 
 #popd
 exit
