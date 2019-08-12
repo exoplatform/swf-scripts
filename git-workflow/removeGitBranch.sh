@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/space-templates
+BRANCH_TO_DELETE=feature/jdk11
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(
@@ -47,26 +47,30 @@ deleteGitBranch forum
 deleteGitBranch calendar
 deleteGitBranch integration
 deleteGitBranch platform
-
+deleteGitBranch addons-manager
 # deleteGitBranch answers # Not after 5.1
 deleteGitBranch cas-addon
 deleteGitBranch chat-application
 deleteGitBranch cmis-addon
 deleteGitBranch enterprise-skin
 deleteGitBranch exo-es-embedded
+deleteGitBranch kudos
 deleteGitBranch lecko
 deleteGitBranch openam-addon
+deleteGitBranch perk-store
 deleteGitBranch push-notifications
 deleteGitBranch remote-edit
 deleteGitBranch saml2-addon
 deleteGitBranch spnego-addon
 deleteGitBranch task
+deleteGitBranch wallet
 deleteGitBranch wcm-template-pack
 deleteGitBranch web-conferencing
 
 deleteGitBranch platform-public-distributions
 deleteGitBranch platform-private-distributions
-deleteGitBranch platform-private-trial-distributions
+# Not adter 5.2
+# deleteGitBranch platform-private-trial-distributions
 
 deleteGitBranch addons-manager
 
