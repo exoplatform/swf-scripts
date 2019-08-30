@@ -83,7 +83,7 @@ do
     git push origin master && git push origin develop
 
     if [ "${project}" == "exo-chat-server" ]; then
-      TAG="${EXO_VERSION}_0"
+      TAG="${CHAT_VERSION}_0"
       printf "\e[1;33mINFO %s\e[m\n" "Creating version tag ${TAG}..."
       git tag "${TAG}"
       git push origin "${TAG}"
