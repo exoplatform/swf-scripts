@@ -47,6 +47,7 @@ do
   pushd $project
   git reset --hard HEAD
   git checkout master
+  git pull
   git reset --hard origin/master
 
   printf "\e[1;33mINFO %s\e[m\n" "Upgrading versions..."
