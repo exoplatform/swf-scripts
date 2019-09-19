@@ -32,6 +32,9 @@ ADDON_KUDOS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
 # Add-on eXo Lecko
 ADDON_LECKO_ORIGIN_VERSION=1.4.x-SNAPSHOT
 ADDON_LECKO_TARGET_VERSION=1.4.x-$BRANCH-SNAPSHOT
+# Add-on eXo news
+ADDON_NEWS_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDON_NEWS_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
 # Add-on eXo Openam
 ADDON_OPENAM_ORIGIN_VERSION=2.3.x-SNAPSHOT
 ADDON_OPENAM_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
@@ -124,6 +127,7 @@ function replaceProjectVersion() {
 	gamification) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_GAMIFICATION_ORIGIN_VERSION</version>" "<version>$ADDON_GAMIFICATION_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	kudos) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_KUDOS_ORIGIN_VERSION</version>" "<version>$ADDON_KUDOS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	lecko) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LECKO_ORIGIN_VERSION</version>" "<version>$ADDON_LECKO_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	news) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_NEWS_ORIGIN_VERSION</version>" "<version>$ADDON_NEWS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	maven-depmgt-pom) $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	openam-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_OPENAM_ORIGIN_VERSION</version>" "<version>$ADDON_OPENAM_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	perk-store) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PERK_STORE_ORIGIN_VERSION</version>" "<version>$ADDON_PERK_STORE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -253,6 +257,7 @@ createFB gamification
 createFB exo-es-embedded
 createFB kudos
 createFB lecko
+createFB news
 createFB openam-addon
 createFB perk-store
 createFB push-notifications
@@ -266,7 +271,6 @@ createFB web-conferencing
 
 createFB platform-public-distributions
 createFB platform-private-distributions
-createFB platform-private-trial-distributions
 popd
 
 echo
