@@ -1,8 +1,8 @@
 #!/bin/bash -eu
 
-ISSUE=SWF-4734
-CURRENT_DEVELOP_VERSION_PREFIX=5.2.x
-NEXT_DEVELOP_VERSION_PREFIX=5.3.x
+ISSUE=SWF-4944
+CURRENT_DEVELOP_VERSION_PREFIX=5.3.x
+NEXT_DEVELOP_VERSION_PREFIX=6.0.x
 
 CURRENT_DEVELOP_VERSION=${CURRENT_DEVELOP_VERSION_PREFIX}-SNAPSHOT
 NEXT_DEVELOP_VERSION=${NEXT_DEVELOP_VERSION_PREFIX}-SNAPSHOT
@@ -12,18 +12,18 @@ JUZU_NEXT_VERSION_PREFIX=1.2.0
 JUZU_CURRENT_DEVELOP_VERSION=${JUZU_CURRENT_VERSION_PREFIX}-SNAPSHOT
 JUZU_NEXT_DEVELOP_VERSION=${JUZU_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-GATEIN_DEP_CURRENT_VERSION_PREFIX=1.7.x
-GATEIN_DEP_NEXT_VERSION_PREFIX=1.8.x
+GATEIN_DEP_CURRENT_VERSION_PREFIX=1.8.x
+GATEIN_DEP_NEXT_VERSION_PREFIX=2.0.x
 GATEIN_DEP_CURRENT_DEVELOP_VERSION=${GATEIN_DEP_CURRENT_VERSION_PREFIX}-SNAPSHOT
 GATEIN_DEP_NEXT_DEVELOP_VERSION=${GATEIN_DEP_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-MAVEN_DEPMGT_CURRENT_VERSION_PREFIX=15
-MAVEN_DEPMGT_NEXT_VERSION_PREFIX=16
+MAVEN_DEPMGT_CURRENT_VERSION_PREFIX=16.x
+MAVEN_DEPMGT_NEXT_VERSION_PREFIX=17.x
 MAVEN_DEPMGT_CURRENT_VERSION=${MAVEN_DEPMGT_CURRENT_VERSION_PREFIX}-SNAPSHOT
 MAVEN_DEPMGT_NEXT_VERSION=${MAVEN_DEPMGT_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-ADDONS_MANAGER_CURRENT_VERSION_PREFIX=1.4.x
-ADDONS_MANAGER_NEXT_VERSION_PREFIX=1.5.x
+ADDONS_MANAGER_CURRENT_VERSION_PREFIX=1.5.x
+ADDONS_MANAGER_NEXT_VERSION_PREFIX=2.0.x
 ADDONS_MANAGER_CURRENT_VERSION=${ADDONS_MANAGER_CURRENT_VERSION_PREFIX}-SNAPSHOT
 ADDONS_MANAGER_NEXT_VERSION=${ADDONS_MANAGER_NEXT_VERSION_PREFIX}-SNAPSHOT
 
@@ -32,68 +32,87 @@ ADDONS_MANAGER_NEXT_VERSION=${ADDONS_MANAGER_NEXT_VERSION_PREFIX}-SNAPSHOT
 # ANSWERS_CURRENT_VERSION=${ANSWERS_CURRENT_VERSION_PREFIX}-SNAPSHOT
 # ANSWERS_NEXT_VERSION=${ANSWERS_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-CAS_CURRENT_VERSION_PREFIX=2.2.x
-CAS_NEXT_VERSION_PREFIX=2.3.x
+CAS_CURRENT_VERSION_PREFIX=2.3.x
+CAS_NEXT_VERSION_PREFIX=3.0.x
 CAS_CURRENT_VERSION=${CAS_CURRENT_VERSION_PREFIX}-SNAPSHOT
 CAS_NEXT_VERSION=${CAS_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-CHAT_APPLICATION_CURRENT_VERSION_PREFIX=2.2.x
-CHAT_APPLICATION_NEXT_VERSION_PREFIX=2.3.x
+CHAT_APPLICATION_CURRENT_VERSION_PREFIX=2.3.x
+CHAT_APPLICATION_NEXT_VERSION_PREFIX=3.0.x
 CHAT_APPLICATION_CURRENT_VERSION=${CHAT_APPLICATION_CURRENT_VERSION_PREFIX}-SNAPSHOT
 CHAT_APPLICATION_NEXT_VERSION=${CHAT_APPLICATION_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-ES_EMBEDDED_CURRENT_VERSION_PREFIX=2.2.x
-ES_EMBEDDED_NEXT_VERSION_PREFIX=2.3.x
+ES_EMBEDDED_CURRENT_VERSION_PREFIX=2.3.x
+ES_EMBEDDED_NEXT_VERSION_PREFIX=3.0.x
 ES_EMBEDDED_CURRENT_VERSION=${ES_EMBEDDED_CURRENT_VERSION_PREFIX}-SNAPSHOT
 ES_EMBEDDED_NEXT_VERSION=${ES_EMBEDDED_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-LECKO_CURRENT_VERSION_PREFIX=1.3.x
-LECKO_NEXT_VERSION_PREFIX=1.4.x
+GAMIFICATION_CURRENT_VERSION_PREFIX=1.2.x
+GAMIFICATION_NEXT_VERSION_PREFIX=2.0.x
+GAMIFICATION_CURRENT_VERSION=${GAMIFICATION_CURRENT_VERSION_PREFIX}-SNAPSHOT
+GAMIFICATION_NEXT_VERSION=${GAMIFICATION_NEXT_VERSION_PREFIX}-SNAPSHOT
+
+KUDOS_CURRENT_VERSION_PREFIX=1.1.x
+KUDOS_NEXT_VERSION_PREFIX=2.0.x
+KUDOS_CURRENT_VERSION=${KUDOS_CURRENT_VERSION_PREFIX}-SNAPSHOT
+KUDOS_NEXT_VERSION=${KUDOS_NEXT_VERSION_PREFIX}-SNAPSHOT
+
+LECKO_CURRENT_VERSION_PREFIX=1.4.x
+LECKO_NEXT_VERSION_PREFIX=2.0.x
 LECKO_CURRENT_VERSION=${LECKO_CURRENT_VERSION_PREFIX}-SNAPSHOT
 LECKO_NEXT_VERSION=${LECKO_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-OPENAM_CURRENT_VERSION_PREFIX=2.2.x
-OPENAM_NEXT_VERSION_PREFIX=2.3.x
+OPENAM_CURRENT_VERSION_PREFIX=2.3.x
+OPENAM_NEXT_VERSION_PREFIX=3.0.x
 OPENAM_CURRENT_VERSION=${OPENAM_CURRENT_VERSION_PREFIX}-SNAPSHOT
 OPENAM_NEXT_VERSION=${OPENAM_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-REMOTE_EDIT_CURRENT_VERSION_PREFIX=2.2.x
-REMOTE_EDIT_NEXT_VERSION_PREFIX=2.3.x
+PERKSTORE_CURRENT_VERSION_PREFIX=1.1.x
+PERKSTORE_NEXT_VERSION_PREFIX=2.0.x
+PERKSTORE_CURRENT_VERSION=${PERKSTORE_CURRENT_VERSION_PREFIX}-SNAPSHOT
+PERKSTORE_NEXT_VERSION=${PERKSTORE_NEXT_VERSION_PREFIX}-SNAPSHOT
+
+REMOTE_EDIT_CURRENT_VERSION_PREFIX=2.3.x
+REMOTE_EDIT_NEXT_VERSION_PREFIX=3.0.x
 REMOTE_EDIT_CURRENT_VERSION=${REMOTE_EDIT_CURRENT_VERSION_PREFIX}-SNAPSHOT
 REMOTE_EDIT_NEXT_VERSION=${REMOTE_EDIT_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-SAML2_CURRENT_VERSION_PREFIX=2.2.x
-SAML2_NEXT_VERSION_PREFIX=2.3.x
+SAML2_CURRENT_VERSION_PREFIX=2.3.x
+SAML2_NEXT_VERSION_PREFIX=3.0.x
 SAML2_CURRENT_VERSION=${SAML2_CURRENT_VERSION_PREFIX}-SNAPSHOT
 SAML2_NEXT_VERSION=${SAML2_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-SPNEGO_CURRENT_VERSION_PREFIX=2.2.x
-SPNEGO_NEXT_VERSION_PREFIX=2.3.x
+SPNEGO_CURRENT_VERSION_PREFIX=2.3.x
+SPNEGO_NEXT_VERSION_PREFIX=3.0.x
 SPNEGO_CURRENT_VERSION=${SPNEGO_CURRENT_VERSION_PREFIX}-SNAPSHOT
 SPNEGO_NEXT_VERSION=${SPNEGO_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-TASK_CURRENT_VERSION_PREFIX=2.2.x
-TASK_NEXT_VERSION_PREFIX=2.3.x
+TASK_CURRENT_VERSION_PREFIX=2.3.x
+TASK_NEXT_VERSION_PREFIX=3.0.x
 TASK_CURRENT_VERSION=${TASK_CURRENT_VERSION_PREFIX}-SNAPSHOT
 TASK_NEXT_VERSION=${TASK_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-WCM_TEMPLATE_CURRENT_VERSION_PREFIX=2.2.x
-WCM_TEMPLATE_NEXT_VERSION_PREFIX=2.3.x
+WALLET_CURRENT_VERSION_PREFIX=1.0.x
+WALLET_NEXT_VERSION_PREFIX=2.0.x
+WALLET_CURRENT_VERSION=${WALLET_CURRENT_VERSION_PREFIX}-SNAPSHOT
+WALLET_NEXT_VERSION=${WALLET_NEXT_VERSION_PREFIX}-SNAPSHOT
+
+WCM_TEMPLATE_CURRENT_VERSION_PREFIX=2.3.x
+WCM_TEMPLATE_NEXT_VERSION_PREFIX=3.0.x
 WCM_TEMPLATE_CURRENT_VERSION=${WCM_TEMPLATE_CURRENT_VERSION_PREFIX}-SNAPSHOT
 WCM_TEMPLATE_NEXT_VERSION=${WCM_TEMPLATE_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-WEB_CONF_CURRENT_VERSION_PREFIX=1.3x
-WEB_CONF_NEXT_VERSION_PREFIX=1.4.x
+WEB_CONF_CURRENT_VERSION_PREFIX=1.4.x
+WEB_CONF_NEXT_VERSION_PREFIX=2.0.x
 WEB_CONF_CURRENT_VERSION=${WEB_CONF_CURRENT_VERSION_PREFIX}-SNAPSHOT
 WEB_CONF_NEXT_VERSION=${WEB_CONF_NEXT_VERSION_PREFIX}-SNAPSHOT
 
-PUSH_NOTIFICATIONS_CURRENT_VERSION_PREFIX=1.1.x
-PUSH_NOTIFICATIONS_NEXT_VERSION_PREFIX=1.2.x
+PUSH_NOTIFICATIONS_CURRENT_VERSION_PREFIX=1.2.x
+PUSH_NOTIFICATIONS_NEXT_VERSION_PREFIX=2.0.x
 PUSH_NOTIFICATIONS_CURRENT_VERSION=${PUSH_NOTIFICATIONS_CURRENT_VERSION_PREFIX}-SNAPSHOT
 PUSH_NOTIFICATIONS_NEXT_VERSION=${PUSH_NOTIFICATIONS_NEXT_VERSION_PREFIX}-SNAPSHOT
 
 ORIGIN_BRANCH=develop
-STABLE_BRANCH=stable/$CURRENT_DEVELOP_VERSION_PREFIX
 
 SCRIPTDIR=$(
 	cd $(dirname "$0")
@@ -109,6 +128,14 @@ while getopts "p" opt; do
 		;;
 	esac
 done
+
+function replaceInPom() {
+	local descriptor=$1
+	local currentVersion=$2
+	local nextVersion=$3
+
+	${SCRIPTDIR}/../replaceInPom.sh "<${descriptor}>${currentVersion}</${descriptor}>" "<${descriptor}>${nextVersion}</${descriptor}>"
+}
 
 function createSBFromDevelop() {
 	local repository=$1
@@ -186,6 +213,16 @@ function createSBFromDevelop() {
 		currentVersion=${ES_EMBEDDED_CURRENT_VERSION}
 		nextVersion=${ES_EMBEDDED_NEXT_VERSION}
 		;;
+	gamification)
+		stableBranch=stable/${GAMIFICATION_CURRENT_VERSION_PREFIX}
+		currentVersion=${GAMIFICATION_CURRENT_VERSION}
+		nextVersion=${GAMIFICATION_NEXT_VERSION}
+		;;
+	kudos)
+		stableBranch=stable/${KUDOS_CURRENT_VERSION_PREFIX}
+		currentVersion=${KUDOS_CURRENT_VERSION}
+		nextVersion=${KUDOS_NEXT_VERSION}
+		;;
 	lecko)
 		stableBranch=stable/${LECKO_CURRENT_VERSION_PREFIX}
 		currentVersion=${LECKO_CURRENT_VERSION}
@@ -195,6 +232,11 @@ function createSBFromDevelop() {
 		stableBranch=stable/${OPENAM_CURRENT_VERSION_PREFIX}
 		currentVersion=${OPENAM_CURRENT_VERSION}
 		nextVersion=${OPENAM_NEXT_VERSION}
+		;;
+	perk-store)
+		stableBranch=stable/${PERKSTORE_CURRENT_VERSION_PREFIX}
+		currentVersion=${PERKSTORE_CURRENT_VERSION}
+		nextVersion=${PERKSTORE_NEXT_VERSION}
 		;;
 	remote-edit)
 		stableBranch=stable/${REMOTE_EDIT_CURRENT_VERSION_PREFIX}
@@ -215,6 +257,11 @@ function createSBFromDevelop() {
 		stableBranch=stable/${TASK_CURRENT_VERSION_PREFIX}
 		currentVersion=${TASK_CURRENT_VERSION}
 		nextVersion=${TASK_NEXT_VERSION}
+		;;
+	wallet)
+		stableBranch=stable/${WALLET_CURRENT_VERSION_PREFIX}
+		currentVersion=${WALLET_CURRENT_VERSION}
+		nextVersion=${WALLET_NEXT_VERSION}
 		;;
 	wcm-template-pack)
 		stableBranch=stable/${WCM_TEMPLATE_CURRENT_VERSION_PREFIX}
@@ -250,53 +297,56 @@ function createSBFromDevelop() {
 	echo "Prepare next version ${nextVersion}"
 	git checkout $masterBranch
 
-	$SCRIPTDIR/../replaceInPom.sh "<version>${currentVersion}</version>" "<version>${nextVersion}</version>"
+	replaceInPom version ${currentVersion} ${nextVersion}
 
-	$SCRIPTDIR/../replaceInPom.sh "<version>16-RC01</version>" "<version>17-SNAPSHOT</version>"
+	## ????
+	## $SCRIPTDIR/../replaceInPom.sh "<version>16-RC01</version>" "<version>17-SNAPSHOT</version>"
 
-	$SCRIPTDIR/../replaceInPom.sh "<org.juzu.version>${JUZU_CURRENT_DEVELOP_VERSION}</org.juzu.version>" "<org.juzu.version>${JUZU_NEXT_DEVELOP_VERSION}</org.juzu.version>"
+	replaceInPom org.juzu.version ${JUZU_CURRENT_DEVELOP_VERSION} ${JUZU_NEXT_DEVELOP_VERSION}
 
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.depmgt.version>${MAVEN_DEPMGT_CURRENT_VERSION}</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>${MAVEN_DEPMGT_NEXT_VERSION}</org.exoplatform.depmgt.version>"
+	replaceInPom org.exoplatform.depmgt.version ${MAVEN_DEPMGT_CURRENT_VERSION} ${MAVEN_DEPMGT_NEXT_VERSION}
 
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.gatein.wci.version>${CURRENT_DEVELOP_VERSION}</org.exoplatform.gatein.wci.version>" "<org.exoplatform.gatein.wci.version>${NEXT_DEVELOP_VERSION}</org.exoplatform.gatein.wci.version>"
+	replaceInPom org.exoplatform.gatein.wci.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
 
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.kernel.version>${CURRENT_DEVELOP_VERSION}</org.exoplatform.kernel.version>" "<org.exoplatform.kernel.version>${NEXT_DEVELOP_VERSION}</org.exoplatform.kernel.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.core.version>${CURRENT_DEVELOP_VERSION}</org.exoplatform.core.version>" "<org.exoplatform.core.version>${NEXT_DEVELOP_VERSION}</org.exoplatform.core.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.ws.version>${CURRENT_DEVELOP_VERSION}</org.exoplatform.ws.version>" "<org.exoplatform.ws.version>${NEXT_DEVELOP_VERSION}</org.exoplatform.ws.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.jcr.version>${CURRENT_DEVELOP_VERSION}</org.exoplatform.jcr.version>" "<org.exoplatform.jcr.version>${NEXT_DEVELOP_VERSION}</org.exoplatform.jcr.version>"
+	replaceInPom org.exoplatform.kernel.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.core.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.ws.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.jcr.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.gatein.dep.version ${GATEIN_DEP_CURRENT_DEVELOP_VERSION} ${GATEIN_DEP_NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.gatein.sso.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.gatein.pc.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.gatein.portal.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.commons.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.doc.doc-style.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.platform-ui.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.ecms.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.social.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.forum.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.wiki.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.calendar.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.integ.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.platform.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom org.exoplatform.platform.distributions.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
 
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.gatein.dep.version>$GATEIN_DEP_CURRENT_DEVELOP_VERSION</org.exoplatform.gatein.dep.version>" "<org.exoplatform.gatein.dep.version>$GATEIN_DEP_NEXT_DEVELOP_VERSION</org.exoplatform.gatein.dep.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.gatein.sso.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.gatein.sso.version>" "<org.exoplatform.gatein.sso.version>$NEXT_DEVELOP_VERSION</org.exoplatform.gatein.sso.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.gatein.pc.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.gatein.pc.version>" "<org.exoplatform.gatein.pc.version>$NEXT_DEVELOP_VERSION</org.exoplatform.gatein.pc.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.gatein.portal.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.gatein.portal.version>" "<org.exoplatform.gatein.portal.version>$NEXT_DEVELOP_VERSION</org.exoplatform.gatein.portal.version>"
-
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.commons.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.commons.version>" "<org.exoplatform.commons.version>$NEXT_DEVELOP_VERSION</org.exoplatform.commons.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.doc.doc-style.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.doc.doc-style.version>" "<org.exoplatform.doc.doc-style.version>$NEXT_DEVELOP_VERSION</org.exoplatform.doc.doc-style.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.platform-ui.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.platform-ui.version>" "<org.exoplatform.platform-ui.version>$NEXT_DEVELOP_VERSION</org.exoplatform.platform-ui.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.ecms.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.ecms.version>" "<org.exoplatform.ecms.version>$NEXT_DEVELOP_VERSION</org.exoplatform.ecms.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.social.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.social.version>" "<org.exoplatform.social.version>$NEXT_DEVELOP_VERSION</org.exoplatform.social.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.forum.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.forum.version>" "<org.exoplatform.forum.version>$NEXT_DEVELOP_VERSION</org.exoplatform.forum.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.wiki.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.wiki.version>" "<org.exoplatform.wiki.version>$NEXT_DEVELOP_VERSION</org.exoplatform.wiki.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.calendar.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.calendar.version>" "<org.exoplatform.calendar.version>$NEXT_DEVELOP_VERSION</org.exoplatform.calendar.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.integ.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$NEXT_DEVELOP_VERSION</org.exoplatform.integ.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.platform.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$NEXT_DEVELOP_VERSION</org.exoplatform.platform.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.platform.distributions.version>$CURRENT_DEVELOP_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$NEXT_DEVELOP_VERSION</org.exoplatform.platform.distributions.version>"
-
-	$SCRIPTDIR/../replaceInPom.sh "<org.exoplatform.platform.addons-manager.version>${ADDONS_MANAGER_CURRENT_VERSION}</org.exoplatform.platform.addons-manager.version>" "<org.exoplatform.platform.addons-manager.version>${ADDONS_MANAGER_NEXT_VERSION}</org.exoplatform.platform.addons-manager.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.es.embedded.version>${ES_EMBEDDED_CURRENT_VERSION}</addon.exo.es.embedded.version>" "<addon.exo.es.embedded.version>${ES_EMBEDDED_NEXT_VERSION}</addon.exo.es.embedded.version>"
-
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.remote-edit.version>${REMOTE_EDIT_CURRENT_VERSION}</addon.exo.remote-edit.version>" "<addon.exo.remote-edit.version>${REMOTE_EDIT_NEXT_VERSION}</addon.exo.remote-edit.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.push-notifications.version>${PUSH_NOTIFICATIONS_CURRENT_VERSION}</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>${PUSH_NOTIFICATIONS_NEXT_VERSION}</addon.exo.push-notifications.version>"
+	replaceInPom org.exoplatform.platform.addons-manager.version ${ADDONS_MANAGER_CURRENT_VERSION} ${ADDONS_MANAGER_NEXT_VERSION}
+	replaceInPom addon.exo.es.embedded.version ${ES_EMBEDDED_CURRENT_VERSION} ${ES_EMBEDDED_NEXT_VERSION}
+	replaceInPom addon.exo.remote-edit.version ${REMOTE_EDIT_CURRENT_VERSION} ${REMOTE_EDIT_NEXT_VERSION}
+	replaceInPom addon.exo.push-notifications.version ${PUSH_NOTIFICATIONS_CURRENT_VERSION} ${PUSH_NOTIFICATIONS_NEXT_VERSION}
 
 	# < 5.0.0
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.remote.edit.version>${REMOTE_EDIT_CURRENT_VERSION}</addon.exo.remote.edit.version>" "<addon.exo.remote.edit.version>${REMOTE_EDIT_NEXT_VERSION}</addon.exo.remote.edit.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.tasks.version>${TASK_CURRENT_VERSION}</addon.exo.tasks.version>" "<addon.exo.tasks.version>${TASK_NEXT_VERSION}</addon.exo.tasks.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.web-pack.version>${WCM_TEMPLATE_CURRENT_VERSION}</addon.exo.web-pack.version>" "<addon.exo.web-pack.version>${WCM_TEMPLATE_NEXT_VERSION}</addon.exo.web-pack.version>"
-	# < 5.0.0
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.web.pack.version>${WCM_TEMPLATE_CURRENT_VERSION}</addon.exo.web.pack.version>" "<addon.exo.web.pack.version>${WCM_TEMPLATE_NEXT_VERSION}</addon.exo.web.pack.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.web-conferencing.version>${WEB_CONF_CURRENT_VERSION}</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>${WEB_CONF_NEXT_VERSION}</addon.exo.web-conferencing.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.enterprise-skin.version>${CURRENT_DEVELOP_VERSION}</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>${NEXT_DEVELOP_VERSION}</addon.exo.enterprise-skin.version>"
-	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.chat.version>${CHAT_APPLICATION_CURRENT_VERSION}</addon.exo.chat.version>" "<addon.exo.chat.version>${CHAT_APPLICATION_NEXT_VERSION}</addon.exo.chat.version>"
+	replaceInPom addon.exo.remote.edit.version ${REMOTE_EDIT_CURRENT_VERSION} ${REMOTE_EDIT_NEXT_VERSION}
+	replaceInPom addon.exo.tasks.version ${TASK_CURRENT_VERSION} ${TASK_NEXT_VERSION}
+	replaceInPom addon.exo.web-pack.version ${WCM_TEMPLATE_CURRENT_VERSION} ${WCM_TEMPLATE_NEXT_VERSION}
+
+	# >= 5.0.0
+	replaceInPom addon.exo.web.pack.version ${WCM_TEMPLATE_CURRENT_VERSION} ${WCM_TEMPLATE_NEXT_VERSION}
+	replaceInPom addon.exo.web-conferencing.version ${WEB_CONF_CURRENT_VERSION} ${WEB_CONF_NEXT_VERSION}
+	replaceInPom addon.exo.enterprise-skin.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
+	replaceInPom addon.exo.chat.version ${CHAT_APPLICATION_CURRENT_VERSION} ${CHAT_APPLICATION_NEXT_VERSION}
+	replaceInPom addon.exo.gamification.version ${GAMIFICATION_CURRENT_VERSION} ${GAMIFICATION_NEXT_VERSION}
+	replaceInPom addon.exo.kudos.version ${KUDOS_CURRENT_VERSION} ${KUDOS_NEXT_VERSION}
+	replaceInPom addon.exo.perk-store.version ${PERKSTORE_CURRENT_VERSION} ${PERKSTORE_NEXT_VERSION}
+	replaceInPom addon.exo.wallet.version ${WALLET_CURRENT_VERSION} ${WALLET_NEXT_VERSION}
 
 	git commit -m "$ISSUE: Update project versions to ${nextVersion}" -a
 
@@ -312,6 +362,10 @@ function createSBFromDevelop() {
 
 	popd
 }
+
+
+createSBFromDevelop gamification exo-addons
+exit 1
 
 # Not yet supported
 # createSBFromDevelop cf-parent exoplatform
@@ -352,12 +406,16 @@ createSBFromDevelop chat-application exo-addons
 createSBFromDevelop cmis-addon exo-addons
 createSBFromDevelop exo-es-embedded exo-addons
 createSBFromDevelop enterprise-skin exoplatform
+createSBFromDevelop gamification exo-addons
+createSBFromDevelop kudos exo-addons
 createSBFromDevelop lecko exo-addons
 createSBFromDevelop openam-addon exo-addons
+createSBFromDevelop perk-store exo-addons
 createSBFromDevelop remote-edit exo-addons
 createSBFromDevelop saml2-addon exo-addons
 createSBFromDevelop spnego-addon exo-addons
 createSBFromDevelop task exo-addons
+createSBFromDevelop wallet exo-addons
 createSBFromDevelop wcm-template-pack exo-addons
 createSBFromDevelop web-conferencing exo-addons
 createSBFromDevelop push-notifications exo-addons
@@ -365,4 +423,4 @@ createSBFromDevelop push-notifications exo-addons
 ## Distrib
 createSBFromDevelop platform-public-distributions exoplatform
 createSBFromDevelop platform-private-distributions exoplatform
-createSBFromDevelop platform-private-trial-distributions exoplatform
+# createSBFromDevelop platform-private-trial-distributions exoplatform
