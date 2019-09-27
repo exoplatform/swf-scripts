@@ -18,10 +18,10 @@ done
 REMOTE=origin
 LOCAL_BRANCH=develop
 
-PREVIOUS_VERSION=10-RC01
-NEXT_VERSION=10
-ISSUE=SWF-4737
-PROJECT=addons-parent-pom
+PREVIOUS_VERSION=18
+NEXT_VERSION=19-RC01
+ISSUE=SWF-4943
+PROJECT=cf-parent
 
 #REPLACE_WHAT="<org.gatein.portal.version>3.5.10.Final-SNAPSHOT</org.gatein.portal.version>"
 #REPLACE_BY="<org.gatein.portal.version>3.5.11.Final-SNAPSHOT</org.gatein.portal.version>"
@@ -117,12 +117,6 @@ updateProject addons-manager # stable/1.3.x
 updateProject cas-addon # stable/2.1.x
 updateProject chat-application # stable/2.1.x
 updateProject cmis-addon # stable/5.1.x
-# Not supported starting 5.1.x
-# updateProject crash-addon
-updateProject exo-es-embedded # stable/2.1.x
-# Supported since 5.2.0
-updateProject lecko # stable/5.1.x
-
 updateProject enterprise-skin # stable/5.1.x
 updateProject openam-addon # stable/2.1.x
 updateProject remote-edit # stable/2.1.x
@@ -132,8 +126,20 @@ updateProject task # stable/2.1.x
 updateProject wcm-template-pack # stable/2.1.x
 updateProject web-conferencing # stable/1.2.x
 updateProject push-notifications # stable/1.0.x
+# Not supported starting 5.1.x
+# updateProject crash-addon
+updateProject exo-es-embedded # stable/2.1.x
+# Supported since 5.2.0
+updateProject lecko # stable/5.1.x
+# Supported since 5.3.0
+updateProject wallet # stable/5.1.x
+updateProject perk-store # stable/5.1.x
+updateProject kudos # stable/5.1.x
+updateProject gamification # stable/5.1.x
+
 
 ## Distrib
 updateProject platform-public-distributions # stable/5.1.x
 updateProject platform-private-distributions # stable/5.1.x
-updateProject platform-private-trial-distributions # stable/5.1.x
+# Not released since 5.3.0
+#updateProject platform-private-trial-distributions # stable/5.1.x
