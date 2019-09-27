@@ -18,10 +18,10 @@ done
 REMOTE=origin
 LOCAL_BRANCH=develop
 
-PREVIOUS_VERSION=18
-NEXT_VERSION=19-RC01
+PREVIOUS_VERSION=19
+NEXT_VERSION=20-RC01
 ISSUE=SWF-4943
-PROJECT=cf-parent
+PROJECT=maven-parent-pom
 
 #REPLACE_WHAT="<org.gatein.portal.version>3.5.10.Final-SNAPSHOT</org.gatein.portal.version>"
 #REPLACE_BY="<org.gatein.portal.version>3.5.11.Final-SNAPSHOT</org.gatein.portal.version>"
