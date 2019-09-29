@@ -184,7 +184,7 @@ function createSBFromDevelop() {
 		;;
 	maven-depmgt-pom)
 		stableBranch=stable/${MAVEN_DEPMGT_CURRENT_VERSION_PREFIX}
-		currentVersion=${MAVEN_DEPMGT_DEVELOP_VERSION}
+		currentVersion=${MAVEN_DEPMGT_CURRENT_VERSION}
 		nextVersion=${MAVEN_DEPMGT_NEXT_VERSION}
 		;;
 	addons-manager)
@@ -299,9 +299,6 @@ function createSBFromDevelop() {
 
 	replaceInPom version ${currentVersion} ${nextVersion}
 
-	## ????
-	## $SCRIPTDIR/../replaceInPom.sh "<version>16-RC01</version>" "<version>17-SNAPSHOT</version>"
-
 	replaceInPom org.juzu.version ${JUZU_CURRENT_DEVELOP_VERSION} ${JUZU_NEXT_DEVELOP_VERSION}
 
 	replaceInPom org.exoplatform.depmgt.version ${MAVEN_DEPMGT_CURRENT_VERSION} ${MAVEN_DEPMGT_NEXT_VERSION}
@@ -363,13 +360,9 @@ function createSBFromDevelop() {
 	popd
 }
 
-
-createSBFromDevelop gamification exo-addons
-exit 1
-
 # Not yet supported
 # createSBFromDevelop cf-parent exoplatform
-# createSBFromDevelop maven-depmgt-pom
+createSBFromDevelop maven-depmgt-pom
 
 # Supported
 # Not since 5.1
