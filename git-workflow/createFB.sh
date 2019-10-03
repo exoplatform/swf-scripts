@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=news
-ISSUE=SWF-4780
+BRANCH=oo-productization
+ISSUE=SWF-4952
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=5.3.x-SNAPSHOT
@@ -44,6 +44,9 @@ ADDON_REMOTE_EDIT_TARGET_VERSION=2.3.x-$BRANCH-SNAPSHOT
 # Add-on eXo Perk Store
 ADDON_PERK_STORE_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDON_PERK_STORE_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+# Add-on eXo OnlyOffice
+ADDON_ONLYOFFICE_ORIGIN_VERSION=1.5.x-SNAPSHOT
+ADDON_ONLYOFFICE_TARGET_VERSION=1.5.x-$BRANCH-SNAPSHOT
 # Add-on eXo Push notifications
 ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION=1.2.x-SNAPSHOT
 ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
@@ -129,6 +132,7 @@ function replaceProjectVersion() {
 	lecko) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LECKO_ORIGIN_VERSION</version>" "<version>$ADDON_LECKO_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	news) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_NEWS_ORIGIN_VERSION</version>" "<version>$ADDON_NEWS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	maven-depmgt-pom) $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	onlyoffice) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ONLYOFFICE_ORIGIN_VERSION</version>" "<version>$ADDON_ONLYOFFICE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	openam-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_OPENAM_ORIGIN_VERSION</version>" "<version>$ADDON_OPENAM_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	perk-store) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PERK_STORE_ORIGIN_VERSION</version>" "<version>$ADDON_PERK_STORE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	push-notifications) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</version>" "<version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -191,6 +195,7 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.gamification.version>$ORIGIN_VERSION</addon.exo.gamification.version>" "<addon.exo.gamification.version>$TARGET_VERSION</addon.exo.gamification.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.kudos.version>$ADDON_KUDOS_ORIGIN_VERSION</addon.exo.kudos.version>" "<addon.exo.kudos.version>$ADDON_KUDOS_TARGET_VERSION</addon.exo.kudos.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.lecko.version>$ADDON_LECKO_ORIGIN_VERSION</addon.exo.lecko.version>" "<addon.exo.lecko.version>$ADDON_LECKO_TARGET_VERSION</addon.exo.lecko.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.onlyoffice.version>$ADDON_ONLYOFFICE_ORIGIN_VERSION</addon.exo.onlyffice.version>" "<addon.exo.onlyoffice.version>$ADDON_ONLYOFFICE_TARGET_VERSION</addon.exo.onlyoffice.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.openam-addon.version>$ADDON_OPENAM_ORIGIN_VERSION</addon.exo.openam-addon.version>" "<addon.exo.openam-addon.version>$ADDON_OPENAM_TARGET_VERSION</addon.exo.openam-addon.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.perk-store.version>$ADDON_PERK_STORE_ORIGIN_VERSION</addon.exo.perk-store.version>" "<addon.exo.perk-store.version>$ADDON_PERK_STORE_TARGET_VERSION</addon.exo.perk-store.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</addon.exo.push-notifications.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -258,6 +263,7 @@ createFB exo-es-embedded
 createFB kudos
 createFB lecko
 createFB news
+createFB onlyoffice
 createFB openam-addon
 createFB perk-store
 createFB push-notifications
