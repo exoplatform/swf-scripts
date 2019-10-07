@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/company-branding
+BRANCH_TO_DELETE=feature/kill-shindig
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(
