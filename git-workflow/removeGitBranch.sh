@@ -1,11 +1,11 @@
 #!/bin/bash -eu
 
-BRANCH_TO_DELETE=feature/jdk11
+BRANCH_TO_DELETE=feature/company-branding
 DEFAULT_BRANCH=develop
 
 SCRIPTDIR=$(
-	cd $(dirname "$0")
-	pwd
+  cd $(dirname "$0")
+  pwd
 )
 CURRENTDIR=$(pwd)
 
@@ -13,17 +13,17 @@ SWF_FB_REPOS=${SWF_FB_REPOS:-$CURRENTDIR}
 #echo "FB source dirs = ${SWF_FB_REPOS}"
 
 function deleteGitBranch() {
-	echo "########################################"
-	echo "##### repo : $(basename $1)"
-	echo "########################################"
-	pushd $1
-	git reset --hard origin/$DEFAULT_BRANCH
-	git clean -df
-	git checkout $DEFAULT_BRANCH
+  echo "########################################"
+  echo "##### repo : $(basename $1)"
+  echo "########################################"
+  pushd $1
+  git reset --hard origin/$DEFAULT_BRANCH
+  git clean -df
+  git checkout $DEFAULT_BRANCH
 
-	git branch -D $BRANCH_TO_DELETE || true
-	git push origin --delete $BRANCH_TO_DELETE || true
-	popd
+  git branch -D $BRANCH_TO_DELETE || true
+  git push origin --delete $BRANCH_TO_DELETE || true
+  popd
 }
 
 #pushd ${SWF_FB_REPOS}
@@ -71,8 +71,6 @@ deleteGitBranch platform-public-distributions
 deleteGitBranch platform-private-distributions
 # Not adter 5.2
 # deleteGitBranch platform-private-trial-distributions
-
-deleteGitBranch addons-manager
 
 #popd
 exit
