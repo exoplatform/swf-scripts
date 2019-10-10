@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=portal-rdbms
-ISSUE=SWF-3584
+BRANCH=activity-composer-vue
+ISSUE=SWF-4831
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.0.x-SNAPSHOT
@@ -246,18 +246,18 @@ createFB ws
 createFB jcr
 createFB gatein-pc
 createFB gatein-sso
-# createFB gatein-portal
+createFB gatein-portal
 createFB maven-depmgt-pom
 createFB docs-style
 createFB platform-ui
-createFB commons
-createFB social
-# createFB ecms
-# createFB wiki
+# createFB commons
+# createFB social
+createFB ecms
+createFB wiki
 createFB forum
 createFB calendar
 # createFB integration
-# createFB platform
+createFB platform
 
 createFB addons-manager
 createFB cas-addon
@@ -282,7 +282,7 @@ createFB wallet
 createFB wcm-template-pack
 createFB web-conferencing
 
-# createFB platform-public-distributions
+createFB platform-public-distributions
 createFB platform-private-distributions
 popd
 
