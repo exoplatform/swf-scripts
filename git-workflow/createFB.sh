@@ -232,7 +232,7 @@ function createFB() {
 	printf "\e[1;33m# %s\e[m\n" "Commiting and pushing the new $TARGET_BRANCH branch to origin ($repo_name) ..."
 	git commit -m "$ISSUE: Create FB $BRANCH and update projects versions/dependencies" -a
 	git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
-	git checkout develop
+	git checkout ${ORIGIN_BRANCH}
 	popd
 }
 
