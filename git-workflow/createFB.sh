@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=dw-homepage
-ISSUE=SWF-4956
+BRANCH=portal-rdbms
+ISSUE=SWF-3584
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.0.x-SNAPSHOT
@@ -111,7 +111,7 @@ function repoCleanup() {
 		git checkout -b $TARGET_BRANCH
 	else
 		printf "\e[1;35m# %s\e[m\n" "WARNING : the ${TARGET_BRANCH} branch already exists so we will delete it (you have 5 seconds to cancel with CTRL+C) ($repo_name) ..."
-		sleep 5
+		# sleep 5
 		git checkout $ORIGIN_BRANCH
 		git branch -D $TARGET_BRANCH
 		git checkout -b $TARGET_BRANCH
@@ -246,18 +246,18 @@ createFB ws
 createFB jcr
 createFB gatein-pc
 createFB gatein-sso
-createFB gatein-portal
+# createFB gatein-portal
 createFB maven-depmgt-pom
 createFB docs-style
 createFB platform-ui
 createFB commons
 createFB social
-createFB ecms
-createFB wiki
+# createFB ecms
+# createFB wiki
 createFB forum
 createFB calendar
-createFB integration
-createFB platform
+# createFB integration
+# createFB platform
 
 createFB addons-manager
 createFB cas-addon
@@ -282,7 +282,7 @@ createFB wallet
 createFB wcm-template-pack
 createFB web-conferencing
 
-createFB platform-public-distributions
+# createFB platform-public-distributions
 createFB platform-private-distributions
 popd
 
