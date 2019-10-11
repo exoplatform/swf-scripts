@@ -27,7 +27,14 @@ fi
 
 RELEASE_ISSUE=$1
 EXO_VERSION=$2
-CHAT_VERSION=$(echo ${EXO_VERSION} | sed 's/^5/2/')
+
+MAJOR_VERSION=$(echo "${EXO_VERSION}" | awk -F '.' '{print $1}')
+MINOR_VERSION=$(echo "${EXO_VERSION}" | awk -F '.' '{print $2}')
+FIX_VERSION=$(echo "${EXO_VERSION}" | awk -F '.' '{print $3}')
+
+CHAT_MAJOR_VERSION=$(( ${MAJOR_VERSION} - 3 ))
+
+CHAT_VERSION="${CHAT_MAJOR_VERSION}.${MINOR_VERSION}.${FIX_VERSION}"
 
 PROJECTS="exo-chat-server exo exo-community exo-trial"
 
