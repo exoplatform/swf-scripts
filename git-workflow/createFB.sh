@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=activity-composer-vue
-ISSUE=SWF-4831
+BRANCH=lightweight
+ISSUE=SWF-5008
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.0.x-SNAPSHOT
@@ -21,8 +21,8 @@ ADDON_CAS_TARGET_VERSION=3.0.x-$BRANCH-SNAPSHOT
 ADDON_CHAT_ORIGIN_VERSION=3.0.x-SNAPSHOT
 ADDON_CHAT_TARGET_VERSION=3.0.x-$BRANCH-SNAPSHOT
 # Add-on DW Homepage
-ADDON_DW_HOMEPAGE_ORIGIN_VERSION=1.0.x-SNAPSHOT
-ADDON_DW_HOMEPAGE_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+ADDON_DIGITAL_WORKPLACE_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDON_DIGITAL_WORKPLACE_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
 # Add-on eXo ElasticSearch Embedded
 ADDON_ES_EMBED_ORIGIN_VERSION=3.0.x-SNAPSHOT
 ADDON_ES_EMBED_TARGET_VERSION=3.0.x-$BRANCH-SNAPSHOT
@@ -129,7 +129,7 @@ function replaceProjectVersion() {
 	cas-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CAS_ORIGIN_VERSION</version>" "<version>$ADDON_CAS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	chat-application) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CHAT_ORIGIN_VERSION</version>" "<version>$ADDON_CHAT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	exo-es-embedded) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ES_EMBED_ORIGIN_VERSION</version>" "<version>$ADDON_ES_EMBED_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	dw-homepage) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_DW_HOMEPAGE_ORIGIN_VERSION</version>" "<version>$ADDON_DW_HOMEPAGE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	digital-workplace) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_DIGITAL_WORKPLACE_ORIGIN_VERSION</version>" "<version>$ADDON_DIGITAL_WORKPLACE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	gatein-dep) $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	gamification) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_GAMIFICATION_ORIGIN_VERSION</version>" "<version>$ADDON_GAMIFICATION_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	kudos) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_KUDOS_ORIGIN_VERSION</version>" "<version>$ADDON_KUDOS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -196,7 +196,7 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.cas-addon.version>$ADDON_CAS_ORIGIN_VERSION</addon.exo.cas-addon.version>" "<addon.exo.cas-addon.version>$ADDON_CAS_TARGET_VERSION</addon.exo.cas-addon.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>" "pom.xml -not -wholename \"*/target/*\""
 	# String to confirm
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.dw-homepage.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.dw-homepage.version>" "<addon.exo.dw-homepage.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.dw-homepage.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.digital-workplace.version>$ADDON_DIGITAL_WORKPLACE_ORIGIN_VERSION</addon.exo.digital-workplace.version>" "<addon.exo.digital-workplace.version>$ADDON_DIGITAL_WORKPLACE_TARGET_VERSION</addon.exo.digital-workplace.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.enterprise-skin.version>$ORIGIN_VERSION</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>$TARGET_VERSION</addon.exo.enterprise-skin.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.gamification.version>$ORIGIN_VERSION</addon.exo.gamification.version>" "<addon.exo.gamification.version>$TARGET_VERSION</addon.exo.gamification.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.kudos.version>$ADDON_KUDOS_ORIGIN_VERSION</addon.exo.kudos.version>" "<addon.exo.kudos.version>$ADDON_KUDOS_TARGET_VERSION</addon.exo.kudos.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -263,7 +263,7 @@ createFB addons-manager
 createFB cas-addon
 createFB chat-application
 createFB cmis-addon
-createFB dw-homepage
+createFB digital-workplace
 createFB enterprise-skin
 createFB gamification
 createFB exo-es-embedded
