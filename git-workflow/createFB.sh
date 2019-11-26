@@ -250,13 +250,13 @@ createFB gatein-portal
 createFB maven-depmgt-pom
 createFB docs-style
 createFB platform-ui
-# createFB commons
-# createFB social
+createFB commons
+createFB social
 createFB ecms
 createFB wiki
 createFB forum
 createFB calendar
-# createFB integration
+createFB integration
 createFB platform
 
 createFB addons-manager
