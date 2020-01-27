@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=spaces-groups-binding
-ISSUE=ITOP-4587
+BRANCH=dw-homepage2
+ISSUE=ITOP-4619
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.0.x-SNAPSHOT
@@ -251,7 +251,7 @@ createFB maven-depmgt-pom
 createFB docs-style
 createFB platform-ui
 createFB commons
-# createFB social
+createFB social
 createFB ecms
 createFB wiki
 createFB forum
