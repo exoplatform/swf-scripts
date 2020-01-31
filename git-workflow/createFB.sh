@@ -2,7 +2,7 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=dw-homepage
+BRANCH=dw-homepage2
 ISSUE=ITOP-4624
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
