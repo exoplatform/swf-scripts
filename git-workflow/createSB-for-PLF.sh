@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-ISSUE=SWF-4944
+ISSUE=ITOP-4722
 CURRENT_DEVELOP_VERSION_PREFIX=5.3.x
 NEXT_DEVELOP_VERSION_PREFIX=6.0.x
 
@@ -61,6 +61,11 @@ LECKO_CURRENT_VERSION_PREFIX=1.4.x
 LECKO_NEXT_VERSION_PREFIX=2.0.x
 LECKO_CURRENT_VERSION=${LECKO_CURRENT_VERSION_PREFIX}-SNAPSHOT
 LECKO_NEXT_VERSION=${LECKO_NEXT_VERSION_PREFIX}-SNAPSHOT
+
+NEWS_CURRENT_VERSION_PREFIX=1.1.x
+NEWS_NEXT_VERSION_PREFIX=2.0.x
+NEWS_CURRENT_VERSION=${NEWS_CURRENT_VERSION_PREFIX}-SNAPSHOT
+NEWS_NEXT_VERSION=${NEWS_NEXT_VERSION_PREFIX}-SNAPSHOT
 
 OPENAM_CURRENT_VERSION_PREFIX=2.3.x
 OPENAM_NEXT_VERSION_PREFIX=3.0.x
@@ -228,6 +233,11 @@ function createSBFromDevelop() {
 		currentVersion=${LECKO_CURRENT_VERSION}
 		nextVersion=${LECKO_NEXT_VERSION}
 		;;
+	news)
+		stableBranch=stable/${NEWS_CURRENT_VERSION_PREFIX}
+		currentVersion=${NEWS_CURRENT_VERSION}
+		nextVersion=${NEWS_NEXT_VERSION}
+		;;
 	openam-addon)
 		stableBranch=stable/${OPENAM_CURRENT_VERSION_PREFIX}
 		currentVersion=${OPENAM_CURRENT_VERSION}
@@ -341,6 +351,7 @@ function createSBFromDevelop() {
 	replaceInPom addon.exo.enterprise-skin.version ${CURRENT_DEVELOP_VERSION} ${NEXT_DEVELOP_VERSION}
 	replaceInPom addon.exo.chat.version ${CHAT_APPLICATION_CURRENT_VERSION} ${CHAT_APPLICATION_NEXT_VERSION}
 	replaceInPom addon.exo.gamification.version ${GAMIFICATION_CURRENT_VERSION} ${GAMIFICATION_NEXT_VERSION}
+	replaceInPom addon.exo.news.version ${NEWS_CURRENT_VERSION} ${NEWS_NEXT_VERSION}
 	replaceInPom addon.exo.kudos.version ${KUDOS_CURRENT_VERSION} ${KUDOS_NEXT_VERSION}
 	replaceInPom addon.exo.perk-store.version ${PERKSTORE_CURRENT_VERSION} ${PERKSTORE_NEXT_VERSION}
 	replaceInPom addon.exo.wallet.version ${WALLET_CURRENT_VERSION} ${WALLET_NEXT_VERSION}
@@ -402,6 +413,7 @@ createSBFromDevelop enterprise-skin exoplatform
 createSBFromDevelop gamification exo-addons
 createSBFromDevelop kudos exo-addons
 createSBFromDevelop lecko exo-addons
+createSBFromDevelop news exo-addons
 createSBFromDevelop openam-addon exo-addons
 createSBFromDevelop perk-store exo-addons
 createSBFromDevelop remote-edit exo-addons
