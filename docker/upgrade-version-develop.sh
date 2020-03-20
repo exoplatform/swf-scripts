@@ -60,7 +60,16 @@ CHAT_MAJOR_VERSION=$((${MAJOR_VERSION} - 3))
 
 CHAT_VERSION="${CHAT_MAJOR_VERSION}.${MINOR_VERSION}.${FIX_VERSION}"
 
-PROJECTS="exo-chat-server exo exo-community exo-trial"
+PROJECTS=""
+
+if [ ${MAJOR_VERSION} -ge 6 ]; then
+  PROJECTS="exo-chat-server exo exo-trial"
+else
+  PROJECTS="exo-chat-server exo exo-trial exo-community"
+fi
+
+printf "\e[1;33mWARN %s\e[m\n" "Docker project to build : ${PROJECTS}"
+user_validation Continue
 
 function compute_stable_branch() {
   local project=$1
