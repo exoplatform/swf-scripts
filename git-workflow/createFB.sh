@@ -292,6 +292,18 @@ createFB social
 # Removed on lightweight
 # createFB platform
 
+createFB app-center
+createFB exo-es-embedded
+createFB gamification
+createFB kudos
+createFB wallet
+createFB perk-store
+createFB push-notifications
+
+createFB addons-manager
+
+createFB meeds
+
 # CE plugins
 createFB ecms
 createFB jcr
@@ -300,34 +312,24 @@ createFB forum
 createFB calendar
 
 
-createFB addons-manager
-createFB app-center
 createFB cas-addon
 createFB chat-application
 createFB cmis-addon
 createFB data-upgrade
 createFB digital-workplace
-createFB enterprise-skin
-createFB exo-es-embedded
-createFB gamification
-createFB kudos
 createFB layout-management
 createFB lecko
 createFB legacy-intranet
 createFB news
 createFB onlyoffice
 createFB openam-addon
-createFB perk-store
-createFB push-notifications
 createFB remote-edit
 createFB saml2-addon
 createFB spnego-addon
 createFB task
-createFB wallet
 createFB wcm-template-pack
 createFB web-conferencing
 
-createFB platform-public-distributions
 createFB platform-private-distributions
 popd
 
