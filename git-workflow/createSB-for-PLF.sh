@@ -371,61 +371,63 @@ function createSBFromDevelop() {
 	popd
 }
 
-# Not yet supported
-# createSBFromDevelop cf-parent exoplatform
-createSBFromDevelop maven-depmgt-pom
 
 # Supported
 # Not since 5.1
 # createSBFromDevelop juzu juzu master
 
-createSBFromDevelop gatein-wci exodev
-createSBFromDevelop kernel exodev
-createSBFromDevelop core exodev
-createSBFromDevelop ws exodev
-createSBFromDevelop jcr exodev
-createSBFromDevelop gatein-dep exoplatform
-createSBFromDevelop gatein-sso exodev
-createSBFromDevelop gatein-pc exodev
-createSBFromDevelop gatein-portal exodev
+## Meeds
+
+# Not yet supported
+# createSBFromDevelop cf-parent meeds-io
+
+createSBFromDevelop maven-depmgt-pom meeds-io
+
+createSBFromDevelop gatein-wci meeds-io
+createSBFromDevelop kernel meeds-io
+createSBFromDevelop core meeds-io
+createSBFromDevelop ws meeds-io
+createSBFromDevelop gatein-dep meeds-io
+createSBFromDevelop gatein-sso meeds-io
+createSBFromDevelop gatein-pc meeds-io
+createSBFromDevelop platform-ui meeds-io
+createSBFromDevelop gatein-portal meeds-io
+createSBFromDevelop commons meeds-io
+createSBFromDevelop social meeds-io
+
+createSBFromDevelop exo-es-embedded meeds-io
+createSBFromDevelop gamification meeds-io
+createSBFromDevelop kudos meeds-io
+createSBFromDevelop perk-store meeds-io
+createSBFromDevelop wallet meeds-io
+createSBFromDevelop app-center meeds-io
+createSBFromDevelop push-notifications meeds-io
+
+createSBFromDevelop addons-manager meeds-io
+
+createSBFromDevelop meeds meeds-io
 
 ## PLF
-createSBFromDevelop docs-style exodev
-createSBFromDevelop platform-ui exodev
-createSBFromDevelop commons exodev
-createSBFromDevelop ecms exodev
-createSBFromDevelop social exodev
 createSBFromDevelop wiki exodev
+createSBFromDevelop jcr exodev
+createSBFromDevelop ecms exodev
 createSBFromDevelop forum exodev
 createSBFromDevelop calendar exodev
-createSBFromDevelop integration exodev
-createSBFromDevelop platform exodev
 
 ## Addons
-createSBFromDevelop addons-manager exoplatform
-# Not since 5.2
-# createSBFromDevelop answers exo-addons
 createSBFromDevelop cas-addon exo-addons
 createSBFromDevelop chat-application exo-addons
 createSBFromDevelop cmis-addon exo-addons
-createSBFromDevelop exo-es-embedded exo-addons
-createSBFromDevelop enterprise-skin exoplatform
-createSBFromDevelop gamification exo-addons
-createSBFromDevelop kudos exo-addons
 createSBFromDevelop lecko exo-addons
 createSBFromDevelop news exo-addons
 createSBFromDevelop openam-addon exo-addons
-createSBFromDevelop perk-store exo-addons
 createSBFromDevelop remote-edit exo-addons
 createSBFromDevelop saml2-addon exo-addons
 createSBFromDevelop spnego-addon exo-addons
 createSBFromDevelop task exo-addons
-createSBFromDevelop wallet exo-addons
 createSBFromDevelop wcm-template-pack exo-addons
 createSBFromDevelop web-conferencing exo-addons
-createSBFromDevelop push-notifications exo-addons
 
 ## Distrib
-createSBFromDevelop platform-public-distributions exoplatform
 createSBFromDevelop platform-private-distributions exoplatform
 # createSBFromDevelop platform-private-trial-distributions exoplatform
