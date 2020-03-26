@@ -62,7 +62,8 @@ CHAT_VERSION="${CHAT_MAJOR_VERSION}.${MINOR_VERSION}.${FIX_VERSION}"
 
 PROJECTS=""
 
-if [ ${MAJOR_VERSION} -ge 6 ]; then
+# no community version for >= 6.0 and fix versions
+if [ ${MAJOR_VERSION} -ge 6 ] || [ ${STABLE_BRANCH} == "true" ] && [ "${FIX_VERSION:0:1}" -gt 0 ]; then
   PROJECTS="exo-chat-server exo exo-trial"
 else
   PROJECTS="exo-chat-server exo exo-trial exo-community"
