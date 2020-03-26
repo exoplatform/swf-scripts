@@ -68,7 +68,7 @@ while getopts "rc:e:j:" opt; do
 		echo "Jira issue : ${JIRA_ID}"
 		;;
 	*)
-	    echo "Unsupported option -${opt}"
+	        echo "Unsupported option -${opt}"
 		exit 1
 		;;
 	esac
