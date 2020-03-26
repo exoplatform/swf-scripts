@@ -67,6 +67,10 @@ while getopts "rc:e:j:" opt; do
 		JIRA_ID=${OPTARG}
 		echo "Jira issue : ${JIRA_ID}"
 		;;
+	*)
+	    echo "Unsupported option -${opt}"
+		exit 1
+		;;
 	esac
 done
 
@@ -97,7 +101,11 @@ if [ -n "${CUSTOMER}" ]; then
 	fi
 	REQ_PARAMS="&customer=${CUSTOMER}&catalog=${ENVIRONMENT}"
 	CATALOG_FILE_NAME="${ENVIRONMENT}-${CUSTOMER}-list.json"
+elif [ -n "${ENVIRONMENT}" ]; then
+	REQ_PARAMS="&catalog=${ENVIRONMENT}"
+	CATALOG_FILE_NAME="${ENVIRONMENT}-list.json"
 fi
+
 curl -f -L "${CATALOG_URL}/exec?${REQ_PARAMS}" >/tmp/list-new.json
 echo "Download old catalog..."
 if ! scp ${CATALOG_HOST}:${CATALOG_PATH}/${CATALOG_FILE_NAME} /tmp/list-old.json; then
