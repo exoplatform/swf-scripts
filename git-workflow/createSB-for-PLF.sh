@@ -379,22 +379,22 @@ createSBFromDevelop maven-depmgt-pom
 # Not since 5.1
 # createSBFromDevelop juzu juzu master
 
-createSBFromDevelop gatein-wci exodev
-createSBFromDevelop kernel exodev
-createSBFromDevelop core exodev
-createSBFromDevelop ws exodev
+createSBFromDevelop gatein-wci meeds-io
+createSBFromDevelop kernel meeds-io
+createSBFromDevelop core meeds-io
+createSBFromDevelop ws meeds-io
 createSBFromDevelop jcr exodev
 createSBFromDevelop gatein-dep exoplatform
-createSBFromDevelop gatein-sso exodev
-createSBFromDevelop gatein-pc exodev
-createSBFromDevelop gatein-portal exodev
+createSBFromDevelop gatein-sso meeds-io
+createSBFromDevelop gatein-pc meeds-io
+createSBFromDevelop gatein-portal meeds-io
 
 ## PLF
 createSBFromDevelop docs-style exodev
-createSBFromDevelop platform-ui exodev
-createSBFromDevelop commons exodev
+createSBFromDevelop platform-ui meeds-io
+createSBFromDevelop commons meeds-io
 createSBFromDevelop ecms exodev
-createSBFromDevelop social exodev
+createSBFromDevelop social meeds-io
 createSBFromDevelop wiki exodev
 createSBFromDevelop forum exodev
 createSBFromDevelop calendar exodev

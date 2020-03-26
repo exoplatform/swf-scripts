@@ -23,12 +23,13 @@ function clone {
   curl -u "$GITHUB_LOGIN:$GITHUB_PWD" -s "https://api.github.com/orgs/$1/repos?page=$2&per_page=100" | ruby -rubygems ${SCRIPT_DIR}/clone-github-orga-repos.rb
 }
 
-# Clone all exodev repositories and add blessed remotes
+# Clone all exodev & meeds-io repositories and add blessed remotes
 # $2 : The page number  (there are 100 entries per page)
 function cloneDev {
 	export WORKSPACE=$TARGET_DIR/exodev
 	mkdir -p $WORKSPACE
   ruby -rubygems ${SCRIPT_DIR}/clone-exo-dev-with-blessed.rb
+  ruby -rubygems ${SCRIPT_DIR}/clone-meeds-io-with-blessed.rb
 }
 
 pushd .

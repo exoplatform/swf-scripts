@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-# Create a project branch on exodev repositories (and exoplatform for private projects)
+# Create a project branch on exodev & meeds-io repositories (and exoplatform for private projects)
 # based on a stable branch or a release tag
 # target branch name = ${TARGET_BRANCH_PREFIX}/${BRANCH} (the plf version is not kept because can change after the branch creation)
 # for example : /project/acc210 
@@ -428,24 +428,24 @@ function createPB() {
 
 pushd ${SWF_FB_REPOS}
 
-createPB gatein-wci exodev
-createPB kernel exodev
-createPB core exodev
-createPB ws exodev
+createPB gatein-wci meeds-io
+createPB kernel meeds-io
+createPB core meeds-io
+createPB ws meeds-io
 createPB jcr exodev
 createPB gatein-dep exoplatform
-createPB gatein-sso exodev
-createPB gatein-pc exodev
-createPB gatein-portal exodev
+createPB gatein-sso meeds-io
+createPB gatein-pc meeds-io
+createPB gatein-portal meeds-io
 
 createPB maven-depmgt-pom exoplatform
 
 ## PLF
 createPB docs-style exodev
-createPB platform-ui exodev
-createPB commons exodev
+createPB platform-ui meeds-io
+createPB commons meeds-io
 createPB ecms exodev
-createPB social exodev
+createPB social meeds-io
 createPB wiki exodev
 createPB forum exodev
 createPB calendar exodev
