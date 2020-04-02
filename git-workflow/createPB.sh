@@ -79,6 +79,12 @@ ADDON_LECKO_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_LECKO_ORIGIN_VERSION=${ADDON_LECKO_ORIGIN_BRANCH}  #.x-SNAPSHOT 
 ADDON_LECKO_TARGET_VERSION=1.4.2-$BRANCH-SNAPSHOT
 
+# Add-on eXo News
+ADDON_NEWS_ORIGIN_BRANCH=1.1.1
+ADDON_NEWS_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
+ADDON_NEWS_ORIGIN_VERSION=${ADDON_NEWS_ORIGIN_BRANCH}  #.x-SNAPSHOT 
+ADDON_NEWS_TARGET_VERSION=1.1.1-$BRANCH-SNAPSHOT
+
 # Add-on OpenAM
 ADDON_OPENAM_ORIGIN_BRANCH=2.3.2
 ADDON_OPENAM_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
@@ -126,6 +132,12 @@ ADDON_TASK_ORIGIN_BRANCH=2.3.2
 ADDON_TASK_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_TASK_ORIGIN_VERSION=${ADDON_TASK_ORIGIN_BRANCH} #.x-SNAPSHOT
 ADDON_TASK_TARGET_VERSION=2.3.2-$BRANCH-SNAPSHOT
+
+# Add-on eXo Wallet
+ADDON_WALLET_ORIGIN_BRANCH=1.0.2
+ADDON_WALLET_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
+ADDON_WALLET_ORIGIN_VERSION=${ADDON_WALLET_ORIGIN_BRANCH} #.x-SNAPSHOT
+ADDON_WALLET_TARGET_VERSION=1.0.2-$BRANCH-SNAPSHOT
 
 # Add-on eXo Web Conferencing
 ADDON_WEB_CONFERENCING_ORIGIN_BRANCH=1.4.2
@@ -279,9 +291,15 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.enterprise-skin.version>$DEFAULT_ORIGIN_VERSION</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>$DEFAULT_TARGET_VERSION</addon.exo.enterprise-skin.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_ORIGIN_VERSION</addon.exo.es.embedded.version>" "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_TARGET_VERSION</addon.exo.es.embedded.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.gamification.version>$ADDON_GAMIFICATION_ORIGIN_VERSION</addon.exo.gamification.version>" "<addon.exo.gamification.version>$ADDON_GAMIFICATION_TARGET_VERSION</addon.exo.gamification.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.kudos.version>$ADDON_KUDOS_ORIGIN_VERSION</addon.exo.kudos.version>" "<addon.exo.kudos.version>$ADDON_KUDOS_TARGET_VERSION</addon.exo.kudos.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.news.version>$ADDON_NEWS_ORIGIN_VERSION</addon.exo.news.version>" "<addon.exo.news.version>$ADDON_NEWS_TARGET_VERSION</addon.exo.news.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.onlyoffice.version>$ADDON_ONLYOFFICE_ORIGIN_VERSION</addon.exo.onlyoffice.version>" "<addon.exo.onlyoffice.version>$ADDON_ONLYOFFICE_TARGET_VERSION</addon.exo.onlyoffice.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</addon.exo.push-notifications.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</addon.exo.remote-edit.version>" "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_TARGET_VERSION</addon.exo.remote-edit.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.perk-store.version>$ADDON_PERK_STORE_ORIGIN_VERSION</addon.exo.perk-store.version>" "<addon.exo.perk-store.version>$ADDON_PERK_STORE_TARGET_VERSION</addon.exo.perk-store.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.wallet.version>$ADDON_WALLET_ORIGIN_VERSION</addon.exo.wallet.version>" "<addon.exo.wallet.version>$ADDON_WALLET_TARGET_VERSION</addon.exo.wallet.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</addon.exo.web-conferencing.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.web-pack.version>$ADDON_WEB_PACK_ORIGIN_VERSION</addon.exo.web-pack.version>" "<addon.exo.web-pack.version>$ADDON_WEB_PACK_TARGET_VERSION</addon.exo.web-pack.version>"
 }
@@ -381,6 +399,12 @@ function createPB() {
 		projectBranch=${ADDON_LECKO_TARGET_BRANCH}
 		projectBranchVersion=${ADDON_LECKO_TARGET_VERSION}
 		;;
+	news)
+		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_NEWS_ORIGIN_BRANCH}
+		startVersion=${ADDON_NEWS_ORIGIN_VERSION}
+		projectBranch=${ADDON_NEWS_TARGET_BRANCH}
+		projectBranchVersion=${ADDON_NEWS_TARGET_VERSION}
+		;;
 	onlyoffice)
 		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_ONLYOFFICE_ORIGIN_BRANCH}
 		startVersion=${ADDON_ONLYOFFICE_CURRENT_VERSION}
@@ -423,6 +447,12 @@ function createPB() {
 		projectBranch=${ADDON_TASK_TARGET_BRANCH}
 		projectBranchVersion=${ADDON_TASK_TARGET_VERSION}
 		;;
+	wallet)
+		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_WALLET_ORIGIN_BRANCH}
+		startVersion=${ADDON_WALLET_ORIGIN_VERSION}
+		projectBranch=${ADDON_WALLET_TARGET_BRANCH}
+		projectBranchVersion=${ADDON_WALLET_TARGET_VERSION}
+		;;
 	wcm-template-pack)
 		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_WEB_PACK_ORIGIN_BRANCH}
 		startVersion=${ADDON_WEB_PACK_ORIGIN_VERSION}
@@ -455,11 +485,6 @@ function createPB() {
 	printf "\e[1;33m########################################\e[m\n"
 	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
 	printf "\e[1;33m########################################\e[m\n"
-
-	if [ ! -d $repo_name ]; then
-	  # Control will enter here if $DIRECTORY doesn't exist.
-	  git clone git@github.com:$devOrga/$repo_name.git
-	fi
 
 	pushd ${repo_name}
 
@@ -518,6 +543,7 @@ createPB enterprise-skin exoplatform
 createPB gamification exoplatform
 createPB kudos exoplatform
 createPB lecko exoplatform
+createPB news exoplatform
 createPB onlyoffice explatform
 createPB openam-addon exoplatform
 createPB perk-store exoplatform
@@ -526,6 +552,7 @@ createPB remote-edit exoplatform
 createPB saml2-addon exoplatform
 createPB spnego-addon exoplatform
 createPB task exoplatform
+createPB wallet exoplatform
 createPB wcm-template-pack exoplatform
 createPB web-conferencing exoplatform
 
