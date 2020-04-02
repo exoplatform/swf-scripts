@@ -7,113 +7,149 @@
 # project version is on the form 5.1.x-acc210-SNAPSHOT on the form 
 
 # Create Git Feature Branches for PLF projects
-BRANCH=acc210
-ISSUE=SWF-4697
+BRANCH=spaces-groups-binding
+ISSUE=ITOP-4787
 # Empty if start point is a tag, stable/ for a stable branch
 ORIGIN_BRANCH_PREFIX=   # stable/
 TARGET_BRANCH_PREFIX=project/
 
-DEFAULT_ORIGIN_BRANCH=5.1.2
-DEFAULT_TARGET_BRANCH=${TARGET_BRANCH_PREFIX}${BRANCH}
+DEFAULT_ORIGIN_BRANCH=5.3.2
+DEFAULT_TARGET_BRANCH=${TARGET_BRANCH_PREFIX}5.3.2-${BRANCH}
 
-DEFAULT_ORIGIN_VERSION=5.1.2
-DEFAULT_TARGET_VERSION=5.1.x-$BRANCH-SNAPSHOT
+DEFAULT_ORIGIN_VERSION=5.3.2
+DEFAULT_TARGET_VERSION=5.3.2-$BRANCH-SNAPSHOT
 
 # Maven DEPMGT
-DEPMGT_ORIGIN_BRANCH=14.2
+DEPMGT_ORIGIN_BRANCH=16.2
 DEPMGT_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 DEPMGT_ORIGIN_VERSION=${DEPMGT_ORIGIN_BRANCH} #.x-SNAPSHOT
-DEPMGT_TARGET_VERSION=14.x-$BRANCH-SNAPSHOT
+DEPMGT_TARGET_VERSION=16.2-$BRANCH-SNAPSHOT
 
 # GateIn DEPMGT
-GATEIN_DEP_ORIGIN_BRANCH=1.6.2
+GATEIN_DEP_ORIGIN_BRANCH=1.8.2
 GATEIN_DEP_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 GATEIN_DEP_ORIGIN_VERSION=${GATEIN_DEP_ORIGIN_BRANCH} #.x-SNAPSHOT
-GATEIN_DEP_TARGET_VERSION=1.6.x-$BRANCH-SNAPSHOT 
+GATEIN_DEP_TARGET_VERSION=1.8.2-$BRANCH-SNAPSHOT 
 
 # Add-on manager
-ADDONS_MANAGER_ORIGIN_BRANCH=1.3.2
+ADDONS_MANAGER_ORIGIN_BRANCH=1.5.2
 ADDONS_MANAGER_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDONS_MANAGER_ORIGIN_VERSION=${ADDONS_MANAGER_ORIGIN_BRANCH}   #.x-SNAPSHOT
-ADDONS_MANAGER_TARGET_VERSION=1.3.x-${BRANCH}-SNAPSHOT
+ADDONS_MANAGER_TARGET_VERSION=1.5.2-${BRANCH}-SNAPSHOT
 
 # Add-on Answers
-ADDON_ANSWERS_ORIGIN_BRANCH=2.1.2
+ADDON_ANSWERS_ORIGIN_BRANCH=2.1.3-CP01
 ADDON_ANSWERS_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_ANSWERS_ORIGIN_VERSION=${ADDON_ANSWERS_ORIGIN_BRANCH}  #.x-SNAPSHOT
-ADDON_ANSWERS_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_ANSWERS_TARGET_VERSION=2.1.3-CP01-$BRANCH-SNAPSHOT
 
 # Add-on CAS
-ADDON_CAS_ORIGIN_BRANCH=2.1.2
+ADDON_CAS_ORIGIN_BRANCH=2.3.2
 ADDON_CAS_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_CAS_ORIGIN_VERSION=${ADDON_CAS_ORIGIN_BRANCH}  #.x-SNAPSHOT
-ADDON_CAS_TARGET_VERSION=2.1.x-${BRANCH}-SNAPSHOT
+ADDON_CAS_TARGET_VERSION=2.3.2-${BRANCH}-SNAPSHOT
 
 # Add-on eXo Chat
-ADDON_CHAT_ORIGIN_BRANCH=2.1.2
+ADDON_CHAT_ORIGIN_BRANCH=2.3.2
 ADDON_CHAT_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_CHAT_ORIGIN_VERSION=${ADDON_CHAT_ORIGIN_BRANCH} #.x-SNAPSHOT
-ADDON_CHAT_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_CHAT_TARGET_VERSION=2.3.2-$BRANCH-SNAPSHOT
 
 # Add-on eXo ElasticSearch Embedded
-ADDON_ES_EMBED_ORIGIN_BRANCH=2.1.2
+ADDON_ES_EMBED_ORIGIN_BRANCH=2.3.2
 ADDON_ES_EMBED_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_ES_EMBED_ORIGIN_VERSION=${ADDON_ES_EMBED_ORIGIN_BRANCH} #.x-SNAPSHOT
-ADDON_ES_EMBED_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_ES_EMBED_TARGET_VERSION=2.3.2-$BRANCH-SNAPSHOT
+
+# Add-on eXo Gamification
+ADDON_GAMIFICATION_ORIGIN_BRANCH=1.2.2
+ADDON_GAMIFICATION_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
+ADDON_GAMIFICATION_ORIGIN_VERSION=${ADDON_GAMIFICATION_ORIGIN_BRANCH} #.x-SNAPSHOT
+ADDON_GAMIFICATION_TARGET_VERSION=1.2.2-$BRANCH-SNAPSHOT
+
+# Add-on eXo Kudos
+ADDON_KUDOS_ORIGIN_BRANCH=1.1.2
+ADDON_KUDOS_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
+ADDON_KUDOS_ORIGIN_VERSION=${ADDON_KUDOS_ORIGIN_BRANCH} #.x-SNAPSHOT
+ADDON_KUDOS_TARGET_VERSION=1.1.2-$BRANCH-SNAPSHOT
 
 # Add-on eXo Lecko !!not available before 5.2.x!!
-ADDON_LECKO_ORIGIN_BRANCH=
+ADDON_LECKO_ORIGIN_BRANCH=1.4.2
 ADDON_LECKO_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_LECKO_ORIGIN_VERSION=${ADDON_LECKO_ORIGIN_BRANCH}  #.x-SNAPSHOT 
-ADDON_LECKO_TARGET_VERSION=x.x.x-$BRANCH-SNAPSHOT
+ADDON_LECKO_TARGET_VERSION=1.4.2-$BRANCH-SNAPSHOT
+
+# Add-on eXo News
+ADDON_NEWS_ORIGIN_BRANCH=1.1.1
+ADDON_NEWS_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
+ADDON_NEWS_ORIGIN_VERSION=${ADDON_NEWS_ORIGIN_BRANCH}  #.x-SNAPSHOT 
+ADDON_NEWS_TARGET_VERSION=1.1.1-$BRANCH-SNAPSHOT
 
 # Add-on OpenAM
-ADDON_OPENAM_ORIGIN_BRANCH=2.1.2
+ADDON_OPENAM_ORIGIN_BRANCH=2.3.2
 ADDON_OPENAM_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_OPENAM_CURRENT_VERSION=${ADDON_OPENAM_ORIGIN_BRANCH}   #.x-SNAPSHOT
-ADDON_OPENAM_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_OPENAM_TARGET_VERSION=2.3.2-$BRANCH-SNAPSHOT
+
+# Add-on eXo OnlyOffice
+ADDON_ONLYOFFICE_ORIGIN_BRANCH=1.5.2
+ADDON_ONLYOFFICE_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
+ADDON_ONLYOFFICE_CURRENT_VERSION=${ADDON_ONLYOFFICE_ORIGIN_BRANCH}
+ADDON_ONLYOFFICE_TARGET_VERSION=1.5.2-$BRANCH-SNAPSHOT
+
+# Add-on eXo Perk Store
+ADDON_PERK_STORE_ORIGIN_BRANCH=1.1.2
+ADDON_PERK_STORE_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
+ADDON_PERK_STORE_ORIGIN_VERSION=${ADDON_PERK_STORE_ORIGIN_BRANCH}  #.x-SNAPSHOT
+ADDON_PERK_STORE_TARGET_VERSION=1.1.2-$BRANCH-SNAPSHOT
 
 # Add-on eXo Push notifications
-ADDON_PUSH_NOTIFICATIONS_ORIGIN_BRANCH=1.0.2
+ADDON_PUSH_NOTIFICATIONS_ORIGIN_BRANCH=1.2.2
 ADDON_PUSH_NOTIFICATIONS_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION=${ADDON_PUSH_NOTIFICATIONS_ORIGIN_BRANCH}  #.x-SNAPSHOT
-ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=1.2.2-$BRANCH-SNAPSHOT
 
 # Add-on eXo Remote Edit
-ADDON_REMOTE_EDIT_ORIGIN_BRANCH=2.1.2
+ADDON_REMOTE_EDIT_ORIGIN_BRANCH=2.3.2
 ADDON_REMOTE_EDIT_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_REMOTE_EDIT_ORIGIN_VERSION=${ADDON_REMOTE_EDIT_ORIGIN_BRANCH}  #.x-SNAPSHOT
-ADDON_REMOTE_EDIT_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_REMOTE_EDIT_TARGET_VERSION=2.3.2-$BRANCH-SNAPSHOT
 
 # Add-on Saml
-ADDON_SAML2_ORIGIN_BRANCH=2.1.2
+ADDON_SAML2_ORIGIN_BRANCH=2.3.2
 ADDON_SAML2_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_SAML2_ORIGIN_VERSION=${ADDON_SAML2_ORIGIN_BRANCH}  #  #.x-SNAPSHOT
-ADDON_SAML2_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_SAML2_TARGET_VERSION=2.3.2-$BRANCH-SNAPSHOT
 
 # Add-on SPNEGO
-ADDON_SPNEGO_ORIGIN_BRANCH=2.1.2
+ADDON_SPNEGO_ORIGIN_BRANCH=2.3.2
 ADDON_SPNEGO_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_SPNEGO_ORIGIN_VERSION=${ADDON_SPNEGO_ORIGIN_BRANCH}   #.x-SNAPSHOT
-ADDON_SPNEGO_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_SPNEGO_TARGET_VERSION=2.3.2-$BRANCH-SNAPSHOT
 
 # Add-on eXo Task
-ADDON_TASK_ORIGIN_BRANCH=2.1.2
+ADDON_TASK_ORIGIN_BRANCH=2.3.2
 ADDON_TASK_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_TASK_ORIGIN_VERSION=${ADDON_TASK_ORIGIN_BRANCH} #.x-SNAPSHOT
-ADDON_TASK_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_TASK_TARGET_VERSION=2.3.2-$BRANCH-SNAPSHOT
+
+# Add-on eXo Wallet
+ADDON_WALLET_ORIGIN_BRANCH=1.0.2
+ADDON_WALLET_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
+ADDON_WALLET_ORIGIN_VERSION=${ADDON_WALLET_ORIGIN_BRANCH} #.x-SNAPSHOT
+ADDON_WALLET_TARGET_VERSION=1.0.2-$BRANCH-SNAPSHOT
 
 # Add-on eXo Web Conferencing
-ADDON_WEB_CONFERENCING_ORIGIN_BRANCH=1.2.2
+ADDON_WEB_CONFERENCING_ORIGIN_BRANCH=1.4.2
 ADDON_WEB_CONFERENCING_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH}
 ADDON_WEB_CONFERENCING_ORIGIN_VERSION=${ADDON_WEB_CONFERENCING_ORIGIN_BRANCH}  #.x-SNAPSHOT 
-ADDON_WEB_CONFERENCING_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
+ADDON_WEB_CONFERENCING_TARGET_VERSION=1.4.2-$BRANCH-SNAPSHOT
 
 # Add-on eXo Web Pack
-ADDON_WEB_PACK_ORIGIN_BRANCH=2.1.2
+ADDON_WEB_PACK_ORIGIN_BRANCH=2.3.2
 ADDON_WEB_PACK_TARGET_BRANCH=${DEFAULT_TARGET_BRANCH} 
 ADDON_WEB_PACK_ORIGIN_VERSION=${ADDON_WEB_PACK_ORIGIN_BRANCH}  #.x-SNAPSHOT
-ADDON_WEB_PACK_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_WEB_PACK_TARGET_VERSION=2.3.2-$BRANCH-SNAPSHOT
 
 SCRIPTDIR=$(
 	cd $(dirname "$0")
@@ -255,9 +291,15 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.enterprise-skin.version>$DEFAULT_ORIGIN_VERSION</addon.exo.enterprise-skin.version>" "<addon.exo.enterprise-skin.version>$DEFAULT_TARGET_VERSION</addon.exo.enterprise-skin.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_ORIGIN_VERSION</addon.exo.es.embedded.version>" "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_TARGET_VERSION</addon.exo.es.embedded.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.gamification.version>$ADDON_GAMIFICATION_ORIGIN_VERSION</addon.exo.gamification.version>" "<addon.exo.gamification.version>$ADDON_GAMIFICATION_TARGET_VERSION</addon.exo.gamification.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.kudos.version>$ADDON_KUDOS_ORIGIN_VERSION</addon.exo.kudos.version>" "<addon.exo.kudos.version>$ADDON_KUDOS_TARGET_VERSION</addon.exo.kudos.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.news.version>$ADDON_NEWS_ORIGIN_VERSION</addon.exo.news.version>" "<addon.exo.news.version>$ADDON_NEWS_TARGET_VERSION</addon.exo.news.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.onlyoffice.version>$ADDON_ONLYOFFICE_ORIGIN_VERSION</addon.exo.onlyoffice.version>" "<addon.exo.onlyoffice.version>$ADDON_ONLYOFFICE_TARGET_VERSION</addon.exo.onlyoffice.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</addon.exo.push-notifications.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</addon.exo.remote-edit.version>" "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_TARGET_VERSION</addon.exo.remote-edit.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.perk-store.version>$ADDON_PERK_STORE_ORIGIN_VERSION</addon.exo.perk-store.version>" "<addon.exo.perk-store.version>$ADDON_PERK_STORE_TARGET_VERSION</addon.exo.perk-store.version>"
+	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.wallet.version>$ADDON_WALLET_ORIGIN_VERSION</addon.exo.wallet.version>" "<addon.exo.wallet.version>$ADDON_WALLET_TARGET_VERSION</addon.exo.wallet.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</addon.exo.web-conferencing.version>"
 	$SCRIPTDIR/../replaceInPom.sh "<addon.exo.web-pack.version>$ADDON_WEB_PACK_ORIGIN_VERSION</addon.exo.web-pack.version>" "<addon.exo.web-pack.version>$ADDON_WEB_PACK_TARGET_VERSION</addon.exo.web-pack.version>"
 }
@@ -339,11 +381,35 @@ function createPB() {
 		projectBranch=${ADDON_ES_EMBED_TARGET_BRANCH}
 		projectBranchVersion=${ADDON_ES_EMBED_TARGET_VERSION}
 		;;
+	gamification)
+		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_GAMIFICATION_ORIGIN_BRANCH}
+		startVersion=${ADDON_GAMIFICATION_ORIGIN_VERSION}
+		projectBranch=${ADDON_GAMIFICATION_TARGET_BRANCH}
+		projectBranchVersion=${ADDON_GAMIFICATION_TARGET_VERSION}
+		;;
+	kudos)
+		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_KUDOS_ORIGIN_BRANCH}
+		startVersion=${ADDON_KUDOS_ORIGIN_VERSION}
+		projectBranch=${ADDON_KUDOS_TARGET_BRANCH}
+		projectBranchVersion=${ADDON_KUDOS_TARGET_VERSION}
+		;;	
 	lecko)
 		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_LECKO_ORIGIN_BRANCH}
 		startVersion=${ADDON_LECKO_ORIGIN_VERSION}
 		projectBranch=${ADDON_LECKO_TARGET_BRANCH}
 		projectBranchVersion=${ADDON_LECKO_TARGET_VERSION}
+		;;
+	news)
+		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_NEWS_ORIGIN_BRANCH}
+		startVersion=${ADDON_NEWS_ORIGIN_VERSION}
+		projectBranch=${ADDON_NEWS_TARGET_BRANCH}
+		projectBranchVersion=${ADDON_NEWS_TARGET_VERSION}
+		;;
+	onlyoffice)
+		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_ONLYOFFICE_ORIGIN_BRANCH}
+		startVersion=${ADDON_ONLYOFFICE_CURRENT_VERSION}
+		projectBranch=${ADDON_ONLYOFFICE_TARGET_BRANCH}
+		projectBranchVersion=${ADDON_ONLYOFFICE_TARGET_VERSION}
 		;;
 	openam-addon)
 		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_OPENAM_ORIGIN_BRANCH}
@@ -351,6 +417,12 @@ function createPB() {
 		projectBranch=${ADDON_OPENAM_TARGET_BRANCH}
 		projectBranchVersion=${ADDON_OPENAM_TARGET_VERSION}
 		;;
+	perk-store)
+		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_PERK_STORE_ORIGIN_BRANCH}
+		startVersion=${ADDON_PERK_STORE_CURRENT_VERSION}
+		projectBranch=${ADDON_PERK_STORE_TARGET_BRANCH}
+		projectBranchVersion=${ADDON_PERK_STORE_TARGET_VERSION}
+		;;	
 	remote-edit)
 		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_REMOTE_EDIT_ORIGIN_BRANCH}
 		startVersion=${ADDON_REMOTE_EDIT_ORIGIN_VERSION}
@@ -374,6 +446,12 @@ function createPB() {
 		startVersion=${ADDON_TASK_ORIGIN_VERSION}
 		projectBranch=${ADDON_TASK_TARGET_BRANCH}
 		projectBranchVersion=${ADDON_TASK_TARGET_VERSION}
+		;;
+	wallet)
+		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_WALLET_ORIGIN_BRANCH}
+		startVersion=${ADDON_WALLET_ORIGIN_VERSION}
+		projectBranch=${ADDON_WALLET_TARGET_BRANCH}
+		projectBranchVersion=${ADDON_WALLET_TARGET_VERSION}
 		;;
 	wcm-template-pack)
 		startBranch=${ORIGIN_BRANCH_PREFIX}${ADDON_WEB_PACK_ORIGIN_BRANCH}
@@ -407,6 +485,7 @@ function createPB() {
 	printf "\e[1;33m########################################\e[m\n"
 	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
 	printf "\e[1;33m########################################\e[m\n"
+
 	pushd ${repo_name}
 
 	repoInit ${devOrga} ${repository} ${startBranch}
@@ -428,54 +507,60 @@ function createPB() {
 
 pushd ${SWF_FB_REPOS}
 
-createPB gatein-wci exodev
-createPB kernel exodev
-createPB core exodev
-createPB ws exodev
-createPB jcr exodev
+createPB gatein-wci exoplatform
+createPB kernel exoplatform
+createPB core exoplatform
+createPB ws exoplatform
+createPB jcr exoplatform
 createPB gatein-dep exoplatform
-createPB gatein-sso exodev
-createPB gatein-pc exodev
-createPB gatein-portal exodev
+createPB gatein-sso exoplatform
+createPB gatein-pc exoplatform
+createPB gatein-portal exoplatform
 
 createPB maven-depmgt-pom exoplatform
 
 ## PLF
-createPB docs-style exodev
-createPB platform-ui exodev
-createPB commons exodev
-createPB ecms exodev
-createPB social exodev
-createPB wiki exodev
-createPB forum exodev
-createPB calendar exodev
-createPB integration exodev
-createPB platform exodev
+createPB docs-style exoplatform
+createPB platform-ui exoplatform
+createPB commons exoplatform
+createPB ecms exoplatform
+createPB social exoplatform
+createPB wiki exoplatform
+createPB forum exoplatform
+createPB calendar exoplatform
+createPB integration exoplatform
+createPB platform exoplatform
 
 ## Addons
 createPB addons-manager exoplatform
 # Only for version <= 5.1.x
-createPB answers exo-addons
-createPB cas-addon exo-addons
-createPB chat-application exo-addons
-createPB cmis-addon exo-addons
-createPB exo-es-embedded exo-addons
+#createPB answers exoplatform
+createPB cas-addon exoplatform
+createPB chat-application exoplatform
+createPB cmis-addon exoplatform
+createPB exo-es-embedded exoplatform
 createPB enterprise-skin exoplatform
-# Only for versions >= 5.2.x
-# createPB lecko exo-addons
-createPB openam-addon exo-addons
-createPB push-notifications exo-addons
-createPB remote-edit exo-addons
-createPB saml2-addon exo-addons
-createPB spnego-addon exo-addons
-createPB task exo-addons
-createPB wcm-template-pack exo-addons
-createPB web-conferencing exo-addons
+createPB gamification exoplatform
+createPB kudos exoplatform
+createPB lecko exoplatform
+createPB news exoplatform
+createPB onlyoffice explatform
+createPB openam-addon exoplatform
+createPB perk-store exoplatform
+createPB push-notifications exoplatform
+createPB remote-edit exoplatform
+createPB saml2-addon exoplatform
+createPB spnego-addon exoplatform
+createPB task exoplatform
+createPB wallet exoplatform
+createPB wcm-template-pack exoplatform
+createPB web-conferencing exoplatform
 
 ## Distrib
 createPB platform-public-distributions exoplatform
 createPB platform-private-distributions exoplatform
-createPB platform-private-trial-distributions exoplatform
+## Not present in 5.3.2
+#createPB platform-private-trial-distributions exoplatform
 
 printf "\e[1;33m########################################\e[m\n"
 printf "\e[1;33m# Project branch ${DEFAULT_TARGET_BRANCH} created\e[m\n"
