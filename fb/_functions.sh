@@ -13,7 +13,7 @@ echo_warn() {
 }
 
 exit_with_cleanup() {
- rm -rf $wkdir 2>&1 &>/dev/null
+ rm -rf $wkdir &>/dev/null
  exit $1
 }
 
@@ -22,7 +22,7 @@ validate_json() {
 }
 
 assert_command() {
-  if ! hash $1 2>&1 &>/dev/null; then 
+  if ! hash $1 &>/dev/null; then 
      echo_err "$1 is not installed !"
      exit 1
   fi

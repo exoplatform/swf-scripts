@@ -44,10 +44,10 @@ fi
 
 action=$1
 start_time=$(date +%s);
-rm -rf ${wkdir}* 2>&1 &>/dev/null #Cleanup
+rm -rf ${wkdir}* &>/dev/null #Cleanup
 for el in $(cat ${config_file} | jq -c '.[]'); do
     ## Args Parsing
-    if ! eval $(echo $el | jq -r '. | to_entries | .[] | .key + "=\"" + .value + "\""') 2>&1 &>/dev/null; then
+    if ! eval $(echo $el | jq -r '. | to_entries | .[] | .key + "=\"" + .value + "\""') &>/dev/null; then
         echo_err "Could not convert the followig JSON Object to Bash variables!"
         echo $el | jq
         exit 3
@@ -87,8 +87,8 @@ for el in $(cat ${config_file} | jq -c '.[]'); do
     ## Clone Repository
     echo_ok "Cloning ${full_repo_name}"
     local_repo_path="${wkdir}/${full_repo_name}"
-    [ -e ${local_repo_path} ] && rm -rf ${local_repo_path} 2>&1 &>/dev/null #Cleanup
-    if ! git clone ${ssh_url} ${local_repo_path} 2>&1 &>/dev/null; then
+    [ -e ${local_repo_path} ] && rm -rf ${local_repo_path} &>/dev/null #Cleanup
+    if ! git clone ${ssh_url} ${local_repo_path} &>/dev/null; then
         echo_err "Could not clone ${full_repo_name} !"
         exit_with_cleanup 4
     fi
@@ -135,7 +135,7 @@ for el in $(cat ${config_file} | jq -c '.[]'); do
         fi
         ## Check if the current branch is the selected base branch if not, check out to it
         if [[ "${git_base_branch}" != "${current_branch}" ]]; then
-            if ! r_git checkout ${git_base_branch} 2>&1 &>/dev/null; then
+            if ! r_git checkout ${git_base_branch} &>/dev/null; then
                 echo_err "Could not checkout to branch \"${git_base_branch}\" !"
                 exit_with_cleanup 5
             fi
@@ -147,7 +147,7 @@ for el in $(cat ${config_file} | jq -c '.[]'); do
         # Add Force flag for the git push and remove branch as precaution
         force_flag=""
         [[ ${update} == "true" ]] && force_flag="-f"
-        r_git branch -D ${name} 2>&1 &>/dev/null
+        r_git branch -D ${name} &>/dev/null
 
         # Create target branch locally and push to the remote
         if r_git checkout -b "${name}" && r_git push origin "${name}" ${force_flag} 2>/dev/null; then
@@ -180,7 +180,7 @@ for el in $(cat ${config_file} | jq -c '.[]'); do
         fi
     fi
     ## Mandatory Common cleanup process for the next iteration
-    rm -rf $(dirname ${local_repo_path}) 2>&1 &>/dev/null #Global Cleanup : dirname = organization folder
+    rm -rf $(dirname ${local_repo_path}) &>/dev/null #Global Cleanup : dirname = organization folder
     unset name git_base_branch git_organization git_repository update force_flag
 done
 echo_ok "Finished in $(date -ud "@$(($(date +%s) - $start_time))" +%T)."
