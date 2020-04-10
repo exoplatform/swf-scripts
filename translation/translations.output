@@ -1,5 +1,0 @@
-############################################################################
-# Project exoplatform/gatein-portal - branch develop
-############################################################################
-Clone git repo exoplatform/gatein-portal - branch develop
-./init-crowdin-project.sh: ligne 44 : pushd: gatein-portal: Aucun fichier ou dossier de ce type
