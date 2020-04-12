@@ -45,9 +45,7 @@ print_help() {
 **** Feature Branch Manager ****** 
  ** Created by eXo SWF / ITOP Team
 
-Usage:      $0 <configuration_file.json> <action> <feature_branch_name>
-
-Actions:    create, delete
+Usage:      $0 -j|--jira ITOP_XXXX -c|--config <configuration_file.json> -a|--action <create|delete> -b|--featurebranch <[Feature/]xxxxxxx>
 
 Config File Sample:
 

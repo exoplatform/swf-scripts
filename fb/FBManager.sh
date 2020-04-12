@@ -18,48 +18,84 @@ protected_branches_list_regex="^(master|develop|stable\/[0-9.-_a-zA-Z]+)$"
 
 scrdir=$(dirname $(realpath $0))
 . ${scrdir}/_functions.sh
-if [ -z "$1" ] || [[ $1 =~ ^-(h|-help)$ ]]; then
+SHORT=abchj
+LONG=jira,config,action,featurebranch,help
+PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
+if [[ $? -ne 0 ]]; then
     print_help
     exit 0
 fi
+while true; do
+    case "$1" in
+    -h | --help)
+        print_help
+        exit 0
+        ;;
+    -j | --jira)
+        jira_id="$2"
+        shift 2
+        ;;
+    -c | --config)
+        config_file="$(realpath $2)"
+        shift 2
+        ;;
+    -a | --action)
+        action="$2"
+        shift 2
+        ;;
+    -b | --featurebranch)
+        featurebranch="$2"
+        shift 2
+        ;;
+    "")
+        break
+        ;;
+    *)
+        print_help
+        exit 0
+        ;;
+    esac
+done
+
+#Check commands
 assert_command git
 assert_command jq
 assert_command mvn
-if [ -z "$1" ] || [ ! -f "$1" ]; then
+
+if [ -z "${jira_id}" ] || [[ ! "${jira_id}" =~ ^ITOP-[0-9]+$ ]]; then
+    echo_err "Jira ID is missing or invalid"
+    exit 1
+fi
+
+if [ -z "${config_file}" ] || [ ! -f "${config_file}" ]; then
     echo_err "Config file is missing or invalid"
     exit 1
 fi
-config_file=$(realpath $1)
 if ! validate_json ${config_file} >/dev/null; then #Suppress only plain message
     echo_err "Config file is not a valid JSON file!"
     exit 2
 else
-    echo_ok "Config file \"$1\" is a valid JSON file"
+    echo_ok "Config file \"${config_file}\" is a valid JSON file"
 fi
-shift
-if [[ ! "$1" =~ ^(create|delete)$ ]]; then
+if [[ ! "${action}" =~ ^(create|delete)$ ]]; then
     echo_err "Wrong or Missing action! only create or delete are accepted!"
     exit 2
 else
-    echo_ok "Action \"$1\" will be performed"
+    echo_ok "Action \"${action}\" will be performed"
 fi
-action=$1
-shift
-if [ -z "$1" ]; then
-    echo_err "Missing Feature Branch name!!"
+if [ -z "${featurebranch}" ]; then
+    echo_err "Missing Feature Branch name!"
     exit 2
 fi
-featurebranch=$1
-[[ "${featurebranch}" =~ ^Feature ]] || featurebranch="feature/${featurebranch}"
+[[ "${featurebranch}" =~ ^(F|f)eature/ ]] || featurebranch="feature/${featurebranch}"
 
 maventag=$(echo ${featurebranch} | sed -E 's|^(f\|F)eature/||g')
-#Check for illegal characteres like / etc 
+
+#Check for illegal characteres like / etc
 if [[ ! "${maventag}" =~ ^[A-Za-z0-9_-]+$ ]]; then
     echo_err "Feature branch \"${featurebranch}\" contains illegal characters!"
     exit 3
 fi
-
-shift
 echo_ok "Feature Branch is \"${featurebranch}\""
 start_time=$(date +%s)
 rm -rf ${wkdir}* &>/dev/null #Cleanup
@@ -185,7 +221,7 @@ for el in $(cat ${config_file} | jq -c '.[]'); do
                 exit_with_cleanup 4
             fi
             r_git add $(find ${local_repo_path} -name pom.xml | xargs)
-            if ! echo "Create Feature Branch ${featurebranch}" | r_git commit -F -; then
+            if ! echo "${jira_id}: Create Feature Branch ${featurebranch}" | r_git commit -F -; then
                 echo_err "Could not commit on the ${featurebranch} branch!"
                 exit_with_cleanup 4
             fi
