@@ -63,7 +63,7 @@ echo "Operation ${OPERATION} will be performed by user: $USER"
 echo "Downloading new catalog...."
 curl -f -L "${CATALOG_URL}/exec?${REQ_PARAMS}" >/tmp/list-new.json
 echo "Download old catalog..."
-if ! scp ${CATALOG_HOST}:${CATALOG_PATH}/${CATALOG_FILE_NAME} /tmp/list-old.json; then
+if ! cp -vf ${CATALOG_PATH}/${CATALOG_FILE_NAME} /tmp/list-old.json; then
 	echo Unable to find old remote catalog
 	rm -f /tmp/list-old.json
 	touch /tmp/list-old.json
@@ -81,11 +81,8 @@ cat /tmp/list.diff
 if [ ${OPERATION} == "VALIDATE" ]; then
 	echo "Updating catalog...."
 	echo "   Uploading new catalog..."
-	scp /tmp/list-new.json ${CATALOG_HOST}:/tmp/list-new.json
 	echo "   Preparing script ..."
-
 	OLD_NAME=$(date +%Y%m%d_%H%M%S-${CATALOG_FILE_NAME})
-
 	cat <<EOF >/tmp/update_catalog.sh
 #!/bin/bash -eu
 
@@ -95,15 +92,12 @@ if [ -e "${CATALOG_PATH}/${CATALOG_FILE_NAME}" ]; then
 else
   echo "Previous catalog file ${CATALOG_PATH}/${CATALOG_FILE_NAME} not found"
 fi
-
 mv -v /tmp/list-new.json ${CATALOG_PATH}/${CATALOG_FILE_NAME}
 chown www-data: ${CATALOG_PATH}/${CATALOG_FILE_NAME}
 EOF
-	echo "   Copying script ..."
-	scp -C /tmp/update_catalog.sh ${CATALOG_HOST}:
 	echo "   Changing script permissions..."
-	ssh ${CATALOG_HOST} chmod u+x update_catalog.sh
+	chmod u+x /tmp/update_catalog.sh
 	echo "   Executing script..."
-	ssh -t ${CATALOG_HOST} sudo ./update_catalog.sh
+	sudo /tmp/update_catalog.sh
 	echo "Catalog updated"
 fi
