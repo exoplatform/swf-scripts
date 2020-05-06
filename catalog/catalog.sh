@@ -17,6 +17,16 @@ fi
 [ "${ENVIRONMENT}" == "DEFAULT" ] && ENVIRONMENT=""
 [ -z "${CUSTOMER}" ] && CUSTOMER=""
 
+shopt -s nocasematch
+TASK_TITLE=""
+if [ -z "${TASK_ID}" ] || [[ ! "${TASK_ID}" =~ ^(ta(sk)?-)?[0-9]+$ ]]; then
+	TASK_ID=""
+else
+	TASK_ID=$(echo "${TASK_ID}" | tr -dc '0-9')
+	TASK_TITLE=$(curl -s -L -u $TRIBE_AGENT_USERNAME:$TRIBE_AGENT_PASSWORD "$TRIBE_TASK_REST_PREFIXE_URL/logs/${TASK_ID}" 2>/dev/null | jq .[0].task.title | tr -d '"')
+	[ -z "${TASK_TITLE}" ] || echo "Task title: "${TASK_TITLE}
+fi
+
 set -u
 REQ_PARAMS='catalog=official&show=snapshot'
 CATALOG_FILE_NAME="list.json"
@@ -77,4 +87,8 @@ EOF
 	echo "   Executing script..."
 	sudo /tmp/update_catalog.sh
 	echo "Catalog updated"
+	if [ ! -z "${TASK_TITLE}" ]; then
+		printf "Posting commment to task #${TASK_ID}..."
+		curl -s -L -u $TRIBE_AGENT_USERNAME:$TRIBE_AGENT_PASSWORD -XPOST -d "@/tmp/list.diff" "$TRIBE_TASK_REST_PREFIXE_URL/comments/${TASK_ID}" &>/dev/null && echo "OK" || echo "ERROR"
+	fi
 fi
