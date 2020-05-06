@@ -1,45 +1,23 @@
 #!/bin/bash -eu
 
 set +u
-if [ ! -f "$HOME/.catalog.env" ]; then
-	echo "[ERROR] The configuration file ${HOME}/.catalog.env not found"
-	echo "Check the Readme.md file for more information"
-	exit 1
-fi
-
-source ~/.catalog.env
 
 if [ -z "${CATALOG_URL}" ]; then
-	echo "[ERROR] No CATALOG_URL property found in the configuration file"
+	echo "[ERROR] No value for CATALOG_URL environment variable"
 	echo "Check the Readme.md file for more information"
 	exit 1
 fi
+
+if [ -z "${CATALOG_PATH}" ]; then
+	echo "[ERROR] No value for CATALOG_PATH environment variable"
+	echo "Check the Readme.md file for more information"
+	exit 1
+fi
+
+[ "${ENVIRONMENT}" == "DEFAULT" ] && ENVIRONMENT=""
+[ -z "${CUSTOMER}" ] && CUSTOMER=""
+
 set -u
-
-CUSTOMER=''
-ENVIRONMENT=''
-OPERATION=''
-
-while getopts "c:e:o:" opt; do
-	case $opt in
-	c)
-		CUSTOMER=${OPTARG}
-		echo "Catalog will be generated for customer ${CUSTOMER}"
-		;;
-	e)
-		ENVIRONMENT=${OPTARG}
-		echo "Catalog will be generated for environment ${ENVIRONMENT}"
-		;;
-	o)
-		OPERATION=${OPTARG}
-		;;
-	*)
-		echo "Unsupported option -${opt}"
-		exit 1
-		;;
-	esac
-done
-
 REQ_PARAMS='catalog=official&show=snapshot'
 CATALOG_FILE_NAME="list.json"
 if [ -n "${CUSTOMER}" ]; then
@@ -59,7 +37,6 @@ if [[ ! ${OPERATION} =~ ^(VIEW|VALIDATE)$ ]]; then
 	exit 1
 fi
 echo "Operation ${OPERATION} will be performed by user: $USER"
-
 echo "Downloading new catalog...."
 curl -f -L "${CATALOG_URL}/exec?${REQ_PARAMS}" >/tmp/list-new.json
 echo "Download old catalog..."
