@@ -113,10 +113,11 @@ EOF
 			done
 		else
 			set -e
-			cat /tmp/list.diff >/tmp/formattedComment
+			echo -e "<pre>\n$(cat /tmp/list.diff)" >/tmp/formattedComment
 			sed -i "s/\"/'/g" /tmp/formattedComment
 			sed -ir '/^\s*$/d' /tmp/formattedComment
 			sed -i 's/$/<br>/' /tmp/formattedComment
+			echo "</pre>" >> /tmp/formattedComment
 			printf "Posting comment..."
 			curl -s -L -u $TRIBE_AGENT_USERNAME:$TRIBE_AGENT_PASSWORD -XPOST --data-urlencode "@/tmp/formattedComment" "$TRIBE_TASK_REST_PREFIXE_URL/comments/${TASK_ID}" &>/dev/null && echo "OK" || echo "ERROR"
 		fi
