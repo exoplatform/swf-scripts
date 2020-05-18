@@ -31,8 +31,8 @@ set -u
 REQ_PARAMS='catalog=official&show=snapshot'
 CATALOG_FILE_NAME="list.json"
 if [ -n "${CUSTOMER}" ]; then
-	if [ -z "${ENVIRONMENT}" ]; then
-		echo "You must provide an environment (acceptance|hosting)"
+	if [ -z "${ENVIRONMENT}" ] || [[ ! ${ENVIRONMENT} =~ ^(acceptance|hosting)$ ]]; then
+		echo "You must provide a valid environment (acceptance|hosting)"
 		exit 1
 	fi
 	REQ_PARAMS="&customer=${CUSTOMER}&catalog=${ENVIRONMENT}"
@@ -107,7 +107,7 @@ EOF
 				sed -ir '/^\s*$/d' /tmp/formattedComment$j
 				sed -i 's/$/<br>/' /tmp/formattedComment$j
 				sed -i 's/pre><br>/pre>/g' /tmp/formattedComment$j
-				printf "Posting comment #$j"...
+				printf "Posting comment #$j..."
 				curl -s -L -u $TRIBE_AGENT_USERNAME:$TRIBE_AGENT_PASSWORD -XPOST --data-urlencode "@/tmp/formattedComment$j" "$TRIBE_TASK_REST_PREFIXE_URL/comments/${TASK_ID}" &>/dev/null && echo "OK" || echo "ERROR"
 				((j++))
 			done
@@ -117,6 +117,7 @@ EOF
 			sed -i "s/\"/'/g" /tmp/formattedComment
 			sed -ir '/^\s*$/d' /tmp/formattedComment
 			sed -i 's/$/<br>/' /tmp/formattedComment
+			printf "Posting comment..."
 			curl -s -L -u $TRIBE_AGENT_USERNAME:$TRIBE_AGENT_PASSWORD -XPOST --data-urlencode "@/tmp/formattedComment" "$TRIBE_TASK_REST_PREFIXE_URL/comments/${TASK_ID}" &>/dev/null && echo "OK" || echo "ERROR"
 		fi
 		set +e
