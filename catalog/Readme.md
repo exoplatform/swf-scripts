@@ -1,27 +1,43 @@
 # How to transfer a new catalog
 
+## Desclaimer
+
+The following script should be executed by the CI Agent.
+
 ## Configuration
 
-* Create a ``$HOME/.catalog.env`` file with this content :
+* The following environment variables must be defined in the CI Job / Jenkins Slave configuration
 
 ```
 CATALOG_SCRIPT_URL=https://script....
-CATALOG_HOST=...
 CATALOG_PATH=...
+TRIBE_AGENT_USERNAME=...
+TRIBE_AGENT_PASSWORD=...
+TRIBE_TASK_REST_PREFIXE_URL=https://community.exoplatform.com/rest/private/tasks (without "/" at the end)
+```
+
+* Specify the following environment variables as CI Build parameters
+```
+OPERATION: [Mandatory] Specify the operation to be performed, accpeted values are: VIEW|VALIDATE
+             - VIEW: Display the catalog file changes without applying new changes to the catalog.
+             - VALIDATE: Perform the VIEW operation with applying new changes to the catalog.
+ENVIRONMENT : [Optional] Specify the catalog environment, accepted values are: acceptance|hosting 
+CUSTOMER : [Optional] Specify the customer ID
+TASK_ID: [Optional] Specify the eXo Tribe Task ID, catalog file difference will be commented to the specified task.
 ```
 
 ## Command
 
 ```
-./catalog.sh -o operation [-e env] [-c customer]
+export CATALOG_SCRIPT_URL=https://script....
+export CATALOG_PATH=/srv/....
+export OPERATION=VALIDATE
+./catalog.sh
 ```
-* -o : [mandatory] the operation to be performed: VIEW or VALIDATE are accepted
-* -e : [optional] Generate the catalog for a specific environment (hosting|acceptance)
-* -c : [optional] Generate the catalog for a specific customer
 
 Example :
 ```bash
-$ ./catalog.sh -o VALIDATE
+$ ./catalog.sh
 Downloading new catalog....
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -38,7 +54,7 @@ list-new.json                                                                   
 update_catalog.sh                                                                                  100%  424    32.9KB/s   00:00
    Changing script permissions...
    Executing script...
-[sudo] password for myuser:
+[sudo] password for ciagent:
 Copying list.json to 20200207_111708-list.json
 `/srv/.../list.json' -> `/srv/.../20200207_111708-list.json'
 `/tmp/list-new.json' -> `/srv/.../list.json'
