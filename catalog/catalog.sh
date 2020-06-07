@@ -16,6 +16,7 @@ fi
 
 [ "${ENVIRONMENT}" == "DEFAULT" ] && ENVIRONMENT=""
 [ -z "${CUSTOMER}" ] && CUSTOMER=""
+[ -z "${BUILD_URL}" ] && BUILD_URL=""
 
 shopt -s nocasematch
 TASK_TITLE=""
@@ -92,25 +93,33 @@ EOF
 		rm -f /tmp/splittedComment*
 		rm -f /tmp/formattedComment*
 		# Check if comment split is needed or not according to },{ occurences
-		if [ $(grep -o '},{' /tmp/list.diff | wc -l) -gt "1" ]; then
-			awk '{print $0 > "/tmp/splittedComment" NR}' RS='},{' /tmp/list.diff
-			splittedCommentsLength=$(ls /tmp/splittedComment* | wc -l)
-			j=1
-			set -e
-			echo -e "<pre>\n$(cat /tmp/splittedComment1)" >/tmp/splittedComment1
-			echo -e "$(cat /tmp/splittedComment${splittedCommentsLength} | head -n 2)\n</pre>" >/tmp/splittedComment${splittedCommentsLength}
-			for i in $(seq 2 $((${splittedCommentsLength} - 1))); do
-				echo "$(cat /tmp/splittedComment1)},{" >/tmp/formattedComment$j
-				echo "$(cat /tmp/splittedComment$i)},{" >>/tmp/formattedComment$j
-				cat /tmp/splittedComment${splittedCommentsLength} >>/tmp/formattedComment$j
-				sed -i "s/\"/'/g" /tmp/formattedComment$j
-				sed -ir '/^\s*$/d' /tmp/formattedComment$j
-				sed -i 's/$/<br>/' /tmp/formattedComment$j
-				sed -i 's/pre><br>/pre>/g' /tmp/formattedComment$j
-				printf "Posting comment #$j..."
-				curl -s -L -u $TRIBE_AGENT_USERNAME:$TRIBE_AGENT_PASSWORD -XPOST --data-urlencode "@/tmp/formattedComment$j" "$TRIBE_TASK_REST_PREFIXE_URL/comments/${TASK_ID}" &>/dev/null && echo "OK" || echo "ERROR"
-				((j++))
-			done
+		jsonItemsLength=$(grep -o '},{' /tmp/list.diff | wc -l)
+		if [ ${jsonItemsLength} -gt "1" ]; then
+			if [ ${jsonItemsLength} -lt "20" ]; then
+				awk '{print $0 > "/tmp/splittedComment" NR}' RS='},{' /tmp/list.diff
+				splittedCommentsLength=$(ls /tmp/splittedComment* | wc -l)
+				j=1
+				set -e
+				echo -e "<pre>\n$(cat /tmp/splittedComment1)" >/tmp/splittedComment1
+				echo -e "$(cat /tmp/splittedComment${splittedCommentsLength} | head -n 2)\n</pre>" >/tmp/splittedComment${splittedCommentsLength}
+				for i in $(seq 2 $((${splittedCommentsLength} - 1))); do
+					echo "$(cat /tmp/splittedComment1)},{" >/tmp/formattedComment$j
+					echo "$(cat /tmp/splittedComment$i)},{" >>/tmp/formattedComment$j
+					cat /tmp/splittedComment${splittedCommentsLength} >>/tmp/formattedComment$j
+					sed -i "s/\"/'/g" /tmp/formattedComment$j
+					sed -ir '/^\s*$/d' /tmp/formattedComment$j
+					sed -i 's/$/<br>/' /tmp/formattedComment$j
+					sed -i 's/pre><br>/pre>/g' /tmp/formattedComment$j
+					printf "Posting comment #$j..."
+					curl -s -L -u $TRIBE_AGENT_USERNAME:$TRIBE_AGENT_PASSWORD -XPOST --data-urlencode "@/tmp/formattedComment$j" "$TRIBE_TASK_REST_PREFIXE_URL/comments/${TASK_ID}" &>/dev/null && echo "OK" || echo "ERROR"
+					((j++))
+				done
+			elif [ ! -z "${BUILD_URL}" ]; then
+				echo "The number of JSON elements exceeds 20, Posting the CI Build URL instead."
+				echo "Catalog Updated - CI Build URL: ${BUILD_URL}/console" >/tmp/formattedComment
+				printf "Posting comment..."
+				curl -s -L -u $TRIBE_AGENT_USERNAME:$TRIBE_AGENT_PASSWORD -XPOST --data-urlencode "@/tmp/formattedComment" "$TRIBE_TASK_REST_PREFIXE_URL/comments/${TASK_ID}" &>/dev/null && echo "OK" || echo "ERROR"
+			fi
 		else
 			set -e
 			echo -e "<pre>\n$(cat /tmp/list.diff)" >/tmp/formattedComment
