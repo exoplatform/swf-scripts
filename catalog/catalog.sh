@@ -95,7 +95,7 @@ EOF
 		# Check if comment split is needed or not according to },{ occurences
 		jsonItemsLength=$(grep -o '},{' /tmp/list.diff | wc -l)
 		if [ ${jsonItemsLength} -gt "1" ]; then
-			if [ ${jsonItemsLength} -lt "20" ]; then
+			if [ ${jsonItemsLength} -lt "10" ]; then
 				awk '{print $0 > "/tmp/splittedComment" NR}' RS='},{' /tmp/list.diff
 				splittedCommentsLength=$(ls /tmp/splittedComment* | wc -l)
 				j=1
@@ -115,8 +115,8 @@ EOF
 					((j++))
 				done
 			elif [ ! -z "${BUILD_URL}" ]; then
-				echo "The number of JSON elements exceeds 20, Posting the CI Build URL instead."
-				echo "Catalog Updated - CI Build URL: ${BUILD_URL}/console" >/tmp/formattedComment
+				echo "The number of JSON elements exceeds 10, Posting the CI Build URL instead."
+				echo "Catalog Updated - CI Build URL: ${BUILD_URL}console" >/tmp/formattedComment
 				printf "Posting comment..."
 				curl -s -L -u $TRIBE_AGENT_USERNAME:$TRIBE_AGENT_PASSWORD -XPOST --data-urlencode "@/tmp/formattedComment" "$TRIBE_TASK_REST_PREFIXE_URL/comments/${TASK_ID}" &>/dev/null && echo "OK" || echo "ERROR"
 			fi
