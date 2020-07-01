@@ -132,6 +132,26 @@ APP_CENTER_NEXT_VERSION_PREFIX=6.1.x
 APP_CENTER_CURRENT_VERSION=${APP_CENTER_CURRENT_VERSION_PREFIX}-SNAPSHOT
 APP_CENTER_NEXT_VERSION=${APP_CENTER_NEXT_VERSION_PREFIX}-SNAPSHOT
 
+ONLYOFFICE_CURRENT_VERSION_PREFIX=2.0.x
+ONLYOFFICE_NEXT_VERSION_PREFIX=2.1.x
+ONLYOFFICE_CURRENT_VERSION=${ONLYOFFICE_CURRENT_VERSION_PREFIX}-SNAPSHOT
+ONLYOFFICE_NEXT_VERSION=${ONLYOFFICE_NEXT_VERSION_PREFIX}-SNAPSHOT
+
+DIGITAL_WORKPLACE_CURRENT_VERSION_PREFIX=2.0.x
+DIGITAL_WORKPLACE_NEXT_VERSION_PREFIX=2.1.x
+DIGITAL_WORKPLACE_CURRENT_VERSION=${DIGITAL_WORKPLACE_CURRENT_VERSION_PREFIX}-SNAPSHOT
+DIGITAL_WORKPLACE_NEXT_VERSION=${DIGITAL_WORKPLACE_NEXT_VERSION_PREFIX}-SNAPSHOT
+
+DATA_UPGRADE_CURRENT_VERSION_PREFIX=6.0.x
+DATA_UPGRADE_NEXT_VERSION_PREFIX=6.1.x
+DATA_UPGRADE_CURRENT_VERSION=${DATA_UPGRADE_CURRENT_VERSION_PREFIX}-SNAPSHOT
+DATA_UPGRADE_NEXT_VERSION=${DATA_UPGRADE_NEXT_VERSION_PREFIX}-SNAPSHOT
+
+LAYOUT_MANAGEMENT_CURRENT_VERSION_PREFIX=1.0.x
+LAYOUT_MANAGEMENT_NEXT_VERSION_PREFIX=1.1.x
+LAYOUT_MANAGEMENT_CURRENT_VERSION=${LAYOUT_MANAGEMENT_CURRENT_VERSION_PREFIX}-SNAPSHOT
+LAYOUT_MANAGEMENT_NEXT_VERSION=${LAYOUT_MANAGEMENT_NEXT_VERSION_PREFIX}-SNAPSHOT
+
 ORIGIN_BRANCH=develop
 
 SCRIPTDIR=$(
@@ -234,6 +254,16 @@ function createSBFromDevelop() {
 		currentVersion=${CHAT_APPLICATION_CURRENT_VERSION}
 		nextVersion=${CHAT_APPLICATION_NEXT_VERSION}
 		;;
+	digital-workplace)
+		stableBranch=stable/${DIGITAL_WORKPLACE_CURRENT_VERSION_PREFIX}
+		currentVersion=${DIGITAL_WORKPLACE_CURRENT_VERSION}
+		nextVersion=${DIGITAL_WORKPLACE_NEXT_VERSION}
+		;;
+	data-upgrade)
+		stableBranch=stable/${DATA_UPGRADE_CURRENT_VERSION_PREFIX}
+		currentVersion=${DATA_UPGRADE_CURRENT_VERSION}
+		nextVersion=${DATA_UPGRADE_NEXT_VERSION}
+		;;
 	exo-es-embedded)
 		stableBranch=stable/${ES_EMBEDDED_CURRENT_VERSION_PREFIX}
 		currentVersion=${ES_EMBEDDED_CURRENT_VERSION}
@@ -259,6 +289,11 @@ function createSBFromDevelop() {
 		currentVersion=${MEEDS_CURRENT_VERSION}
 		nextVersion=${MEEDS_NEXT_VERSION}
 		;;
+	layout-management)
+	    stableBranch=stable/${LAYOUT_MANAGEMENT_CURRENT_VERSION_PREFIX}
+		currentVersion=${LAYOUT_MANAGEMENT_CURRENT_VERSION}
+		nextVersion=${LAYOUT_MANAGEMENT_NEXT_VERSION}
+		;;
 	legacy-intranet)
 	    stableBranch=stable/${LEGACY_INTRANET_CURRENT_VERSION_PREFIX}
 		currentVersion=${LEGACY_INTRANET_CURRENT_VERSION}
@@ -273,6 +308,11 @@ function createSBFromDevelop() {
 		stableBranch=stable/${OPENAM_CURRENT_VERSION_PREFIX}
 		currentVersion=${OPENAM_CURRENT_VERSION}
 		nextVersion=${OPENAM_NEXT_VERSION}
+		;;
+	onlyoffice)
+		stableBranch=stable/${ONLYOFFICE_CURRENT_VERSION_PREFIX}
+		currentVersion=${ONLYOFFICE_CURRENT_VERSION}
+		nextVersion=${ONLYOFFICE_NEXT_VERSION}
 		;;
 	perk-store)
 		stableBranch=stable/${PERKSTORE_CURRENT_VERSION_PREFIX}
@@ -389,6 +429,10 @@ function createSBFromDevelop() {
 	replaceInPom io.meeds.distribution.version ${MEEDS_CURRENT_VERSION} ${MEEDS_NEXT_VERSION}
 	replaceInPom addon.exo.layout-management.version ${LEGACY_INTRANET_CURRENT_VERSION} ${LEGACY_INTRANET_NEXT_VERSION}
 	replaceInPom addon.exo.app-center.version ${APP_CENTER_CURRENT_VERSION} ${APP_CENTER_NEXT_VERSION}
+	replaceInPom addon.exo.onlyoffice.version ${ONLYOFFICE_CURRENT_VERSION} ${ONLYOFFICE_NEXT_VERSION}
+	replaceInPom addon.exo.digital-workplace.version ${DIGITAL_WORKPLACE_CURRENT_VERSION} ${DIGITAL_WORKPLACE_NEXT_VERSION}
+	replaceInPom addon.exo.data-upgrade.version ${DATA_UPGRADE_CURRENT_VERSION} ${DATA_UPGRADE_NEXT_VERSION}
+	replaceInPom addon.exo.layout-management.version ${LAYOUT_MANAGEMENT_CURRENT_VERSION} ${LAYOUT_MANAGEMENT_NEXT_VERSION}
 
 	git commit -m "$ISSUE: Update project versions to ${nextVersion}" -a
 
@@ -448,18 +492,23 @@ createSBFromDevelop kudos meeds-io
 createSBFromDevelop lecko exo-addons
 createSBFromDevelop news exo-addons
 createSBFromDevelop openam-addon exo-addons
+createSBFromDevelop onlyoffice exo-addons
 createSBFromDevelop perk-store meeds-io
 createSBFromDevelop remote-edit exo-addons
 createSBFromDevelop saml2-addon exo-addons
 createSBFromDevelop spnego-addon exo-addons
 createSBFromDevelop task exo-addons
 createSBFromDevelop wallet meeds-io
-createSBFromDevelop wcm-template-pack exo-addons
+#createSBFromDevelop wcm-template-pack exo-addons
 createSBFromDevelop web-conferencing exo-addons
 createSBFromDevelop push-notifications meeds-io
 createSBFromDevelop app-center meeds-io
+createSBFromDevelop digital-workplace exo-addons
+createSBFromDevelop data-upgrade exo-addons
+createSBFromDevelop layout-management exo-addons
+
 
 ## Distrib
-createSBFromDevelop platform-public-distributions exoplatform
 createSBFromDevelop meeds meeds-io
+createSBFromDevelop platform-private-distributions exoplatform
 # createSBFromDevelop platform-private-trial-distributions exoplatform

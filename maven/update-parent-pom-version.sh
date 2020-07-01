@@ -136,6 +136,10 @@ updateProject gamification develop
 updateProject news develop
 updateProject legacy-intranet develop
 updateProject app-center develop
+updateProject layout-management develop
+updateProject digital-workplace develop
+updateProject data-upgrade develop
+updateProject onlyoffice develop
 
 
 
