@@ -5,7 +5,6 @@
 # REPOSITORIES: PARAMETER (STRING): exoplatform's repositories names with :Addon/PLF version
 #    Example social:5.3.3,ecms:5.3.3
 # TASK_ID: PARAMETER(NUMBERS): eXo Tribe Task's ID
-
 if [ -z "${GIT_TOKEN}" ]; then
   echo "Error: GIT_TOKEN is not specified!"
   exit 1
@@ -56,26 +55,14 @@ for i in ${_REPOS}; do
   git clone -b ${tagversion} --depth=1 "git@github.com:exoplatform/${repo}.git"
   echo "Clone is OK. Checking if tag ${tagversion} does exist or not..."
   [[ "$(git --work-tree=${repo}/.git --git-dir=${repo}/.git tag)" == "${tagversion}" ]] && echo "OK: ${tagversion} does exist. Creating patch/${tagversion} branch..."
-  git --work-tree=${repo}/.git --git-dir=${repo}/.git checkout -b patch/${tagversion}
+  git --work-tree=${repo}/.git --git-dir=${repo}/.git checkout -b patch/${tagversion} &> /dev/null
   echo "OK: patch/${tagversion} branch has been created locally."
   if [ -f "${repo}/pom.xml" ]; then
-    echo "Maven projet has been detected. Adding \"-patched\" suffix to the project version..."
-    project_artifactId=$(mvn -f "${repo}/pom.xml" -ntp org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression="project.artifactId" | grep -v '\[' 2>&1)
-    if [ -z "${project_artifactId}" ]; then
-      echo "Could not get Project artifactId !"
-      exit 1
-    fi
-    project_groupId=$(mvn -f "${repo}/pom.xml" -ntp org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression="project.groupId" | grep -v '\[' 2>&1)
-    if [ -z "${project_groupId}" ]; then
-      echo "Could not get Project GroupId !"
-      exit 1
-    fi
-    echo ""
-    echo "   ## Maven Project details: "
-    echo "      Artifact ID: ${project_artifactId}"
-    echo "      Group ID   : ${project_groupId}"
-    echo ""
-    mvn -f "${repo}/pom.xml" -q versions:set -DgenerateBackupPoms=false -DgroupId="${project_groupId}" -DartifactId="${project_artifactId}" -DnewVersion="${tagversion}-patched"
+    maven_cmd() {
+      sudo docker run --rm -v $(readlink -m ${repo}):/home -v /opt/prdacc/mavenpatch/settings.xml:/root/.m2/settings.xml -w /home maven:3.6.1 mvn $*
+    }
+    echo "Maven projet has been detected. Adding \"-patched\" suffix to the project version..."    
+    maven_cmd -ntp versions:set -DgenerateBackupPoms=false -DnewVersion="${tagversion}-patched"
     cd ${repo}
     echo "OK: Suffix \"-patched\" has been added. Adding pom.xml files to Git staging area..."
     git diff ${tagversion} --name-only | grep -P pom.xml$ | xargs git add
@@ -91,13 +78,13 @@ for i in ${_REPOS}; do
   echo "Creating commit: ${commit_msg}"
   git --work-tree=${repo}/.git --git-dir=${repo}/.git commit -m "${commit_msg}"
   echo "Pushing branch patch/${tagversion} to remote "
-  git --work-tree=${repo}/.git --git-dir=${repo}/.git push -u origin patch/${tagversion} --quiet
+  git --work-tree=${repo}/.git --git-dir=${repo}/.git push -u origin patch/${tagversion} 2>&1 | grep -v remote
   echo "OK: Branch is pushed correctly. Adding Branch Protection rule to patch/${tagversion} branch..."
   curl -s -f -XPUT -L "https://api.github.com/repos/exoplatform/${repo}/branches/patch%2F${tagversion}/protection" \
     --header 'Accept: application/vnd.github.luke-cage-preview+json' \
     --header "Authorization: Bearer ${GIT_TOKEN}" \
     --header 'Content-Type: application/json' \
-    --data-raw '{ "required_status_checks": null,  "enforce_admins": true,  "required_pull_request_reviews": {"dismiss_stale_reviews": true,"required_approving_review_count": 1  },"restrictions": null}'
+    --data '{ "required_status_checks": null,  "enforce_admins": true,  "required_pull_request_reviews": {"dismiss_stale_reviews": true,"required_approving_review_count": 1  },"restrictions": null}'
   echo "OK: Branch Protection added."
   rm -rf ${repo} &>/dev/null
 done
