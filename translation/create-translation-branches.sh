@@ -2,7 +2,7 @@
 
 # Script to create Translation branches on exodev:
 # * X-x.x-translation
-VERSION=5.3.x-translation
+VERSION=6.1.x-translation
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=integration/$VERSION
 
@@ -53,18 +53,24 @@ createTranslationBranche platform-ui
 createTranslationBranche commons
 createTranslationBranche social
 createTranslationBranche ecms
+createTranslationBranche calendar
 createTranslationBranche wiki
 createTranslationBranche forum
-createTranslationBranche calendar
-createTranslationBranche integration
-createTranslationBranche platform
-createTranslationBranche platform-public-distributions
-createTranslationBranche platform-private-distributions
+createTranslationBranche news
 createTranslationBranche task
 createTranslationBranche chat-application
-createTranslationBranche wcm-template-pack
-createTranslationBranche web-conferencing
+createTranslationBranche digital-workplace
+createTranslationBranche legacy-intranet
 createTranslationBranche lecko
+createTranslationBranche web-conferencing
+createTranslationBranche onlyoffice
+createTranslationBranche app-center
+createTranslationBranche gamification
+createTranslationBranche kudos
+createTranslationBranche perk-store
 createTranslationBranche push-notifications
+createTranslationBranche wallet
+createTranslationBranche meeds
+createTranslationBranche platform-private-distributions
 
 popd
