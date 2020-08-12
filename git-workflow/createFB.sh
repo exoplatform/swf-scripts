@@ -77,6 +77,9 @@ ADDON_APP_CENTER_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
 # Add-on manager
 ADDONS_MANAGER_ORIGIN_VERSION=2.1.x-SNAPSHOT
 ADDONS_MANAGER_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+# Add-on eXo agenda
+ADDONS_AGENDA_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDONS_AGENDA_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
 # Add-on eXo Data upgrade
 ADDONS_DATA_UPGRADE_ORIGIN_VERSION=6.1.x-SNAPSHOT
 ADDONS_DATA_UPGRADE_TARGET_VERSION=6.1.x-$BRANCH-SNAPSHOT
@@ -140,6 +143,7 @@ function replaceProjectVersion() {
 	set -e
 	case $repo_name in
 	addons-manager) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_MANAGER_ORIGIN_VERSION</version>" "<version>$ADDONS_MANAGER_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	agenda) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_AGENDA_ORIGIN_VERSION</version>" "<version>$ADDONS_AGENDA_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	answers) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ANSWERS_ORIGIN_VERSION</version>" "<version>$ADDON_ANSWERS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	app-center) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_APP_CENTER_ORIGIN_VERSION</version>" "<version>$ADDON_APP_CENTER_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	cas-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CAS_ORIGIN_VERSION</version>" "<version>$ADDON_CAS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -200,6 +204,7 @@ function replaceProjectDeps() {
 
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.social.version>$ORIGIN_VERSION</org.exoplatform.social.version>" "<org.exoplatform.social.version>$TARGET_VERSION</org.exoplatform.social.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.wiki.version>$ORIGIN_VERSION</org.exoplatform.wiki.version>" "<org.exoplatform.wiki.version>$TARGET_VERSION</org.exoplatform.wiki.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.agenda.version>$ADDONS_AGENDA_ORIGIN_VERSION</org.exoplatform.agenda.version>" "<org.exoplatform.agenda.version>$ADDONS_AGENDA_TARGET_VERSION</org.exoplatform.agenda.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.forum.version>$ORIGIN_VERSION</org.exoplatform.forum.version>" "<org.exoplatform.forum.version>$TARGET_VERSION</org.exoplatform.forum.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION</org.exoplatform.integ.version>" "pom.xml -not -wholename \"*/target/*\""
 	# $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -299,6 +304,7 @@ createFB calendar
 
 
 createFB addons-manager
+createFB agenda
 createFB app-center
 createFB cas-addon
 createFB chat-application
