@@ -37,15 +37,15 @@ print_info "Docker images gethering has finished:\n  Count: $(wc -w <<< $FULL_IM
 # Starting pull imagees
 for image in ${FULL_IMAGE_LIST}; do
     print_info "Pulling \"$image\" image..."
-    docker pull $image &>/dev/null
+    sudo docker pull $image &>/dev/null
     echo "OK"
     print_info "Checking if \"$image\" image was used before..."
-    if docker ps -a | awk '{print $2}' | grep -q $image; then
+    if sudo docker ps -a | awk '{print $2}' | grep -q $image; then
         echo "Used -> Skipped."
     else
         echo "Not Used."
         print_info "Removing \"$image\" image..."
-        docker image rm $image &>/dev/null && echo "OK"
+        sudo docker image rm $image &>/dev/null && echo "OK"
     fi
 done
 print_info "Finished.\n"
