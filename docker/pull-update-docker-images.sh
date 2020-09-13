@@ -35,7 +35,18 @@ done
 echo "OK"
 print_info "Docker images gethering has finished:\n  Count: $(wc -w <<< $FULL_IMAGE_LIST)\n"
 # Starting pull imagees
+counter=0
 for image in ${FULL_IMAGE_LIST}; do
+    if [ $counter -gt 180 ]; then 
+       print_info "180 docker pulls were achieved. Sleep 6 hours ... DON'T INTERRUPT ME !!!\n"
+       sleep 3h
+       print_info "3 Hours remaining... DON'T INTERRUPT ME !!!\n"
+       sleep 3h
+       print_info "Resuming process in 3 minutes... DON'T INTERRUPT ME !!!\n"
+       sleep 3m
+       print_info "Task resumed!\n"
+       counter=-1
+    fi
     print_info "Pulling \"$image\" image..."
     sudo docker pull $image &>/dev/null
     echo "OK"
@@ -47,5 +58,6 @@ for image in ${FULL_IMAGE_LIST}; do
         print_info "Removing \"$image\" image..."
         sudo docker image rm $image &>/dev/null && echo "OK"
     fi
+    ((counter++))
 done
 print_info "Finished.\n"
