@@ -2,7 +2,7 @@
 
 # Requirement:
 # GIT_TOKEN: ENV VAR: GIT API TOKEN
-# REPOSITORIES: PARAMETER (STRING): exoplatform's repositories names with :Addon/PLF version
+# REPOSITORIES: PARAMETER (STRING): exoplatform or meeds-io's repositories names with :Addon/PLF version
 #    Example social:5.3.3,ecms:5.3.3
 # TASK_ID: PARAMETER(NUMBERS): eXo Tribe Task's ID
 if [ -z "${GIT_TOKEN}" ]; then
@@ -30,6 +30,12 @@ if ! grep -Pq "^[0-9]+$" <<<${TASK_ID}; then
   exit 1
 fi
 
+[ -z ${IS_MEEDS} ] && IS_MEEDS=false
+
+ORGANIZATION="exoplatform"
+
+${IS_MEEDS} && ORGANIZATION="meeds-io"
+
 _REPOS=$(sed 's|,| |g' <<<${REPOSITORIES} | xargs)
 echo "####################################"
 echo "Patch Branch Creator for eXo Support"
@@ -45,14 +51,14 @@ for i in ${_REPOS}; do
   repo="${i%%:*}"
   tagversion="${i#*:}"
   rm -rf ${repo} &>/dev/null
-  echo "Checking exoplatform/${repo}:patch/${tagversion} existance..."
-  if [ $(git ls-remote --heads "git@github.com:exoplatform/${repo}.git" patch/${tagversion} | wc -l) -gt "0" ]; then
+  echo "Checking ${ORGANIZATION}/${repo}:patch/${tagversion} existance..."
+  if [ $(git ls-remote --heads "git@github.com:${ORGANIZATION}/${repo}.git" patch/${tagversion} | wc -l) -gt "0" ]; then
     echo "Error: Branch patch/${tagversion} already exist! Abort."
     exit 1
   fi
   echo "OK: patch/${tagversion} branch is not created."
-  echo "Cloning exoplatform/${repo} repository..."
-  git clone -b ${tagversion} --depth=1 "git@github.com:exoplatform/${repo}.git"
+  echo "Cloning ${ORGANIZATION}/${repo} repository..."
+  git clone -b ${tagversion} --depth=1 "git@github.com:${ORGANIZATION}/${repo}.git"
   echo "Clone is OK. Checking if tag ${tagversion} does exist or not..."
   [[ "$(git --work-tree=${repo}/.git --git-dir=${repo}/.git tag)" == "${tagversion}" ]] && echo "OK: ${tagversion} does exist. Creating patch/${tagversion} branch..."
   git --work-tree=${repo}/.git --git-dir=${repo}/.git checkout -b patch/${tagversion} &> /dev/null
@@ -80,7 +86,7 @@ for i in ${_REPOS}; do
   echo "Pushing branch patch/${tagversion} to remote "
   git --work-tree=${repo}/.git --git-dir=${repo}/.git push -u origin patch/${tagversion} 2>&1 | grep -v remote
   echo "OK: Branch is pushed correctly. Adding Branch Protection rule to patch/${tagversion} branch..."
-  curl -s -f -XPUT -L "https://api.github.com/repos/exoplatform/${repo}/branches/patch%2F${tagversion}/protection" \
+  curl -s -f -XPUT -L "https://api.github.com/repos/${ORGANIZATION}/${repo}/branches/patch%2F${tagversion}/protection" \
     --header 'Accept: application/vnd.github.luke-cage-preview+json' \
     --header "Authorization: Bearer ${GIT_TOKEN}" \
     --header 'Content-Type: application/json' \
