@@ -30,12 +30,6 @@ if ! grep -Pq "^[0-9]+$" <<<${TASK_ID}; then
   exit 1
 fi
 
-[ -z ${IS_MEEDS} ] && IS_MEEDS=false
-
-ORGANIZATION="exoplatform"
-
-${IS_MEEDS} && ORGANIZATION="meeds-io"
-
 _REPOS=$(sed 's|,| |g' <<<${REPOSITORIES} | xargs)
 echo "####################################"
 echo "Patch Branch Creator for eXo Support"
@@ -51,6 +45,18 @@ for i in ${_REPOS}; do
   repo="${i%%:*}"
   tagversion="${i#*:}"
   rm -rf ${repo} &>/dev/null
+  ORGANIZATION="meeds-io"
+  echo "Fetching suitable organization of ${repo}..."
+  set +e
+  if [ $(git ls-remote "git@github.com:${ORGANIZATION}/${repo}.git" ${tagversion} 2>/dev/null | wc -l) = "0" ]; then
+    ORGANIZATION="exoplatform"
+    if [ $(git ls-remote "git@github.com:${ORGANIZATION}/${repo}.git" ${tagversion} 2>/dev/null | wc -l) = "0" ]; then
+      echo "Error: tag ${tagversion} does not exist! Abort."
+      exit 1
+    fi
+  fi
+  set -e
+
   echo "Checking ${ORGANIZATION}/${repo}:patch/${tagversion} existance..."
   if [ $(git ls-remote --heads "git@github.com:${ORGANIZATION}/${repo}.git" patch/${tagversion} | wc -l) -gt "0" ]; then
     echo "Error: Branch patch/${tagversion} already exist! Abort."
@@ -61,13 +67,13 @@ for i in ${_REPOS}; do
   git clone -b ${tagversion} --depth=1 "git@github.com:${ORGANIZATION}/${repo}.git"
   echo "Clone is OK. Checking if tag ${tagversion} does exist or not..."
   [[ "$(git --work-tree=${repo}/.git --git-dir=${repo}/.git tag)" == "${tagversion}" ]] && echo "OK: ${tagversion} does exist. Creating patch/${tagversion} branch..."
-  git --work-tree=${repo}/.git --git-dir=${repo}/.git checkout -b patch/${tagversion} &> /dev/null
+  git --work-tree=${repo}/.git --git-dir=${repo}/.git checkout -b patch/${tagversion} &>/dev/null
   echo "OK: patch/${tagversion} branch has been created locally."
   if [ -f "${repo}/pom.xml" ]; then
     maven_cmd() {
       sudo docker run --rm -v $(readlink -m ${repo}):/home -v /opt/prdacc/mavenpatch/settings.xml:/root/.m2/settings.xml -w /home maven:3.6.1 mvn $*
     }
-    echo "Maven projet has been detected. Adding \"-patched\" suffix to the project version..."    
+    echo "Maven projet has been detected. Adding \"-patched\" suffix to the project version..."
     maven_cmd -ntp versions:set -DgenerateBackupPoms=false -DnewVersion="${tagversion}-patched"
     cd ${repo}
     echo "OK: Suffix \"-patched\" has been added. Adding pom.xml files to Git staging area..."
