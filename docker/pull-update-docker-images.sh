@@ -24,9 +24,11 @@ for org in ${ORGS_LIST}; do
     # build a list of all images & tags
     for repo in ${REPO_LIST}; do
         # Get tags for repo
+        [[ "$repo" =~ ^(exo|meeds|chat-server)$ ]] || continue
         IMAGE_TAGS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${org}/${repo}/tags/?page_size=100 | jq -r '.results|.[]|.name')
         # build a list of images from tags
         for tag in ${IMAGE_TAGS}; do
+            [[ "$tag" =~ .*(-(M|RC)[0-9]+|develop|latest) ]] && continue
             # add each tag to list
             FULL_IMAGE_LIST="${FULL_IMAGE_LIST} ${org}/${repo}:${tag}"
         done
