@@ -7,11 +7,8 @@ require 'net/http'
 require 'net/https'
 
 # Validate inputs
-if ENV['GITHUB_USER'].nil?
-  abort("[ERROR] GITHUB_USER env var not set !!!\n")
-end
-if ENV['GITHUB_PWD'].nil?
-  abort("[ERROR] GITHUB_PWD env var not set !!!\n")
+if ENV['GITHUB_TOKEN'].nil?
+  abort("[ERROR] GITHUB_TOKEN env var not set !!!\n")
 end
 if ENV['WORKSPACE'].nil?
   abort("[ERROR] WORKSPACE env var not set !!!\n")
@@ -20,7 +17,7 @@ end
 # retrieves the list of repositories from exodev organization
 ContentURI = URI.parse("https://api.github.com/orgs/exodev/repos?per_page=100")
 req = Net::HTTP::Get.new(ContentURI.request_uri)
-req.basic_auth ENV['GITHUB_USER'], ENV['GITHUB_PWD']
+req.add_field('Authorization', "token #{ENV['GITHUB_TOKEN']}")
 req.add_field('User-Agent', 'Custom Ruby Script from exo-swf@exoplatform.com')
 https = Net::HTTP.new(ContentURI.host, ContentURI.port)
 https.use_ssl = true

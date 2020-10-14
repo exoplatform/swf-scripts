@@ -3,14 +3,13 @@
 SCRIPT_NAME="${0##*/}"
 SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-if [ "$#" != "3" ]; then
-  echo "Usage: clone-all-github-repositories.sh <TARGET_DIR> <GITHUB_LOGIN> <GITHUB_PWD>"
+if [ "$#" != "2" ]; then
+  echo "Usage: clone-all-github-repositories.sh <TARGET_DIR> <GITHUB_TOKEN>"
   exit 1
 fi
 
 export TARGET_DIR=$1
-export GITHUB_LOGIN=$2
-export GITHUB_PWD=$3
+export GITHUB_TOKEN=$2
 
 [ "$(ls -A $TARGET_DIR)" ] && echo "TARGET_DIR ($TARGET_DIR) exists and is not empty. STOP." && exit 1 
 
@@ -20,7 +19,7 @@ mkdir -p $TARGET_DIR
 # $1 : The organization name
 # $2 : The page number  (there are 100 entries per page)
 function clone {
-  curl -u "$GITHUB_LOGIN:$GITHUB_PWD" -s "https://api.github.com/orgs/$1/repos?page=$2&per_page=100" | ruby -rubygems ${SCRIPT_DIR}/clone-github-orga-repos.rb
+  curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/orgs/$1/repos?page=$2&per_page=100" | ruby -rubygems ${SCRIPT_DIR}/clone-github-orga-repos.rb
 }
 
 # Clone all exodev repositories and add blessed remotes

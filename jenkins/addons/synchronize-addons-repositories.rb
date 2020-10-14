@@ -31,14 +31,12 @@ class SyncAddonsRepos
    attr_writer :github_results_per_page
 
    # required parameters
-   attr_reader :github_user
-   attr_reader :github_pwd
+   attr_reader :github_token
    attr_reader :workspace
 
   def initialize
     @addons_supported = []
-    @github_user = ENV['GITHUB_USER']
-    @github_pwd = ENV['GITHUB_PWD']
+    @github_token = ENV['GITHUB_TOKEN']
     @workspace = ENV['WORKSPACE']
     #a parameter can be set to limit the result per page, default 100
     @github_results_per_page = ARGV.shift || '100'
@@ -48,11 +46,8 @@ class SyncAddonsRepos
 
   def check_params
     # Validate inputs
-    if @github_user.nil?
-      self.error("GITHUB_USER")
-    end
-    if @github_pwd.nil?
-      self.error("GITHUB_PWD")
+    if @github_token.nil?
+      self.error("GITHUB_TOKEN")
     end
     if @workspace.nil?
       self.error("WORKSPACE")
@@ -238,7 +233,7 @@ class SyncAddonsRepos
   # data structure - a hash
   def execute_request_uri(uri)
     req = Net::HTTP::Get.new(uri.request_uri)
-    req.basic_auth @github_user, @github_pwd
+    req.add_field('Authorization', "token #{@github_token}")
     req.add_field('User-Agent', 'Custom Ruby Script from exo-swf@exoplatform.com')
     https = Net::HTTP.new(uri.host, uri.port)
     # to debug HTTP request
