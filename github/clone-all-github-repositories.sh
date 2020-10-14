@@ -3,14 +3,13 @@
 SCRIPT_NAME="${0##*/}"
 SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-if [ "$#" != "3" ]; then
-  echo "Usage: clone-all-github-repositories.sh <TARGET_DIR> <GITHUB_LOGIN> <GITHUB_TOKEN>"
+if [ "$#" != "2" ]; then
+  echo "Usage: clone-all-github-repositories.sh <TARGET_DIR> <GITHUB_TOKEN>"
   exit 1
 fi
 
 export TARGET_DIR=$1
-export GITHUB_LOGIN=$2
-export GITHUB_TOKEN=$3
+export GITHUB_TOKEN=$2
 
 [ "$(ls -A $TARGET_DIR)" ] && echo "TARGET_DIR ($TARGET_DIR) exists and is not empty. STOP." && exit 1 
 

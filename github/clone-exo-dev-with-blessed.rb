@@ -7,9 +7,6 @@ require 'net/http'
 require 'net/https'
 
 # Validate inputs
-if ENV['GITHUB_LOGIN'].nil?
-  abort("[ERROR] GITHUB_LOGIN env var not set !!!\n")
-end
 if ENV['GITHUB_TOKEN'].nil?
   abort("[ERROR] GITHUB_TOKEN env var not set !!!\n")
 end

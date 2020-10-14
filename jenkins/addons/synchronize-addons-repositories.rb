@@ -31,13 +31,11 @@ class SyncAddonsRepos
    attr_writer :github_results_per_page
 
    # required parameters
-   attr_reader :github_user
    attr_reader :github_token
    attr_reader :workspace
 
   def initialize
     @addons_supported = []
-    @github_user = ENV['GITHUB_USER']
     @github_token = ENV['GITHUB_TOKEN']
     @workspace = ENV['WORKSPACE']
     #a parameter can be set to limit the result per page, default 100
@@ -48,9 +46,6 @@ class SyncAddonsRepos
 
   def check_params
     # Validate inputs
-    if @github_user.nil?
-      self.error("GITHUB_USER")
-    end
     if @github_token.nil?
       self.error("GITHUB_TOKEN")
     end
