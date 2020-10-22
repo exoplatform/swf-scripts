@@ -39,8 +39,8 @@ ADDON_LAYOUT_MANAGEMENT_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
 ADDON_LECKO_ORIGIN_VERSION=2.1.x-SNAPSHOT
 ADDON_LECKO_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
 # Add-on eXo news
-ADDON_NEWS_ORIGIN_VERSION=1.1.x-SNAPSHOT
-ADDON_NEWS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+ADDON_NEWS_ORIGIN_VERSION=2.1.x-SNAPSHOT
+ADDON_NEWS_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
 # Add-on eXo Openam
 ADDON_OPENAM_ORIGIN_VERSION=3.1.x-SNAPSHOT
 ADDON_OPENAM_TARGET_VERSION=3.1.x-$BRANCH-SNAPSHOT
@@ -244,7 +244,7 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.wallet.version>$ADDON_WALLET_ORIGIN_VERSION</addon.exo.wallet.version>" "<addon.exo.wallet.version>$ADDON_WALLET_TARGET_VERSION</addon.exo.wallet.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</addon.exo.web-conferencing.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.data-upgrade.version>$ADDONS_DATA_UPGRADE_ORIGIN_VERSION</addon.exo.data-upgrade.version" "<addon.exo.data-upgrade.version>$ADDONS_DATA_UPGRADE_TARGET_VERSION</addon.exo.data-upgrade.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.data-upgrade.version>$ADDONS_DATA_UPGRADE_ORIGIN_VERSION</addon.exo.data-upgrade.version>" "<addon.exo.data-upgrade.version>$ADDONS_DATA_UPGRADE_TARGET_VERSION</addon.exo.data-upgrade.version>" "pom.xml -not -wholename \"*/target/*\""
 }
 
 function createFB() {
