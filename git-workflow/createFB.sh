@@ -88,6 +88,10 @@ ADDONS_DATA_UPGRADE_TARGET_VERSION=6.1.x-$BRANCH-SNAPSHOT
 ADDONS_JITSI_ORIGIN_VERSION=1.0.x-SNAPSHOT
 ADDONS_JITSI_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
 
+# Meeds Distribution
+MEEDS_ORIGIN_VERSION=1.1.x-SNAPSHOT
+MEEDS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+
 SCRIPTDIR=$(
 	cd $(dirname "$0")
 	pwd
@@ -173,6 +177,7 @@ function replaceProjectVersion() {
 	wallet) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WALLET_ORIGIN_VERSION</version>" "<version>$ADDON_WALLET_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	web-conferencing) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	data-upgrade) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_DATA_UPGRADE_ORIGIN_VERSION</version>" "<version>$ADDONS_DATA_UPGRADE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	meeds) $SCRIPTDIR/../replaceInFile.sh "<io.meeds.distribution.version>$MEEDS_ORIGIN_VERSION</io.meeds.distribution.version>" "<io.meeds.distribution.version>$MEEDS_TARGET_VERSION</io.meeds.distribution.version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	*) $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	esac
 }
@@ -214,6 +219,7 @@ function replaceProjectDeps() {
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.forum.version>$ORIGIN_VERSION</org.exoplatform.forum.version>" "<org.exoplatform.forum.version>$TARGET_VERSION</org.exoplatform.forum.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION</org.exoplatform.integ.version>" "pom.xml -not -wholename \"*/target/*\""
 	# $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.distribution.version>$MEEDS_ORIGIN_VERSION</io.meeds.distribution.version>" "<io.meeds.distribution.version>$MEEDS_TARGET_VERSION</io.meeds.distribution.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION</org.exoplatform.platform.distributions.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.addons-manager.version>$ADDONS_MANAGER_ORIGIN_VERSION</org.exoplatform.platform.addons-manager.version>" "<org.exoplatform.platform.addons-manager.version>$ADDONS_MANAGER_TARGET_VERSION</org.exoplatform.platform.addons-manager.version>" "pom.xml -not -wholename \"*/target/*\""
 }
