@@ -9,6 +9,7 @@ echo "Parsing FB ${FB_NAME} Seed Job Configuration..."
 
 set +u
 [ -z "${REVIEWERS}" ] && REVIEWERS=""
+[ -z "${MODULES}" ] && MODULES=""
 set -u
 
 # Check gh command is installed
@@ -22,11 +23,13 @@ curl -H "Authorization: token ${GIT_TOKEN}" \
 cat fblist.txt | grep "project:" >fblistfiltred.txt
 
 echo "Done. Performing action..."
+
 while IFS= read -r line; do
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]" | xargs)
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
+    [ ! -z "${MODULES}" ] && [[ ! "$(echo ${MODULES} | sed 's/,/ /g')" =~ "${item}" ]] && continue
     echo "Rebasing ${org}/${item}:feature/${FB_NAME}..."
     git clone git@github.com:${org}/$item
     pushd $item &>/dev/null
@@ -48,7 +51,7 @@ while IFS= read -r line; do
     echo "Rebasing $branch_name with ${default_branch} and removing the following commit"
     git log --oneline --cherry $default_branch..$maven_dep_commit_id
     git rebase --onto $base_commit $maven_dep_commit_id $branch_name
-    git push -u origin $branch_name | grep -v remote
+    git push -u origin $branch_name &>/dev/null
     gh pr create --title "Feature/${FB_NAME}: Weekly PR #$(date +%V)" --body "Weekly ${FB_NAME} Pull Request" --base "${default_branch}" --reviewer "${REVIEWERS}" -R "${org}/${item}" -H ${branch_name}
     popd &>/dev/null
 done <fblistfiltred.txt
