@@ -294,6 +294,7 @@ function createFB() {
 
 pushd ${SWF_FB_REPOS}
 
+#Meeds Projects
 createFB gatein-dep
 createFB gatein-wci
 createFB kernel
@@ -303,47 +304,33 @@ createFB gatein-pc
 createFB gatein-sso
 createFB gatein-portal
 createFB maven-depmgt-pom
-# Removed on lightweight
-# createFB docs-style
 createFB platform-ui
 createFB commons
 createFB social
-# Removed on lightweight
-# createFB integration
-# Removed on lightweight
-# createFB platform
+createFB addons-manager
+createFB app-center
+createFB gamification
+createFB kudos
+createFB perk-store
+createFB exo-es-embedded
+createFB meeds
 
-# CE plugins
+# Explatform projects
 createFB ecms
 createFB jcr
 createFB wiki
-# Not supported starting from 6.2.x
-# createFB forum
-#createFB calendar
-
-
-createFB addons-manager
 createFB agenda
 createFB analytics
 createFB jitsi
-createFB app-center
 createFB cas-addon
 createFB chat-application
 createFB cmis-addon
 createFB data-upgrade
 createFB digital-workplace
-createFB exo-es-embedded
-createFB gamification
-createFB kudos
 createFB layout-management
-# Not supported starting from 6.2.x
-#createFB lecko
 createFB legacy-intranet
 createFB news
 createFB onlyoffice
-# Not supported starting from 6.2.x
-# createFB openam-addon
-createFB perk-store
 createFB push-notifications
 createFB remote-edit
 createFB saml2-addon
@@ -353,8 +340,6 @@ createFB wallet
 createFB web-conferencing
 createFB data-upgrade
 createFB analytics
-
-createFB meeds
 createFB platform-private-distributions
 popd
 
