@@ -72,11 +72,11 @@ ADDON_WALLET_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
 ADDON_WEB_CONFERENCING_ORIGIN_VERSION=2.2.x-SNAPSHOT
 ADDON_WEB_CONFERENCING_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
 # Add-on eXo App Center
-ADDON_APP_CENTER_ORIGIN_VERSION=2.1.x-SNAPSHOT
-ADDON_APP_CENTER_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDON_APP_CENTER_ORIGIN_VERSION=2.2.x-SNAPSHOT
+ADDON_APP_CENTER_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
 # Add-on manager
-ADDONS_MANAGER_ORIGIN_VERSION=2.1.x-SNAPSHOT
-ADDONS_MANAGER_TARGET_VERSION=2.1.x-$BRANCH-SNAPSHOT
+ADDONS_MANAGER_ORIGIN_VERSION=2.2.x-SNAPSHOT
+ADDONS_MANAGER_TARGET_VERSION=2.2.x-$BRANCH-SNAPSHOT
 # Add-on eXo agenda
 ADDONS_AGENDA_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDONS_AGENDA_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
@@ -219,6 +219,7 @@ function replaceProjectDeps() {
 
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.social.version>$ORIGIN_VERSION</org.exoplatform.social.version>" "<org.exoplatform.social.version>$TARGET_VERSION</org.exoplatform.social.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.wiki.version>$ORIGIN_VERSION</org.exoplatform.wiki.version>" "<org.exoplatform.wiki.version>$TARGET_VERSION</org.exoplatform.wiki.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.wiki.version>$ORIGIN_VERSION</addon.exo.wiki.version>" "<addon.exo.wiki.version>$TARGET_VERSION</addon.exo.wiki.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.agenda.version>$ADDONS_AGENDA_ORIGIN_VERSION</org.exoplatform.agenda.version>" "<org.exoplatform.agenda.version>$ADDONS_AGENDA_TARGET_VERSION</org.exoplatform.agenda.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.jitsi.version>$ADDONS_JITSI_ORIGIN_VERSION</org.exoplatform.jitsi.version>" "<org.exoplatform.jitsi.version>$ADDONS_JITSI_TARGET_VERSION</org.exoplatform.jitsi.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.forum.version>$ORIGIN_VERSION</org.exoplatform.forum.version>" "<org.exoplatform.forum.version>$TARGET_VERSION</org.exoplatform.forum.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -313,6 +314,7 @@ createFB gamification
 createFB kudos
 createFB perk-store
 createFB exo-es-embedded
+createFB wallet
 createFB meeds
 
 # Explatform projects
@@ -336,7 +338,6 @@ createFB remote-edit
 createFB saml2-addon
 createFB spnego-addon
 createFB task
-createFB wallet
 createFB web-conferencing
 createFB data-upgrade
 createFB analytics
