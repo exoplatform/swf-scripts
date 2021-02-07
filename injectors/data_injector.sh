@@ -37,6 +37,10 @@ if [ -z "${USE_AVATARS}" ]; then
     USE_AVATARS="false"
 fi
 
+if [ -z "${USE_BANNERS}" ]; then
+    USE_BANNERS="false"
+fi
+
 if [ -z "${USE_FORMALNAMES}" ]; then
     USE_FORMALNAMES="false"
 fi
@@ -55,6 +59,7 @@ if wget --spider "https://${SERVER_URL}" &>/dev/null; then
 else
     baseurl="http://${SERVER_URL}"
 fi
+jobs=($(curl -s https://gist.githubusercontent.com/wsc/1083459/raw/d8d0aa8737a36912e6c119a172c8367276b76260/gistfile1.txt | sed "s/ /%20/g" | tr "\n" " "))
 url="$baseurl/rest/private/v1/social/users"
 auth="${ADMIN_USERNAME}:${ADMIN_PASSWORD}"
 line='--------------------------------------------------------------------'
@@ -101,6 +106,15 @@ if [ "${TYPE}" = "users" ]; then
         printf "%-80s" "$outputmsg"
         httprs=$(eval $curlCmd)
         if [[ "$httprs" =~ "200" ]]; then echo "[ OK ]"; else echo "[ Fail ]"; fi
+        if [ ! -z "$personJson" ]; then
+            # Extra Info
+            country=$(echo $personJson | jq '.results[0].location.country' | tr -d '"' | sed "s/ /%20/g")
+            curl -s -XPATCH -u "$username:$USERS_PASSWORD" "$baseurl/rest/private/v1/social/users/$username" --data "name=country&value=$country"
+            city=$(echo $personJson | jq '.results[0].location.city' | tr -d '"' | sed "s/ /%20/g")
+            curl -s -XPATCH -u "$username:$USERS_PASSWORD" "$baseurl/rest/private/v1/social/users/$username" --data "name=city&value=$city"
+            rand=$(($RANDOM % ${#jobs[@]}))
+            curl -s -XPATCH -u "$username:$USERS_PASSWORD" "$baseurl/rest/private/v1/social/users/$username" --data "name=position&value=${jobs[$rand]}"
+        fi
         if [[ "$httprs" =~ "200" ]] && ${USE_AVATARS}; then
             printf "Avatar..."
             uploadId=$(date +"%s")
@@ -114,6 +128,38 @@ if [ "${TYPE}" = "users" ]; then
                 continue
             fi
             updateCMD="curl -s -L -w '%{response_code}' -XPATCH -u '$username:$USERS_PASSWORD' '$baseurl/rest/private/v1/social/users/$username' --data 'name=avatar&value=$uploadId' | grep -o  '[1-4][0-9][0-9]'"
+            updateHTTPRS=$(eval $updateCMD)
+            if [[ "$updateHTTPRS" =~ "204" ]]; then
+                echo "[ Updated ]..."
+            else
+                echo "[ Fail ]"
+            fi
+            set +e
+            rm /tmp/$uploadId.jpg &>/dev/null
+            set -e
+        fi
+        if [[ "$httprs" =~ "200" ]] && ${USE_BANNERS}; then
+            printf "Banner..."
+            uploadId=$(date +"%s")
+            categories=("architecture" "network" "nature" "minimal" "sea" "sky" "city" "flower" "butterfly" "building" "buisness" "rail" "rain" "colors" "paint" "happiness" "work" "mojave" "montain" "camping")
+            rand=$(($RANDOM % ${#categories[@]}))
+            bannerLinks=($(curl -s -H "Authorization: Client-ID ${UNSPLASH_TOKEN:-}" "https://api.unsplash.com/search/photos?page=${RANDOM:0:2}&query=${categories[$rand]}" | jq '.results[].urls.regular' | tr -d '"'))
+            if [ -z "${bannerLinks}" ]; then
+                echo "[ Fail ]"
+                echo "[ERROR] Banners Gathering api rate limit may be reached. Please try again within an hour."
+                continue
+            fi
+            rand=$(($RANDOM % ${#bannerLinks[@]}))
+            curl -s -o /tmp/$uploadId.jpg "${bannerLinks[$rand]}"
+            uploadCMD="curl -s -w '%{response_code}' -X POST '$baseurl/portal/upload?uploadId=$uploadId&action=upload' -F upload=@/tmp/$uploadId.jpg  | grep -o  '[1-4][0-9][0-9]'"
+            uploadHTTPRS=$(eval $uploadCMD)
+            if [[ "$uploadHTTPRS" =~ "200" ]]; then
+                printf "[ Uploaded ]..."
+            else
+                echo "[ Fail ]"
+                continue
+            fi
+            updateCMD="curl -s -w '%{response_code}' -XPATCH -u '$username:$USERS_PASSWORD' '$baseurl/rest/private/v1/social/users/$username' --data 'name=banner&value=$uploadId' | grep -o  '[1-4][0-9][0-9]'"
             updateHTTPRS=$(eval $updateCMD)
             if [[ "$updateHTTPRS" =~ "204" ]]; then
                 echo "[ Updated ]..."
