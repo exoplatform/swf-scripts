@@ -53,5 +53,6 @@ while IFS= read -r line; do
     git rebase --onto $base_commit $maven_dep_commit_id $branch_name
     git push -u origin $branch_name &>/dev/null
     gh pr create --title "Feature/${FB_NAME}: Weekly PR #$(date +%V)" --body "Weekly ${FB_NAME} Pull Request" --base "${default_branch}" --reviewer "${REVIEWERS}" -R "${org}/${item}" -H ${branch_name}
+    gh pr merge -R "${org}/${item}" --auto --rebase
     popd &>/dev/null
 done <fblistfiltred.txt
