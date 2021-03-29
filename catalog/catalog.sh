@@ -71,6 +71,7 @@ if [ ${OPERATION} == "VALIDATE" ]; then
 	echo "   Uploading new catalog..."
 	echo "   Preparing script ..."
 	OLD_NAME=$(date +%Y%m%d_%H%M%S-${CATALOG_FILE_NAME})
+	gpg -b --armor --passphrase ${GPG_PASSWORD} --batch /tmp/list-new.json
 	cat <<EOF >/tmp/update_catalog.sh
 #!/bin/bash -eu
 
@@ -82,11 +83,14 @@ else
 fi
 mv -v /tmp/list-new.json ${CATALOG_PATH}/${CATALOG_FILE_NAME}
 chown www-data: ${CATALOG_PATH}/${CATALOG_FILE_NAME}
+[ -f /tmp/list-new.json.asc ] && mv -v /tmp/list-new.json.asc ${CATALOG_PATH}/${CATALOG_FILE_NAME}.asc
+[ -f ${CATALOG_PATH}/${CATALOG_FILE_NAME}.asc ] && chown www-data: ${CATALOG_PATH}/${CATALOG_FILE_NAME}.asc
 EOF
 	echo "   Changing script permissions..."
 	chmod u+x /tmp/update_catalog.sh
 	echo "   Executing script..."
 	sudo /tmp/update_catalog.sh
+	rm /tmp/update_catalog.sh
 	echo "Catalog updated"
 	if [ ! -z "${TASK_TITLE}" ]; then
 		echo "Posting commments to task #${TASK_ID}..."
