@@ -166,6 +166,7 @@ function replaceProjectVersion() {
 	gatein-dep) $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	gamification) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_GAMIFICATION_ORIGIN_VERSION</version>" "<version>$ADDON_GAMIFICATION_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	jitsi) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_JITSI_ORIGIN_VERSION</version>" "<version>$ADDONS_JITSI_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	jitsi-call) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_JITSI_ORIGIN_VERSION</version>" "<version>$ADDONS_JITSI_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	kudos) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_KUDOS_ORIGIN_VERSION</version>" "<version>$ADDON_KUDOS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	layout-management) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LAYOUT_MANAGEMENT_ORIGIN_VERSION</version>" "<version>$ADDON_LAYOUT_MANAGEMENT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	lecko) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LECKO_ORIGIN_VERSION</version>" "<version>$ADDON_LECKO_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -222,6 +223,7 @@ function replaceProjectDeps() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.wiki.version>$ORIGIN_VERSION</addon.exo.wiki.version>" "<addon.exo.wiki.version>$TARGET_VERSION</addon.exo.wiki.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.agenda.version>$ADDONS_AGENDA_ORIGIN_VERSION</org.exoplatform.agenda.version>" "<org.exoplatform.agenda.version>$ADDONS_AGENDA_TARGET_VERSION</org.exoplatform.agenda.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.jitsi.version>$ADDONS_JITSI_ORIGIN_VERSION</org.exoplatform.jitsi.version>" "<org.exoplatform.jitsi.version>$ADDONS_JITSI_TARGET_VERSION</org.exoplatform.jitsi.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.jitsi-call.version>$ADDONS_JITSI_ORIGIN_VERSION</org.exoplatform.jitsi-call.version>" "<org.exoplatform.jitsi-call.version>$ADDONS_JITSI_TARGET_VERSION</org.exoplatform.jitsi-call.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.forum.version>$ORIGIN_VERSION</org.exoplatform.forum.version>" "<org.exoplatform.forum.version>$TARGET_VERSION</org.exoplatform.forum.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION</org.exoplatform.integ.version>" "pom.xml -not -wholename \"*/target/*\""
 	# $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -316,6 +318,7 @@ createFB perk-store
 createFB exo-es-embedded
 createFB wallet
 createFB meeds
+createFB push-notifications
 
 # Explatform projects
 createFB ecms
@@ -324,6 +327,7 @@ createFB wiki
 createFB agenda
 createFB analytics
 createFB jitsi
+createFB jitsi-call
 createFB cas-addon
 createFB chat-application
 createFB cmis-addon
@@ -333,7 +337,6 @@ createFB layout-management
 createFB legacy-intranet
 createFB news
 createFB onlyoffice
-createFB push-notifications
 createFB remote-edit
 createFB saml2-addon
 createFB spnego-addon
