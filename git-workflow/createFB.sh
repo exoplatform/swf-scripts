@@ -319,11 +319,11 @@ createFB exo-es-embedded
 createFB wallet
 createFB meeds
 createFB push-notifications
+createFB notes
 
 # Explatform projects
 createFB ecms
 createFB jcr
-createFB wiki
 createFB agenda
 createFB analytics
 createFB jitsi
