@@ -30,6 +30,7 @@ while IFS= read -r line; do
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
+    [ "${item}" == "notes" ] && continue
     [ -z "${org}" ] && continue
     echo "================================================================================================="
     echo -e " Module: \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a"
