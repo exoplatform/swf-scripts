@@ -8,7 +8,7 @@ fi
 # <---
 
 # --> Default values. Can be overwrided by CI Job
-[ -z "${IMAGE_NAME}" ] && IMAGE_NAME="hbenali/exo-ci"
+[ -z "${IMAGE_NAME}" ] && IMAGE_NAME="exoplatform/ci:fastlane-gradle6-android"
 [ -z "${STORAGE_URL}" ] && STORAGE_URL='https://storage.exoplatform.org/private/android/'
 # <---
 
