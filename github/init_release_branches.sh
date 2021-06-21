@@ -35,6 +35,6 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     # Revert 2 SWF Release commits
     git revert HEAD HEAD^ --no-commit 
     git commit -m "TASK-${TASK_ID}: Prepare Release ${milestone_version} based on ${module_version}"
-    git push origin ${TARGET_BRANCH} --force | grep -v remote
+    git push origin ${TARGET_BRANCH} --force
     popd &>/dev/null
 done
