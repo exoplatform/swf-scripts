@@ -18,7 +18,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
     [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
-    git clone git@github.com:${org}/$item
+    git clone git@github.com:${org}/$item >/dev/null
     pushd $item &>/dev/null
     git fetch --tags --prune &>/dev/null
     tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-[0-9]{8}$ | tail -1)
@@ -35,14 +35,13 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "exo-release" && continue
         #echo $message | grep -q "parent-pom" && continue
         #echo $message | grep -q "Merge Translation" && continue
-        git verify-commit $commitId &>/dev/null && verified="<p title=\"Verified\">&#9989;</p>" || verified=""
         author=$(git show --format="%an" -s $commitId)
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
-        elt=$(echo "<li>(<a href=\"$commitLink\">$commitId</a>)$verified $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+        elt=$(echo "<li>(<a href=\"$commitLink\">$commitId</a>) $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         echo "$commitLink $message $author"
         subbody="$subbody$elt"
     done
-    [ -z "$subbody" ] || body="$body<li>$item $before_tag_name -> $tag_name\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
+    [ -z "$subbody" ] || body="$body<li><b>$item</b> $before_tag_name -> $tag_name:\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
     set -e
     popd &>/dev/null
 done
@@ -50,4 +49,4 @@ done
 echo "Generating activity..."
 curl --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
     -H 'Content-Type: application/json' \
-    --data "{\"title\":\"<p>Changelog generated $(date)</p>\n\n<ul>\n\t$body</ul>\n\",\"type\":\"\",\"templateParams\":{},\"files\":[]}" >/dev/null && echo OK
+    --data "{\"title\":\"<p>Changelog generated $(date).</p>\n\n<ul>\n\t$body</ul>\n\",\"type\":\"\",\"templateParams\":{},\"files\":[]}" >/dev/null && echo OK
