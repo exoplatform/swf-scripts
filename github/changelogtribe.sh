@@ -35,9 +35,10 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "exo-release" && continue
         #echo $message | grep -q "parent-pom" && continue
         #echo $message | grep -q "Merge Translation" && continue
+        git verify-commit $commitId &>/dev/null && verified="<p title=\"Verified\">&#9989;</p>" || verified=""
         author=$(git show --format="%an" -s $commitId)
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
-        elt=$(echo "<li>(<a href=\"$commitLink\">$commitId</a>) $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+        elt=$(echo "<li>(<a href=\"$commitLink\">$commitId</a>)$verified $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         echo "$commitLink $message $author"
         subbody="$subbody$elt"
     done
