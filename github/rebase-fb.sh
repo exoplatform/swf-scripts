@@ -20,10 +20,12 @@ while IFS= read -r line; do
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
     echo "Rebasing ${org}/${item}:feature/${FB_NAME}..."
-    git clone git@github.com:${org}/$item
+    git init $item &>/dev/null
     pushd $item &>/dev/null
+    git remote add -t develop -t feature/${FB_NAME} origin git@github.com:${org}/${item}.git
     default_branch=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
-    [ -z "${default_branch}" ] && continue
+    git fetch &>/dev/null
+    default_branch="develop"
     git checkout feature/${FB_NAME} 
     git rebase origin/$default_branch feature/${FB_NAME}
     git log --oneline --cherry origin/$default_branch..HEAD
