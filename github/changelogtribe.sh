@@ -22,7 +22,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     pushd $item &>/dev/null
     git fetch --tags --prune &>/dev/null
     tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-[0-9]{8}$ | tail -1)
-    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-[0-9]{8}$ | tail -2 | head -1)
+    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-[0-9]{8}$ | tail -3 | head -1)
     echo "*** $item $before_tag_name -> $tag_name"
     set +e
     commitIds=$(git log --no-merges --pretty=format:"%h" $before_tag_name~2...$tag_name~2 | xargs)
