@@ -7,6 +7,7 @@ modules=$(curl -H "Authorization: token ${GIT_TOKEN}" \
     -L "https://api.github.com/repos/exoplatform/swf-release-manager-catalog/contents/exo-platform/continuous-release-template.json")
 
 body=""
+plf_range=""
 echo "Done. Performing action..."
 for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     _jq() {
@@ -28,6 +29,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     commitIds=$(git log --no-merges --pretty=format:"%h" $before_tag_name~2...$tag_name~2 | xargs)
     subbody=""
     modulelink="https://github.com/$org/$item"
+    [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
     for commitId in $commitIds; do
         message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g')
         echo $message | grep -q "Prepare Release" && continue
@@ -45,8 +47,8 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     set -e
     popd &>/dev/null
 done
-
+[ -z "$(echo $body | xargs)" ] && body="<p>The changelog $plf_range is empty now, but awesome things are coming... stay tuned :)</p>" || body="<ul>\n\t$body</ul>"
 echo "Generating activity..."
 curl --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
     -H 'Content-Type: application/json' \
-    --data "{\"title\":\"<p>Changelog generated $(date).</p>\n\n<ul>\n\t$body</ul>\n\",\"type\":\"\",\"templateParams\":{},\"files\":[]}" >/dev/null && echo OK
+    --data "{\"title\":\"<p>Changelog generated $(date).</p>\n\n$body\n\",\"type\":\"\",\"templateParams\":{},\"files\":[]}" >/dev/null && echo OK
