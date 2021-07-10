@@ -1,9 +1,21 @@
 #!/bin/bash -eu
 
+### Colors
+info() {
+echo "\033[1;33m[Info]    \033[0m $1"
+}
 
-echo "Parsing FB ${FB_NAME} Seed Job Configuration..."
+error() {
+echo "\033[1;31m[Error]   \033[0m $1"
+}
+
+success() {
+echo "\033[1;32m[Success] \033[0m $1"
+}
+###
 
 [ -z "${FB_NAME}" ] && exit 1
+info "Parsing FB ${FB_NAME} Seed Job Configuration..."
 
 current_date=$(date '+%s')
 echo "Parsing FB repositories from catalog..."
@@ -13,13 +25,6 @@ curl -H "Authorization: token ${GIT_TOKEN}" \
     -L "https://api.github.com/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" --output fblist.txt
 cat fblist.txt | grep "project:" > fblistfiltred.txt
 
-### Colors
-red=`tput setaf 1`
-green=`tput setaf 2`
-magenta=`tput setaf 2`
-reset=`tput sgr0`
-###
-
 echo "Done. Performing action..."
 while IFS= read -r line; do
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
@@ -27,7 +32,7 @@ while IFS= read -r line; do
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
     echo "================================================================================================="
-    echo " Module: ${green}${org}/${item}${reset}"
+    echo " Module: ${org}/${item}"
     echo "================================================================================================="
     git init $item &>/dev/null
     pushd $item &>/dev/null
@@ -36,14 +41,18 @@ while IFS= read -r line; do
     git fetch &>/dev/null
     default_branch="develop"
     git checkout feature/${FB_NAME} &>/dev/null
-    git rebase origin/$default_branch feature/${FB_NAME}
+    if ! git rebase --exit-code origin/$default_branch feature/${FB_NAME}; then 
+      error "Could not rebase feature/${FB_NAME}!"
+      exit 1
+    fi
     git log --oneline --cherry origin/$default_branch..HEAD
     if [ "$(git log HEAD..FETCH_HEAD --oneline 2>/dev/null | wc -l)" -gt "0" ]; then
-      echo "${magenta}Changes before the rebase:{reset}"
+      info "Changes before the rebase:"
       git log HEAD..FETCH_HEAD --oneline --format="(%h) %s"
-      git push origin feature/${FB_NAME} --force-with-lease
+      git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
     else 
-      echo "${green}INFO:${reset} No changes detected!"  
+      info "No changes detected!"  
     fi
     popd &>/dev/null
 done < fblistfiltred.txt
+success "Rebase done!"
