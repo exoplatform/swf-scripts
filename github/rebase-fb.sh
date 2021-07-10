@@ -41,7 +41,7 @@ while IFS= read -r line; do
     git fetch &>/dev/null
     default_branch="develop"
     git checkout feature/${FB_NAME} &>/dev/null
-    if ! git rebase --exit-code origin/$default_branch feature/${FB_NAME}; then 
+    if ! git rebase origin/$default_branch feature/${FB_NAME}; then 
       error "Could not rebase feature/${FB_NAME}!"
       exit 1
     fi
