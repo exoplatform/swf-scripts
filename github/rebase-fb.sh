@@ -46,7 +46,7 @@ while IFS= read -r line; do
       exit 1
     fi
     git log --oneline --cherry origin/$default_branch..HEAD
-    if [ "$(git log HEAD..FETCH_HEAD --oneline 2>/dev/null | wc -l)" -gt "0" ]; then
+    if [ ! -z "$(git diff origin/feature/${FB_NAME} 2>/dev/null)" ]; then
       info "Changes before the rebase:"
       echo -e "\033[1;32m****\033[0m"
       git log HEAD..FETCH_HEAD --oneline --format="(%h) %s"
