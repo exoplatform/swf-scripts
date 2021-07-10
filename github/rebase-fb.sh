@@ -49,7 +49,7 @@ while IFS= read -r line; do
     if [ ! -z "$(git diff origin/feature/${FB_NAME} 2>/dev/null)" ]; then
       info "Changes before the rebase:"
       echo -e "\033[1;32m****\033[0m"
-      git log HEAD..FETCH_HEAD --oneline --format="(%h) %s"
+      git log HEAD..origin/feature/${FB_NAME} --oneline --format="(%h) %s"
       echo -e "\033[1;32m****\033[0m"
       git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
     else 
