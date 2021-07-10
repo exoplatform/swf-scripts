@@ -2,15 +2,15 @@
 
 ### Colors
 info() {
-echo -e "\033[1;33m[Info]    \033[0m $1"
+echo -e "\033[1;34m[Info]\033[0m $1"
 }
 
 error() {
-echo -e "\033[1;31m[Error]   \033[0m $1"
+echo -e "\033[1;31m[Error]\033[0m $1"
 }
 
 success() {
-echo -e "\033[1;32m[Success] \033[0m $1"
+echo -e "\033[1;32m[Success]\033[0m $1"
 }
 ###
 
@@ -48,11 +48,14 @@ while IFS= read -r line; do
     git log --oneline --cherry origin/$default_branch..HEAD
     if [ "$(git log HEAD..FETCH_HEAD --oneline 2>/dev/null | wc -l)" -gt "0" ]; then
       info "Changes before the rebase:"
+      echo -e "\033[1;32m****\033[0m"
       git log HEAD..FETCH_HEAD --oneline --format="(%h) %s"
+      echo -e "\033[1;32m****\033[0m"
       git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
     else 
       info "No changes detected!"  
     fi
     popd &>/dev/null
 done < fblistfiltred.txt
+echo "================================================================================================="
 success "Rebase done!"
