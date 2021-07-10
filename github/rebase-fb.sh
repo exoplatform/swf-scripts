@@ -32,7 +32,7 @@ while IFS= read -r line; do
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
     echo "================================================================================================="
-    echo " Module: ${org}/${item}"
+    echo -e " Module: \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a"
     echo "================================================================================================="
     git init $item &>/dev/null
     pushd $item &>/dev/null
