@@ -51,10 +51,10 @@ while IFS= read -r line; do
       echo -e "\033[1;32m****\033[0m"
       git log HEAD..origin/feature/${FB_NAME} --oneline --format="(%h) %s"
       echo -e "\033[1;32m****\033[0m"
-      git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
     else 
       info "No changes detected!"  
     fi
+    git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
     popd &>/dev/null
 done < fblistfiltred.txt
 echo "================================================================================================="
