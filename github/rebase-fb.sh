@@ -47,13 +47,9 @@ while IFS= read -r line; do
     fi
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
-    if ! git rebase origin/${baseBranch} feature/${FB_NAME} >/dev/null; then
-      info "Rebase with recursive strategy has failed! Trying ours rebase strategy without detecting changes loss (helpful for detecting and removing backported commits)..."
-      git rebase --abort || :
-      if ! git rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option ours >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
-        error "Could not rebase feature/${FB_NAME}!"
-        exit 1
-      fi
+    if ! git rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option=theirs >/dev/null; then 
+      error "Could not rebase feature/${FB_NAME}!"
+      exit 1
     fi
     git log --oneline --cherry origin/${baseBranch}..HEAD
     if [ ! -z "$(git diff origin/feature/${FB_NAME} 2>/dev/null)" ]; then
