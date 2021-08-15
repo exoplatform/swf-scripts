@@ -24,7 +24,8 @@ curl -H "Authorization: token ${GIT_TOKEN}" \
     -H 'Accept: application/vnd.github.v3.raw' \
     -L "https://api.github.com/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" --output fblist.txt
 cat fblist.txt | grep "project:" > fblistfiltred.txt
-
+modules_length=$(wc -l fblistfiltred.txt)
+counter=1
 echo "Done. Performing action..."
 while IFS= read -r line; do
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
@@ -32,7 +33,7 @@ while IFS= read -r line; do
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
     echo "================================================================================================="
-    echo -e " Module: \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a"
+    echo -e " Module (${counter}/${modules_length}): \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a"
     echo "================================================================================================="
     git init $item &>/dev/null
     pushd $item &>/dev/null
@@ -59,7 +60,8 @@ while IFS= read -r line; do
     if [ "${prev_head}" != "${new_head}" ]; then
       info "Previous HEAD: \033[1;32m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
-    fi  
+    fi
+    ((counter++))  
     popd &>/dev/null
 done < fblistfiltred.txt
 echo "================================================================================================="
