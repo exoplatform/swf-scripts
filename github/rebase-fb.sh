@@ -24,7 +24,7 @@ curl -H "Authorization: token ${GIT_TOKEN}" \
     -H 'Accept: application/vnd.github.v3.raw' \
     -L "https://api.github.com/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" --output fblist.txt
 cat fblist.txt | grep "project:" > fblistfiltred.txt
-modules_length=$(wc -l fblistfiltred.txt)
+modules_length=$(wc -l fblistfiltred.txt | awk '{ print $1 }')
 counter=1
 echo "Done. Performing action..."
 while IFS= read -r line; do
