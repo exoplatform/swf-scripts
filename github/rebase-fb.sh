@@ -58,7 +58,7 @@ while IFS= read -r line; do
     fi
     new_head=$(git rev-parse --short HEAD)
     if [ "${prev_head}" != "${new_head}" ]; then
-      info "Previous HEAD: \033[1;32m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
+      info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
     fi
     ((counter++))  
