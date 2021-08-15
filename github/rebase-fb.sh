@@ -41,6 +41,7 @@ while IFS= read -r line; do
     git fetch &>/dev/null
     default_branch="develop"
     git checkout feature/${FB_NAME} &>/dev/null
+    prev_head=$(git rev-parse --short HEAD)
     if ! git rebase origin/$default_branch feature/${FB_NAME} >/dev/null; then 
       error "Could not rebase feature/${FB_NAME}!"
       exit 1
@@ -54,7 +55,11 @@ while IFS= read -r line; do
     else 
       info "No changes detected!"  
     fi
-    git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
+    new_head=$(git rev-parse --short HEAD)
+    if [ "${prev_head}" != "${new_head}" ]; then
+      info "Previous HEAD: \033[1;32m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
+      git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
+    fi  
     popd &>/dev/null
 done < fblistfiltred.txt
 echo "================================================================================================="
