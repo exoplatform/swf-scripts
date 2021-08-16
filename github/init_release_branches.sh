@@ -25,6 +25,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     version=$(_jq '.release.version')
     [ -z "${name}" ] && continue
     [ -z "${git_organization}" ] && continue
+    [ "${name}" = "community-website" ] && continue
     # Module to be not released -> Skipped
     [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
     git clone git@github.com:${git_organization}/$name
