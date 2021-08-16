@@ -18,6 +18,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     version=$(_jq '.release.version')
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
+    [ "${item}" = "community-website" ] && continue
     [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
     git clone git@github.com:${org}/$item >/dev/null
     pushd $item &>/dev/null
