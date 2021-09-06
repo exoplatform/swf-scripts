@@ -27,7 +27,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-[0-9]{8}$ | tail -2 | head -1)
     echo "*** $item $before_tag_name -> $tag_name"
     set +e
-    commitIds=$(git log --no-merges --pretty=format:"%h" $before_tag_name~2...$tag_name~2 | xargs)
+    commitIds=$(git log --no-merges --pretty=format:"%h" $before_tag_name~2...$tag_name~2 --after="2021-09-06 00:00" --before="2021-09-06 23:59" | xargs)
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
