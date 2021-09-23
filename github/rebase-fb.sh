@@ -43,10 +43,11 @@ while IFS= read -r line; do
     default_branch="develop"
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
-    if ! git rebase origin/$default_branch feature/${FB_NAME} >/dev/null; then 
+    if ! git rebase origin/$default_branch feature/${FB_NAME} --committer-date-is-author-date >/dev/null; then 
       error "Could not rebase feature/${FB_NAME}!"
       exit 1
     fi
+    git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"; git commit-tree "$@"' -- origin/$default_branch..HEAD &>/dev/null
     git log --oneline --cherry origin/$default_branch..HEAD
     if [ ! -z "$(git diff origin/feature/${FB_NAME} 2>/dev/null)" ]; then
       info "Changes before the rebase:"
