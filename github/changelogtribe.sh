@@ -9,6 +9,12 @@ modules=$(curl -H "Authorization: token ${GIT_TOKEN}" \
 body=""
 plf_range=""
 echo "Done. Performing action..."
+git clone git@github.com:exoplatform/platform-private-distributions &>/dev/null
+pushd platform-private-distributions &>/dev/null
+tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | tail -1)
+before_tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | tail -2 | head -1)
+popd &>/dev/null
+rm -rf platform-private-distributions &>/dev/null
 for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     _jq() {
         echo ${module} | base64 --decode | jq -r ${1}
@@ -23,8 +29,8 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     git clone git@github.com:${org}/$item >/dev/null
     pushd $item &>/dev/null
     git fetch --tags --prune &>/dev/null
-    tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-[0-9]{8}$ | tail -1)
-    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-[0-9]{8}$ | tail -2 | head -1)
+    tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${tag_name_suffix}$ )
+    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${before_tag_name_suffix}$)
     echo "*** $item $before_tag_name -> $tag_name"
     set +e
     commitIds=$(git log --no-merges --pretty=format:"%h" $before_tag_name~2...$tag_name~2 | xargs)
