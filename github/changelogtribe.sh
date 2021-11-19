@@ -26,13 +26,17 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     [ -z "${org}" ] && continue
     [ "${item}" = "community-website" ] && continue
     [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
-    git clone git@github.com:${org}/$item >/dev/null
+    git clone git@github.com:${org}/$item &>/dev/null
     pushd $item &>/dev/null
     git fetch --tags --prune &>/dev/null
+    set +e
     tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${tag_name_suffix}$ )
     before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${before_tag_name_suffix}$)
+    if [ -z "$tag_name" ] || [ -z "$before_tag_name" ]; then
+      popd &>/dev/null
+      continue
+    fi
     echo "*** $item $before_tag_name -> $tag_name"
-    set +e
     commitIds=$(git log --no-merges --pretty=format:"%h" $before_tag_name~2...$tag_name~2 | xargs)
     subbody=""
     modulelink="https://github.com/$org/$item"
