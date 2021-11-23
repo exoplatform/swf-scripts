@@ -100,6 +100,10 @@ ADDONS_NOTES_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
 ADDONS_ANALYTICS_ORIGIN_VERSION=1.2.x-SNAPSHOT
 ADDONS_ANALYTICS_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
 
+# Add-on Challenges
+ADDONS_CHALLENGES_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDONS_CHALLENGES_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+
 # Meeds Distribution
 MEEDS_ORIGIN_VERSION=1.3.x-SNAPSHOT
 MEEDS_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
@@ -165,6 +169,7 @@ function replaceProjectVersion() {
 	addons-manager) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_MANAGER_ORIGIN_VERSION</version>" "<version>$ADDONS_MANAGER_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	agenda) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_AGENDA_ORIGIN_VERSION</version>" "<version>$ADDONS_AGENDA_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	analytics) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_ANALYTICS_ORIGIN_VERSION</version>" "<version>$ADDONS_ANALYTICS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	challenges) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_CHALLENGES_ORIGIN_VERSION</version>" "<version>$ADDONS_CHALLENGES_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	answers) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ANSWERS_ORIGIN_VERSION</version>" "<version>$ADDON_ANSWERS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	app-center) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_APP_CENTER_ORIGIN_VERSION</version>" "<version>$ADDON_APP_CENTER_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	cas-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CAS_ORIGIN_VERSION</version>" "<version>$ADDON_CAS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -266,6 +271,7 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</addon.exo.web-conferencing.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.data-upgrade.version>$ADDONS_DATA_UPGRADE_ORIGIN_VERSION</addon.exo.data-upgrade.version>" "<addon.exo.data-upgrade.version>$ADDONS_DATA_UPGRADE_TARGET_VERSION</addon.exo.data-upgrade.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.analytics.version>$ADDONS_ANALYTICS_ORIGIN_VERSION</addon.exo.analytics.version>" "<addon.exo.analytics.version>$ADDONS_ANALYTICS_TARGET_VERSION</addon.exo.analytics.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.challenges.version>$ADDONS_CHALLENGES_ORIGIN_VERSION</addon.exo.challenges.version>" "<addon.exo.challenges.version>$ADDONS_CHALLENGES_TARGET_VERSION</addon.exo.challenges.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.jitsi.version>$ADDONS_JITSI_ORIGIN_VERSION</org.exoplatform.jitsi.version>" "<addon.exo.jitsi.version>$ADDONS_JITSI_TARGET_VERSION</addon.exo.jitsi.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.jitsi-call.version>$ADDONS_JITSI_ORIGIN_VERSION</org.exoplatform.jitsi-call.version>" "<addon.exo.jitsi-call.version>$ADDONS_JITSI_TARGET_VERSION</addon.exo.jitsi-call.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.multifactor-authentication.version>$ADDONS_MULTIFACTOR_AUTHENTICATION_ORIGIN_VERSION</addon.exo.multifactor-authentication.version>" "<addon.exo.multifactor-authentication.version>$ADDONS_MULTIFACTOR_AUTHENTICATION_TARGET_VERSION</addon.exo.multifactor-authentication.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -330,6 +336,7 @@ createFB wallet
 createFB meeds
 createFB push-notifications
 createFB notes
+createFB challenges
 
 # Explatform projects
 createFB ecms
