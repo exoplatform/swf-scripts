@@ -8,6 +8,7 @@ modules=$(curl -H "Authorization: token ${GIT_TOKEN}" \
 
 body=""
 plf_range=""
+grafana_dashboard="https://mon.exoplatform.org/d/g5gmgcpnz/deployed-exo-version"
 echo "Done. Performing action..."
 git clone git@github.com:exoplatform/platform-private-distributions &>/dev/null
 pushd platform-private-distributions &>/dev/null
@@ -59,6 +60,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     popd &>/dev/null
 done
 [ -z "$(echo $body | xargs)" ] && body="<p>The changelog $plf_range is empty now, but awesome things are coming... stay tuned :)</p>" || body="<ul>\n\t$body</ul>"
+body="$body<li><b>Deployment status: </b>:\n\t\n\t<a href=\"$grafana_dashboard\">here</a>.\n\t"
 echo "Generating activity..."
 curl --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
     -H 'Content-Type: application/json' \
