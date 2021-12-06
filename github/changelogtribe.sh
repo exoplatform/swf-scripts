@@ -60,7 +60,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     popd &>/dev/null
 done
 [ -z "$(echo $body | xargs)" ] && body="<p>The changelog $plf_range is empty now, but awesome things are coming... stay tuned :)</p>" || body="<ul>\n\t$body</ul>"
-dep_status=$(echo "<li><b>Deployment status: </b>:\n\t\n\t<a href=\"$grafana_dashboard\">here</a>.\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+dep_status=$(echo "<b>Deployment status: </b>\n\t\n\t<a href=\"$grafana_dashboard\">here</a>.\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
 body=$body$dep_status
 echo "Generating activity..."
 curl --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
