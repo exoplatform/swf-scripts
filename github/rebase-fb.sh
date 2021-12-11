@@ -16,7 +16,7 @@ echo -e "\033[1;32m[Success]\033[0m $1"
 
 [ -z "${FB_NAME}" ] && exit 1
 info "Parsing FB ${FB_NAME} Seed Job Configuration..."
-
+export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 current_date=$(date '+%s')
 echo "Parsing FB repositories from catalog..."
 rm -f /tmp/prlist.txt &>/dev/null
