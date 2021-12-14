@@ -48,6 +48,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "continuous-release-template" && continue
         echo $message | grep -q "exo-release" && continue
         echo $message | grep -q "parent-pom" && continue
+        echo $message | grep -q "Add Pull Request workflow for eXo Tasks notifications" && continue
         #echo $message | grep -q "Merge Translation" && continue
         author=$(git show --format="%an" -s $commitId)
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
