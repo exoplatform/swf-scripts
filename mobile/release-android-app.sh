@@ -12,6 +12,9 @@ fi
 [ -z "${STORAGE_URL}" ] && STORAGE_URL='https://storage.exoplatform.org/private/android/'
 # <---
 
+echo ${STORAGE_URL} > /tmp/passre.txt
+exit 0
+
 # Mandatory Job Parameters/args
 set -u
 echo "Generating keystore..."
