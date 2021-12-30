@@ -51,10 +51,10 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "Add Pull Request workflow for eXo Tasks notifications" && continue
         echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
         #echo $message | grep -q "Merge Translation" && continue
-        author=$(git show --format="%an" -s $commitId)
+        author=$(git show --format="%an" -s $commitId | sed 's/exo-swf/eXo Software Factory/g')
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
         elt=$(echo "<li>(<a href=\"$commitLink\">$commitId</a>) $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
-        echo "$commitLink $message $author"
+        echo "$commitLink $message *** $author"
         subbody="$subbody$elt"
     done
     [ -z "$subbody" ] || body="$body<li><b>$item</b> $before_tag_name -> $tag_name:\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
@@ -63,7 +63,8 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
 done
 [ -z "$(echo $body | xargs)" ] && body="<p>The changelog $plf_range is empty now, but awesome things are coming... stay tuned :)</p>" || body="<ul>\n\t$body</ul>"
 dep_status=$(echo "Deployment status: \n\t\n\t<a href=\"$grafana_dashboard\">Grafana Dashboard</a>.\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
-body=$body$dep_status
+yearnotif=$(echo "<br/><br/>This is the <b>latest changelog</b> of $(date +%Y)! See you next year! 🎊 🎊 🥳 🥳\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+body=$body$dep_status$yearnotif
 echo "Generating activity..."
 for SPACE_ID in ${SPACES_IDS/,/ }; do
     curl --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
