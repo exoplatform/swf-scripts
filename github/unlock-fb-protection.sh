@@ -15,7 +15,7 @@ function hasArrayValue ()
 
     # Linear search. Upgrade to binary search for large datasets.
     for value in "${haystack[@]}"; do
-        if [[ $value == $needle ]] ;
+        if [[ $value == $needle ]] ; then
             return 0
         fi
     done
