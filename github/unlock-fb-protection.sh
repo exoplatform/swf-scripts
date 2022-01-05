@@ -7,14 +7,14 @@
 ###
 function hasArrayValue ()
 {
-    local -r needle="{$1:?}"
+    local needle="$1"
 
     shift 1
 
-    local -nr haystack="{$2:?}"
+    local haystack="$@"
 
     # Linear search. Upgrade to binary search for large datasets.
-    for value in "${haystack[@]}"; do
+    for value in "$haystack"; do
         if [[ $value == $needle ]] ; then
             return 0
         fi
