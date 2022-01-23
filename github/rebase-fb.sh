@@ -43,8 +43,8 @@ while IFS= read -r line; do
     default_branch="develop"
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
-    if ! git rebase origin/$default_branch feature/${FB_NAME} >/dev/null; then 
-      info "Recursive rebase strategy failed! Trying OURS rebase strategy without changes loss..."
+    if ! git rebase origin/$default_branch feature/${FB_NAME} >/dev/null; then
+      info "Rebase with recursive strategy has failed! Trying ours rebase strategy without detecting changes loss (helpful for detecting and removing backported commits)..."
       git rebase --abort || :
       if ! git rebase origin/$default_branch feature/${FB_NAME} --strategy-option ours >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
         error "Could not rebase feature/${FB_NAME}!"
