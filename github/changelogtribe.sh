@@ -53,6 +53,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         #echo $message | grep -q "Merge Translation" && continue
         author=$(git show --format="%an" -s $commitId | sed 's/exo-swf/eXo Software Factory/g')
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
+        message=$(echo $message | awk 'NR>20{print \"...\"; exit}1')
         elt=$(echo "<li>(<a href=\"$commitLink\">$commitId</a>) $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         echo "$commitLink $message *** $author"
         subbody="$subbody$elt"
