@@ -108,6 +108,24 @@ ADDONS_CHALLENGES_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
 MEEDS_ORIGIN_VERSION=1.3.x-SNAPSHOT
 MEEDS_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
 
+# Add-on poll
+ADDONS_POLL_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDONS_POLL_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+
+
+# Add-on eXo processes
+ADDONS_PROCESSES_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDONS_PROCESSES_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+
+
+# Automatic Translation
+ADDONS_AUTOMATIC_TRANSLATION_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDONS_AUTOMATIC_TRANSLATION_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+
+# Add-on eXo Documents
+ADDONS_DOCUMENTS_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDONS_DOCUMENTS_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+
 SCRIPTDIR=$(
 	cd $(dirname "$0")
 	pwd
@@ -170,6 +188,7 @@ function replaceProjectVersion() {
 	agenda) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_AGENDA_ORIGIN_VERSION</version>" "<version>$ADDONS_AGENDA_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	analytics) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_ANALYTICS_ORIGIN_VERSION</version>" "<version>$ADDONS_ANALYTICS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	challenges) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_CHALLENGES_ORIGIN_VERSION</version>" "<version>$ADDONS_CHALLENGES_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	poll) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_POLL_ORIGIN_VERSION</version>" "<version>$ADDONS_POLL_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	answers) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ANSWERS_ORIGIN_VERSION</version>" "<version>$ADDON_ANSWERS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	app-center) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_APP_CENTER_ORIGIN_VERSION</version>" "<version>$ADDON_APP_CENTER_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	cas-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CAS_ORIGIN_VERSION</version>" "<version>$ADDON_CAS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -198,6 +217,9 @@ function replaceProjectVersion() {
 	web-conferencing) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	data-upgrade) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_DATA_UPGRADE_ORIGIN_VERSION</version>" "<version>$ADDONS_DATA_UPGRADE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	meeds) $SCRIPTDIR/../replaceInFile.sh "<version>$MEEDS_ORIGIN_VERSION</version>" "<version>$MEEDS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	automatic-translation) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_AUTOMATIC_TRANSLATION_ORIGIN_VERSION</version>" "<version>$ADDONS_AUTOMATIC_TRANSLATION_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	documents) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_DOCUMENTS_ORIGIN_VERSION</version>" "<version>$ADDONS_DOCUMENTS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;	
+	processes) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_PROCESSES_ORIGIN_VERSION</version>" "<version>$ADDONS_PROCESSES_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	*) $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	esac
 }
@@ -276,6 +298,10 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.jitsi-call.version>$ADDONS_JITSI_ORIGIN_VERSION</org.exoplatform.jitsi-call.version>" "<addon.exo.jitsi-call.version>$ADDONS_JITSI_TARGET_VERSION</addon.exo.jitsi-call.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.multifactor-authentication.version>$ADDONS_MULTIFACTOR_AUTHENTICATION_ORIGIN_VERSION</addon.exo.multifactor-authentication.version>" "<addon.exo.multifactor-authentication.version>$ADDONS_MULTIFACTOR_AUTHENTICATION_TARGET_VERSION</addon.exo.multifactor-authentication.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.notes.version>$ADDONS_NOTES_ORIGIN_VERSION</addon.exo.notes.version>" "<addon.exo.notes.version>$ADDONS_NOTES_TARGET_VERSION</addon.exo.notes.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.documents.version>$ADDONS_DOCUMENTS_ORIGIN_VERSION</addon.exo.documents.version>" "<addon.exo.documents.version>$ADDONS_DOCUMENTS_TARGET_VERSION</addon.exo.documents.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.processes.version>$ADDONS_PROCESSES_ORIGIN_VERSION</addon.exo.processes.version>" "<addon.exo.processes.version>$ADDONS_PROCESSES_TARGET_VERSION</addon.exo.processes.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.poll.version>$ADDONS_POLL_ORIGIN_VERSION</addon.exo.poll.version>" "<addon.exo.poll.version>$ADDONS_POLL_TARGET_VERSION</addon.exo.poll.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.automatic-translation.version>$ADDONS_AUTOMATIC_TRANSLATION_ORIGIN_VERSION</addon.exo.automatic-translation.version>" "<addon.exo.automatic-translation.version>$ADDONS_AUTOMATIC_TRANSLATION_TARGET_VERSION</addon.exo.automatic-translation.version>" "pom.xml -not -wholename \"*/target/*\""
 }
 
 function createFB() {
@@ -314,7 +340,6 @@ function createFB() {
 pushd ${SWF_FB_REPOS}
 
 #Meeds Projects
-createFB gatein-dep
 createFB gatein-wci
 createFB kernel
 createFB core
@@ -331,37 +356,36 @@ createFB app-center
 createFB gamification
 createFB kudos
 createFB perk-store
-createFB exo-es-embedded
 createFB wallet
 createFB meeds
 createFB push-notifications
 createFB notes
 createFB challenges
+createFB analytics
+createFB task
+createFB poll
 
 # Explatform projects
 createFB ecms
 createFB jcr
 createFB agenda
-createFB analytics
 createFB jitsi
 createFB jitsi-call
-createFB cas-addon
 createFB chat-application
 createFB cmis-addon
 createFB multifactor-authentication
 createFB digital-workplace
 createFB layout-management
-createFB legacy-intranet
 createFB news
 createFB onlyoffice
-createFB remote-edit
 createFB saml2-addon
 createFB spnego-addon
-createFB task
 createFB web-conferencing
 createFB data-upgrade
-createFB analytics
 createFB platform-private-distributions
+createFB automatic-translation
+createFB processes
+createFB documents
 popd
 
 echo
