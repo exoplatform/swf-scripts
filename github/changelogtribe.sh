@@ -51,7 +51,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "eXo Tasks notifications" && continue
         echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
         #echo $message | grep -q "Merge Translation" && continue
-        author=$(git show --format="%ae" -s $commitId | sed 's/exo-swf/eXo Software Factory/g')
+        author=$(git show --format="%an" -s $commitId | sed 's/exo-swf/eXo Software Factory/g')
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
         elt=$(echo "<li>(<a href=\"$commitLink\">$commitId</a>) $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         echo "$commitLink $message *** $author"
