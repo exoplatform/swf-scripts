@@ -22,10 +22,12 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
     git clone git@github.com:${org}/$item >/dev/null
     pushd $item &>/dev/null
-    git checkout security/codeql &>/dev/null
+    git checkout security/codeql &>/dev/null || git checkout -b security/codeql &>/dev/null
     git rebase origin/develop >/dev/null
     git push origin security/codeql:security/codeql --force-with-lease >/dev/null
-    echo "Report: https://github.com/${org}/${item}/security/code-scanning?query=branch%3Asecurity%2Fcodeql++is%3Aopen+"
-    echo "==========="
+    if [ -f .github/workflows/codeql-analysis.yml ]; then
+        echo "Report: https://github.com/${org}/${item}/security/code-scanning?query=branch%3Asecurity%2Fcodeql++is%3Aopen+"
+        echo "==========="
+    fi
     popd &>/dev/null
 done
