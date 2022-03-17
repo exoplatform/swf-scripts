@@ -14,8 +14,14 @@ git clone git@github.com:exoplatform/platform-private-distributions &>/dev/null
 pushd platform-private-distributions &>/dev/null
 tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | tail -1)
 before_tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | tail -2 | head -1)
+plfVersion=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${tag_name_suffix}$ )
 popd &>/dev/null
 rm -rf platform-private-distributions &>/dev/null
+changelogfile="/tmp/CHANGE_LOG.txt"
+echo "=== Changelog generated $(date)" > $changelogfile
+echo "platform version: ${plfVersion}" >> $changelogfile
+echo "===" >> $changelogfile
+echo "" >> $changelogfile
 for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     _jq() {
         echo ${module} | base64 --decode | jq -r ${1}
@@ -42,8 +48,9 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
+    [ -z "$commitIds" ] || echo "*** $item $before_tag_name -> $tag_name" >> $changelogfile
     for commitId in $commitIds; do
-        message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g')
+        message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs)
         echo $message | grep -q "Prepare Release" && continue
         echo $message | grep -q "continuous-release-template" && continue
         echo $message | grep -q "exo-release" && continue
@@ -51,23 +58,38 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "eXo Tasks notifications" && continue
         echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
         #echo $message | grep -q "Merge Translation" && continue
-        author=$(git show --format="%an" -s $commitId | sed 's/exo-swf/eXo Software Factory/g')
+        author=$(git show --format="%an" -s $commitId | sed 's/exo-swf/eXo Software Factory/g' | xargs)
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
         elt=$(echo "<li>(<a href=\"$commitLink\">$commitId</a>) $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         echo "$commitLink $message *** $author"
+        echo "	($commitId) $message --- $author" >> $changelogfile
         subbody="$subbody$elt"
     done
     [ -z "$subbody" ] || body="$body<li><b>$item</b> $before_tag_name -> $tag_name:\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
     set -e
     popd &>/dev/null
 done
+[ -z "$(echo $body | xargs)" ] && echo "-- No changelog for this release." >> $changelogfile
+echo "" >> $changelogfile
+echo "===" >> $changelogfile
 [ -z "$(echo $body | xargs)" ] && body="<p>The changelog $plf_range is empty now, but awesome things are coming... stay tuned :)</p>" || body="<ul>\n\t$body</ul>"
 dep_status=$(echo "Deployment status: \n\t\n\t<a href=\"$grafana_dashboard\">Grafana Dashboard</a>.\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
 #yearnotif=$(echo "<br/><br/>This is the <b>latest changelog</b> of $(date +%Y)! See you next year! 🎊 🎊 🥳 🥳\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+hash=$(echo '<a target="_blank" class="metadata-tag" rel="noopener" title="Start a search based on this tag">#Changelog</a>' | gawk '{ gsub(/"/,"\\\"") } 1')
+uploadlink="${STORAGE_URL}/$(echo ${plfVersion} | grep -oP ^[0-9]\.[0-9])/${plfVersion}/"
+# Sanitize pwd
+downloadlink="$(echo ${uploadlink}$(basename $changelogfile) | sed 's|private/|public/|g' | sed -E 's|//\w+:\w+@|//|')"
+echo "Download link: $downloadlink"
+downloadinfo=''
+if wget -S --spider $downloadlink &>/dev/null; then
+  downloadinfo=$(echo "Changelog file: \n\t\n\t<a href=\"$downloadlink\">link</a>.<br/>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+fi
+body=$body$downloadinfo
 body=$body$dep_status #$yearnotif
+curl -T ${changelogfile} ${uploadlink}
 echo "Generating activity..."
 for SPACE_ID in ${SPACES_IDS/,/ }; do
-    curl --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
-        -H 'Content-Type: application/json' \
-        --data "{\"title\":\"<p>Changelog generated $(date).</p>\n\n$body\n\",\"type\":\"\",\"templateParams\":{},\"files\":[]}" >/dev/null && echo OK
+  curl --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
+    -H 'Content-Type: application/json' \
+    --data "{\"title\":\"<p>${hash} generated $(date).</p>\n\n$body\n\",\"type\":\"\",\"templateParams\":{},\"files\":[]}" >/dev/null && echo OK
 done
