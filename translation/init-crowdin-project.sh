@@ -39,7 +39,7 @@ CROWDIN_PROJECT_NAME=$1
 CROWDIN_PROJECT_KEY=$2
 LANGUAGES=en,ar,az,ca,ceb,cs,nl,fr,de,el,it,ja,fa,fil,fi,hi,hu,id,kab,ko,lt,ms,no,pcm,pl,pt-BR,pt-PT,ro,ru,sk,sl,sv-SE,tl,th,ut-IN,zh-CN,zh-TW,es-ES,tr,uk,vi
 
-CROWDIN_MAVEN_PLUGIN_VERSION=1.3.x-SNAPSHOT
+CROWDIN_MAVEN_PLUGIN_VERSION=1.2.x-SNAPSHOT
 
 ##
 # Init translations in Crowdin for one project
