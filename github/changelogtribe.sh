@@ -44,7 +44,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
       continue
     fi
     echo "*** $item $before_tag_name -> $tag_name"
-    commitIds=$(git log --no-merges --pretty=format:"%h" $before_tag_name~2...$tag_name~2 | xargs)
+    commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~2...$tag_name~2 | xargs)
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
@@ -60,9 +60,10 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         #echo $message | grep -q "Merge Translation" && continue
         author=$(git show --format="%an" -s $commitId | sed 's/exo-swf/eXo Software Factory/g' | xargs)
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
-        elt=$(echo "<li>(<a href=\"$commitLink\">$commitId</a>) $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+        fomattedCommitId=$(echo $commitId | head -c 8)
+        elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         echo "$commitLink $message *** $author"
-        echo "	($commitId) $message --- $author" >> $changelogfile
+        echo "	($fomattedCommitId) $message --- $author" >> $changelogfile
         subbody="$subbody$elt"
     done
     [ -z "$subbody" ] || body="$body<li><b>$item</b> $before_tag_name -> $tag_name:\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
