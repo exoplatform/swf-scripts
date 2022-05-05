@@ -66,9 +66,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo "	($fomattedCommitId) $message --- $author" >> $changelogfile
         subbody="$subbody$elt"
     done
-    beforeTagCommitID=$(git rev-parse --short $before_tag_name~2)
-    tagCommitID=$(git rev-parse --short $tag_name~2)
-    [ -z "$subbody" ] || body="$body<li><b>$item</b> <a href=\"https://github.com/${org}/${item}/compare/${beforeTagCommitID}...${tagCommitID}\">$before_tag_name..$tag_name</a>:\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
+    [ -z "$subbody" ] || body="$body<li><b>$item</b> $before_tag_name -> $tag_name:\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
     set -e
     popd &>/dev/null
 done
