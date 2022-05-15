@@ -44,7 +44,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
       continue
     fi
     echo "*** $item $before_tag_name -> $tag_name"
-    commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~2...$tag_name~2 | xargs)
+    commitIds=$(git log --no-merges --since='2 days ago' --pretty=format:"%H" $before_tag_name~2...$tag_name~2 | xargs)
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
