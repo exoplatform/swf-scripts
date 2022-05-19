@@ -45,6 +45,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     fi
     echo "*** $item $before_tag_name -> $tag_name"
     commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~2...$tag_name~2 | xargs)
+    commitstats=$(git log --no-merges --numstat --pretty="%H" $before_tag_name~2...$tag_name~2 | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}')
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
@@ -69,7 +70,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     beforeTagCommitID=$(git rev-parse --short $before_tag_name~2)
     tagCommitID=$(git rev-parse --short $tag_name~2)
     fullchangeloglink=$(echo "<a href=\"https://github.com/${org}/${item}/compare/${beforeTagCommitID}...${tagCommitID}\">$before_tag_name..$tag_name</a>" | gawk '{ gsub(/"/,"\\\"") } 1')
-    [ -z "$subbody" ] || body="$body<li><b>$item</b> ${fullchangeloglink}:\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
+    [ -z "$subbody" ] || body="$body<li><b>$item</b> ${fullchangeloglink} (${commitstats}):\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
     set -e
     popd &>/dev/null
 done
