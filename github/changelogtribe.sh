@@ -51,7 +51,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
     [ -z "$commitIds" ] || echo "*** $item $before_tag_name -> $tag_name" >> $changelogfile
     for commitId in $commitIds; do
-        message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs)
+        message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs -0)
         echo $message | grep -q "Prepare Release" && continue
         echo $message | grep -q "continuous-release-template" && continue
         echo $message | grep -q "exo-release" && continue
