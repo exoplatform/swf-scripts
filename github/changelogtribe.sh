@@ -50,7 +50,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
-    [ -z "$commitIds" ] || echo "*** $item $before_tag_name -> $tag_name" >> $changelogfile
+    [ -z "$commitIds" ] || echo "*** $item currentversion" >> $changelogfile
     for commitId in $commitIds; do
         message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs -0)
         echo $message | grep -q "Prepare Release" && continue
@@ -65,7 +65,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         fomattedCommitId=$(echo $commitId | head -c 7)
         elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $message <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         echo "$commitLink $message *** $author"
-        echo "	($fomattedCommitId) $message --- $author" >> $changelogfile
+        echo "	$message" >> $changelogfile
         subbody="$subbody$elt"
     done
     beforeTagCommitID=$(git rev-parse --short $before_tag_name~2)
@@ -94,9 +94,3 @@ fi
 body=$body$downloadinfo
 body=$body$dep_status #$yearnotif
 curl -T ${changelogfile} ${uploadlink}
-echo "Generating activity..."
-for SPACE_ID in ${SPACES_IDS/,/ }; do
-  curl --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
-    -H 'Content-Type: application/json' \
-    --data "{\"title\":\"<p>${changeloghash} ${cicdhash} generated $(date).</p>\n\n$body\n\",\"type\":\"\",\"templateParams\":{},\"files\":[]}" >/dev/null && echo OK
-done
