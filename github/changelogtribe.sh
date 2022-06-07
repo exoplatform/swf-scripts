@@ -50,7 +50,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
-    [ -z "$commitIds" ] || echo "*** $item currentversion" >> $changelogfile
+    [ -z "$commitIds" ] || echo "*** $item $currentversion" >> $changelogfile
     for commitId in $commitIds; do
         message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs -0)
         echo $message | grep -q "Prepare Release" && continue
