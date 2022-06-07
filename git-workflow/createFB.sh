@@ -2,7 +2,7 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=tasks
+BRANCH=experience
 ISSUE=TASK-58001
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
@@ -123,6 +123,14 @@ ADDONS_AUTOMATIC_TRANSLATION_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
 ADDONS_DOCUMENTS_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDONS_DOCUMENTS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
 
+# Add-on mail-integration
+ADDONS_MAIL_INTEGRATION_ORIGIN_VERSION=1.1.x-SNAPSHOT
+ADDONS_MAIL_INTEGRATION_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+
+# Add-on Gamification-github
+ADDONS_GAMIFICATION_GITHUB_ORIGIN_VERSION=1.1.x-SNAPSHOT
+ADDONS_GAMIFICATION_GITHUB_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+
 SCRIPTDIR=$(
 	cd $(dirname "$0")
 	pwd
@@ -216,6 +224,8 @@ function replaceProjectVersion() {
 	automatic-translation) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_AUTOMATIC_TRANSLATION_ORIGIN_VERSION</version>" "<version>$ADDONS_AUTOMATIC_TRANSLATION_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	documents) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_DOCUMENTS_ORIGIN_VERSION</version>" "<version>$ADDONS_DOCUMENTS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;	
 	processes) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_PROCESSES_ORIGIN_VERSION</version>" "<version>$ADDONS_PROCESSES_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	mail-integration) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_MAIL_INTEGRATION_ORIGIN_VERSION</version>" "<version>$ADDONS_MAIL_INTEGRATION_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	gamification-github) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_GAMIFICATION_GITHUB_ORIGIN_VERSION</version>" "<version>$ADDONS_GAMIFICATION_GITHUB_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	*) $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	esac
 }
@@ -297,6 +307,8 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.processes.version>$ADDONS_PROCESSES_ORIGIN_VERSION</addon.exo.processes.version>" "<addon.exo.processes.version>$ADDONS_PROCESSES_TARGET_VERSION</addon.exo.processes.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.poll.version>$ADDONS_POLL_ORIGIN_VERSION</addon.exo.poll.version>" "<addon.exo.poll.version>$ADDONS_POLL_TARGET_VERSION</addon.exo.poll.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.automatic-translation.version>$ADDONS_AUTOMATIC_TRANSLATION_ORIGIN_VERSION</addon.exo.automatic-translation.version>" "<addon.exo.automatic-translation.version>$ADDONS_AUTOMATIC_TRANSLATION_TARGET_VERSION</addon.exo.automatic-translation.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.mail-integration.version>$ADDONS_MAIL_INTEGRATION_ORIGIN_VERSION</addon.exo.mail-integration.version>" "<addon.exo.mail-integration.version>$ADDONS_MAIL_INTEGRATION_TARGET_VERSION</addon.exo.mail-integration.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.gamification-github.version>$ADDONS_GAMIFICATION_GITHUB_ORIGIN_VERSION</addon.exo.gamification-github.version>" "<addon.exo.gamification-github.version>$ADDONS_GAMIFICATION_GITHUB_TARGET_VERSION</addon.exo.gamification-github.version>" "pom.xml -not -wholename \"*/target/*\""
 }
 
 function createFB() {
@@ -359,6 +371,7 @@ createFB challenges
 createFB analytics
 createFB task
 createFB poll
+createFB gamification-github
 
 # Explatform projects
 createFB ecms
@@ -367,7 +380,6 @@ createFB agenda
 createFB jitsi
 createFB jitsi-call
 createFB chat-application
-createFB cmis-addon
 createFB multifactor-authentication
 createFB digital-workplace
 createFB layout-management
@@ -380,6 +392,7 @@ createFB platform-private-distributions
 createFB automatic-translation
 createFB processes
 createFB documents
+createFB mail-integration
 popd
 
 echo
