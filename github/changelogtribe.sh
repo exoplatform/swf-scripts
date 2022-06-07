@@ -37,8 +37,9 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     pushd $item &>/dev/null
     git fetch --tags --prune &>/dev/null
     set +e
-    tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${tag_name_suffix}$ )
-    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${before_tag_name_suffix}$)
+    currentversion=$(echo $version | sed 's/\-\${release-version}//g' | sed 's/-version//g')
+    tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep $currentversion-${tag_name_suffix}$ )
+    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep $currentversion-${before_tag_name_suffix}$)
     if [ -z "$tag_name" ] || [ -z "$before_tag_name" ]; then
       popd &>/dev/null
       continue
