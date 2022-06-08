@@ -32,8 +32,8 @@ set -u
 REQ_PARAMS='catalog=official&show=snapshot'
 CATALOG_FILE_NAME="list.json"
 if [ -n "${CUSTOMER}" ]; then
-	if [ -z "${ENVIRONMENT}" ] || [[ ! ${ENVIRONMENT} =~ ^(acceptance|hosting)$ ]]; then
-		echo "You must provide a valid environment (acceptance|hosting)"
+	if [ -z "${ENVIRONMENT}" ] || [[ ! ${ENVIRONMENT} =~ ^(acceptance|hosting|meeds)$ ]]; then
+		echo "You must provide a valid environment (acceptance|hosting|meeds)"
 		exit 1
 	fi
 	REQ_PARAMS="&customer=${CUSTOMER}&catalog=${ENVIRONMENT}"
