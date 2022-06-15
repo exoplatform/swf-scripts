@@ -96,7 +96,7 @@ for i in ${_REPOS}; do
     --header 'Accept: application/vnd.github.luke-cage-preview+json' \
     --header "Authorization: Bearer ${GIT_TOKEN}" \
     --header 'Content-Type: application/json' \
-    --data '{ "required_status_checks": null,  "enforce_admins": true,  "required_pull_request_reviews": {"dismiss_stale_reviews": true,"required_approving_review_count": 1  },"restrictions": null}'
+    --data '{ "required_status_checks":{"strict": true,"contexts": ["exo-ci/build-status"]},  "enforce_admins": true,  "required_pull_request_reviews": {"dismiss_stale_reviews": true,"required_approving_review_count": 1  },"restrictions": null}'
   echo "OK: Branch Protection added."
   rm -rf ${repo} &>/dev/null
 done
