@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=experience
-ISSUE=TASK-58001
+BRANCH=devx
+ISSUE=TASK-58146
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.4.x-SNAPSHOT
@@ -127,6 +127,17 @@ ADDONS_MAIL_INTEGRATION_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
 ADDONS_GAMIFICATION_GITHUB_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDONS_GAMIFICATION_GITHUB_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
 
+# Add-on Anti-bruteforce
+ADDONS_ANTI_BRUTEFORCE_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDONS_ANTI_BRUTEFORCE_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+
+# Add-on Anti-malware
+ADDONS_ANTI_MALWARE_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDONS_ANTI_MALWARE_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+
+# Add-on dlp
+ADDONS_DLP_ORIGIN_VERSION=1.0.x-SNAPSHOT
+ADDONS_DLP_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
 SCRIPTDIR=$(
 	cd $(dirname "$0")
 	pwd
@@ -221,6 +232,9 @@ function replaceProjectVersion() {
 	processes) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_PROCESSES_ORIGIN_VERSION</version>" "<version>$ADDONS_PROCESSES_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	mail-integration) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_MAIL_INTEGRATION_ORIGIN_VERSION</version>" "<version>$ADDONS_MAIL_INTEGRATION_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	gamification-github) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_GAMIFICATION_GITHUB_ORIGIN_VERSION</version>" "<version>$ADDONS_GAMIFICATION_GITHUB_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	anti-bruteforce) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_ANTI_BRUTEFORCE_ORIGIN_VERSION</version>" "<version>$ADDONS_ANTI_BRUTEFORCE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	anti-malware) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_ANTI_MALWARE_ORIGIN_VERSION</version>" "<version>$ADDONS_ANTI_MALWARE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	dlp) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_DLP_ORIGIN_VERSION</version>" "<version>$ADDONS_DLP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	*) $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	esac
 }
@@ -247,7 +261,7 @@ function replaceProjectDeps() {
 
 	## PLF
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.depmgt.version>$DEPMGT_ORIGIN_VERSION</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>$DEPMGT_TARGET_VERSION</org.exoplatform.depmgt.version>" "pom.xml -not -wholename \"*/target/*\""
-	# $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.doc.doc-style.version>$ORIGIN_VERSION</org.exoplatform.doc.doc-style.version>" "<org.exoplatform.doc.doc-style.version>$TARGET_VERSION</org.exoplatform.doc.doc-style.version>" "pom.xml -not -wholename \"*/target/*\""
+  $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.doc.doc-style.version>$ORIGIN_VERSION</org.exoplatform.doc.doc-style.version>" "<org.exoplatform.doc.doc-style.version>$TARGET_VERSION</org.exoplatform.doc.doc-style.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform-ui.version>$ORIGIN_VERSION</org.exoplatform.platform-ui.version>" "<org.exoplatform.platform-ui.version>$TARGET_VERSION</org.exoplatform.platform-ui.version>" "pom.xml -not -wholename \"*/target/*\""
 	# Temporary after lightweight merge
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.calendar.version>$ORIGIN_VERSION</org.exoplatform.calendar.version>" "<org.exoplatform.calendar.version>$TARGET_VERSION</org.exoplatform.calendar.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -255,12 +269,12 @@ function replaceProjectDeps() {
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.ecms.version>$ORIGIN_VERSION</org.exoplatform.ecms.version>" "<org.exoplatform.ecms.version>$TARGET_VERSION</org.exoplatform.ecms.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.jcr.version>$ORIGIN_VERSION</org.exoplatform.jcr.version>" "<org.exoplatform.jcr.version>$TARGET_VERSION</org.exoplatform.jcr.version>" "pom.xml -not -wholename \"*/target/*\""
 
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.social.version>$ORIGIN_VERSION</org.exoplatform.social.version>" "<org.exoplatform.social.version>$TARGET_VERSION</org.exoplatform.social.version>" "pom.xml -not -wholename \"*/target/*\""	
+	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.social.version>$ORIGIN_VERSION</org.exoplatform.social.version>" "<org.exoplatform.social.version>$TARGET_VERSION</org.exoplatform.social.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.notes.version>$ADDONS_NOTES_ORIGIN_VERSION</addon.exo.notes.version>" "<addon.exo.notes.version>$ADDONS_NOTES_TARGET_VERSION</addon.exo.notes.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.agenda.version>$ADDONS_AGENDA_ORIGIN_VERSION</org.exoplatform.agenda.version>" "<org.exoplatform.agenda.version>$ADDONS_AGENDA_TARGET_VERSION</org.exoplatform.agenda.version>" "pom.xml -not -wholename \"*/target/*\""	
+	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.agenda.version>$ADDONS_AGENDA_ORIGIN_VERSION</org.exoplatform.agenda.version>" "<org.exoplatform.agenda.version>$ADDONS_AGENDA_TARGET_VERSION</org.exoplatform.agenda.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.forum.version>$ORIGIN_VERSION</org.exoplatform.forum.version>" "<org.exoplatform.forum.version>$TARGET_VERSION</org.exoplatform.forum.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION</org.exoplatform.integ.version>" "pom.xml -not -wholename \"*/target/*\""
-	# $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
+ $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.distribution.version>$MEEDS_ORIGIN_VERSION</io.meeds.distribution.version>" "<io.meeds.distribution.version>$MEEDS_TARGET_VERSION</io.meeds.distribution.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION</org.exoplatform.platform.distributions.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.addons-manager.version>$ADDONS_MANAGER_ORIGIN_VERSION</org.exoplatform.platform.addons-manager.version>" "<org.exoplatform.platform.addons-manager.version>$ADDONS_MANAGER_TARGET_VERSION</org.exoplatform.platform.addons-manager.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -270,7 +284,7 @@ function replaceProjectAddons() {
 	printf "\e[1;33m# %s\e[m\n" "Modifying add-ons versions in the packaging project POMs ($repo_name) ..."
 
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_ORIGIN_VERSION</addon.exo.es.embedded.version>" "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_TARGET_VERSION</addon.exo.es.embedded.version>" "pom.xml -not -wholename \"*/target/*\""
-	#	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.answers.version>$ADDON_ANSWERS_ORIGIN_VERSION</addon.exo.answers.version>" "<addon.exo.answers.version>$ADDON_ANSWERS_TARGET_VERSION</addon.exo.answers.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.answers.version>$ADDON_ANSWERS_ORIGIN_VERSION</addon.exo.answers.version>" "<addon.exo.answers.version>$ADDON_ANSWERS_TARGET_VERSION</addon.exo.answers.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.app-center.version>$ADDON_APP_CENTER_ORIGIN_VERSION</addon.exo.app-center.version>" "<addon.exo.app-center.version>$ADDON_APP_CENTER_TARGET_VERSION</addon.exo.app-center.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.calendar.version>$ORIGIN_VERSION</addon.exo.calendar.version>" "<addon.exo.calendar.version>$TARGET_VERSION</addon.exo.calendar.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.cas-addon.version>$ADDON_CAS_ORIGIN_VERSION</addon.exo.cas-addon.version>" "<addon.exo.cas-addon.version>$ADDON_CAS_TARGET_VERSION</addon.exo.cas-addon.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -303,6 +317,9 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.automatic-translation.version>$ADDONS_AUTOMATIC_TRANSLATION_ORIGIN_VERSION</addon.exo.automatic-translation.version>" "<addon.exo.automatic-translation.version>$ADDONS_AUTOMATIC_TRANSLATION_TARGET_VERSION</addon.exo.automatic-translation.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.mail-integration.version>$ADDONS_MAIL_INTEGRATION_ORIGIN_VERSION</addon.exo.mail-integration.version>" "<addon.exo.mail-integration.version>$ADDONS_MAIL_INTEGRATION_TARGET_VERSION</addon.exo.mail-integration.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.gamification-github.version>$ADDONS_GAMIFICATION_GITHUB_ORIGIN_VERSION</addon.meeds.gamification-github.version>" "<addon.meeds.gamification-github.version>$ADDONS_GAMIFICATION_GITHUB_TARGET_VERSION</addon.meeds.gamification-github.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.anti-bruteforce.version>$ADDONS_ANTI_BRUTEFORCE_ORIGIN_VERSION</addon.exo.anti-bruteforce.version>" "<addon.exo.anti-bruteforce.version>$ADDONS_ANTI_BRUTEFORCE_TARGET_VERSION</addon.exo.anti-bruteforce.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.anti-malware.version>$ADDONS_ANTI_MALWARE_ORIGIN_VERSION</addon.exo.anti-malware.version>" "<addon.exo.anti-malware.version>$ADDONS_ANTI_MALWARE_TARGET_VERSION</addon.exo.anti-malware.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.dlp.version>$ADDONS_DLP_ORIGIN_VERSION</addon.exo.dlp.version>" "<addon.exo.dlp.version>$ADDONS_DLP_TARGET_VERSION</addon.exo.dlp.version>" "pom.xml -not -wholename \"*/target/*\""
 }
 
 function createFB() {
@@ -386,6 +403,9 @@ createFB automatic-translation
 createFB processes
 createFB documents
 createFB mail-integration
+createFB anti-bruteforce
+createFB anti-malware
+createFB dlp
 popd
 
 echo
