@@ -46,6 +46,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "exo-release" && continue
         echo $message | grep -q "parent-pom" && continue
         echo $message | grep -q "eXo Tasks notifications" && continue
+        echo $message | grep -q "Merge Translations" && continue
         echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
         #echo $message | grep -q "Merge Translation" && continue
         author=$(git show --format="%an" -s $commitId)
