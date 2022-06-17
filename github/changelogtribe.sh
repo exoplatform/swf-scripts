@@ -63,10 +63,15 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
         fomattedCommitId=$(echo $commitId | head -c 7)
         buildersTasks=$(echo  $message | grep -oPi '(BUILDER|MEED)(S)?-[0-9]+' | sort -u | xargs)
+        eXoTasks=$(echo  $message | grep -oPi '(TASK|MAINT)-[0-9]+' | sort -u | xargs)
         transormedMessage="$message"
         for buildersTask in $buildersTasks; do 
           buildersTaskID=$(echo $buildersTask | sed -E 's/(BUILDER|MEED)(S)?-//gi')
           transormedMessage=$(echo $transormedMessage | sed "s|$buildersTask|<a href=\"https://builders.meeds.io/portal/meeds/tasks/taskDetail/$buildersTaskID\">$buildersTask</a>|g")
+        done
+        for eXoTask in $eXoTasks; do 
+          eXoTaskID=$(echo $eXoTask | sed -E 's/(TASK|MAINT)-//gi')
+          transormedMessage=$(echo $transormedMessage | sed "s|$eXoTask|<a href=\"https://community.exoplatform.com/portal/dw/tasks/taskDetail/$eXoTaskID\">$eXoTask</a>|g")
         done
         elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         echo "$commitLink $message *** $author"
