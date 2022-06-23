@@ -2,8 +2,8 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=devx
-ISSUE=TASK-58146
+BRANCH=security-fix
+ISSUE=TASK-58581
 ORIGIN_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.4.x-SNAPSHOT
@@ -138,6 +138,11 @@ ADDONS_ANTI_MALWARE_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
 # Add-on dlp
 ADDONS_DLP_ORIGIN_VERSION=1.0.x-SNAPSHOT
 ADDONS_DLP_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
+
+# Add-on agenda connectors
+ADDONS_AGENDA_CONNECTORS_ORIGIN_VERSION=1.1.x-SNAPSHOT
+ADDONS_AGENDA_CONNECTORS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+
 SCRIPTDIR=$(
 	cd $(dirname "$0")
 	pwd
@@ -235,6 +240,7 @@ function replaceProjectVersion() {
 	anti-bruteforce) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_ANTI_BRUTEFORCE_ORIGIN_VERSION</version>" "<version>$ADDONS_ANTI_BRUTEFORCE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	anti-malware) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_ANTI_MALWARE_ORIGIN_VERSION</version>" "<version>$ADDONS_ANTI_MALWARE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	dlp) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_DLP_ORIGIN_VERSION</version>" "<version>$ADDONS_DLP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	agenda-connectors) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_AGENDA_CONNECTORS_ORIGIN_VERSION</version>" "<version>$ADDONS_AGENDA_CONNECTORS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	*) $SCRIPTDIR/../replaceInFile.sh "<version>$ORIGIN_VERSION</version>" "<version>$TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	esac
 }
@@ -320,6 +326,7 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.anti-bruteforce.version>$ADDONS_ANTI_BRUTEFORCE_ORIGIN_VERSION</addon.exo.anti-bruteforce.version>" "<addon.exo.anti-bruteforce.version>$ADDONS_ANTI_BRUTEFORCE_TARGET_VERSION</addon.exo.anti-bruteforce.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.anti-malware.version>$ADDONS_ANTI_MALWARE_ORIGIN_VERSION</addon.exo.anti-malware.version>" "<addon.exo.anti-malware.version>$ADDONS_ANTI_MALWARE_TARGET_VERSION</addon.exo.anti-malware.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.dlp.version>$ADDONS_DLP_ORIGIN_VERSION</addon.exo.dlp.version>" "<addon.exo.dlp.version>$ADDONS_DLP_TARGET_VERSION</addon.exo.dlp.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.agenda-connectors.version>$ADDONS_AGENDA_CONNECTORS_ORIGIN_VERSION</addon.exo.agenda-connectors.version>" "<addon.exo.agenda-connectors.version>$ADDONS_AGENDA_CONNECTORS_TARGET_VERSION</addon.exo.agenda-connectors.version>" "pom.xml -not -wholename \"*/target/*\""
 }
 
 function createFB() {
@@ -406,6 +413,7 @@ createFB mail-integration
 createFB anti-bruteforce
 createFB anti-malware
 createFB dlp
+createFB agenda-connectors
 popd
 
 echo
