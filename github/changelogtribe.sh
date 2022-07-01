@@ -2,6 +2,51 @@
 # Args:
 # Generate changelog of CI/CD as Tribe Space Activity
 
+
+declare -A tribeGithbIds=( [exo-swf]=NA )
+declare -A githubScore=( [exo-swf]=0 )
+
+getCommitAuthorFromGithub() {
+  local _id="$1"
+  echo $(curl --fail -XGET -H "Authorization: token ${GIT_TOKEN}" \
+    -H 'Accept: application/vnd.github.luke-cage-preview+json' \
+    -L "https://api.github.com/search/issues?q=${_id}" 2>/dev/null | jq .items[0].user.login | tr -d '"' 2>/dev/null || echo "")
+}
+
+getTribeAuthorFromGithb() {
+  curl --fail -XGET --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/gamification/connectors/github/hooksmanagement/users/$1" 2>/dev/null || echo "NA"
+}
+
+checkElementExists() {
+  [ ! -z "${tribeGithbIds[$1]:-}" ]
+}
+
+setElementtoIds() {
+  tribeGithbIds[$1]="$2"
+}
+
+getElementfromIds() {
+  echo ${tribeGithbIds[$1]} 2>/dev/null || echo "NA"
+}
+
+getTribeProfile() {
+  curl --fail -XGET --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/users/$1" 2>/dev/null || echo ""
+}
+
+setStat() {
+  [ -z "${githubScore[$1]:-}" ] && githubScore[$1]=$2 || ((githubScore[$1]+=$2))
+}
+
+getWinner() {
+  local max=-1
+  local winner=""
+  for key in "${!githubScore[@]}"; do
+    item=${githubScore[$key]}
+    ((item > max)) && max=$item && winner=$key
+  done
+  echo $winner  
+}
+
 modules=$(curl -H "Authorization: token ${GIT_TOKEN}" \
     -H 'Accept: application/vnd.github.v3.raw' \
     -L "https://api.github.com/repos/exoplatform/swf-release-manager-catalog/contents/exo-platform/continuous-release-template.json")
@@ -32,6 +77,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
     [ "${item}" = "community-website" ] && continue
+    #[ "${item}" = "social" ] || continue # DELETE
     [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
     git clone git@github.com:${org}/$item &>/dev/null
     pushd $item &>/dev/null
@@ -51,6 +97,9 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
     [ -z "$commitIds" ] || echo "*** $item $before_tag_name -> $tag_name" >> $changelogfile
     for commitId in $commitIds; do
+        unset authorTribeID
+        unset authorProfile
+        unset authorFullName
         message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs -0)
         echo $message | grep -q "Prepare Release" && continue
         echo $message | grep -q "continuous-release-template" && continue
@@ -59,7 +108,24 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "eXo Tasks notifications" && continue
         echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
         #echo $message | grep -q "Merge Translation" && continue
-        author=$(git show --format="%an" -s $commitId | sed 's/exo-swf/eXo Software Factory/g' | xargs)
+        author=$(git show --format="%an" -s $commitId | xargs)
+        userStat=$(git show --numstat --pretty="%H" $commitId | awk 'NF==3 {score+=$1+$2} END {printf("+%d\n", score)}')
+        _githubusername=$(getCommitAuthorFromGithub $commitId)
+        authorLink="${author}"
+        if [ ! -z "${_githubusername}" ]; then 
+           if checkElementExists ${_githubusername}; then 
+              authorTribeID="$(getElementfromIds ${_githubusername})"
+           else 
+              authorTribeID="$(getTribeAuthorFromGithb ${_githubusername})"
+              setElementtoIds ${_githubusername} $authorTribeID
+           fi
+           authorProfile=$(getTribeProfile $authorTribeID)
+           if [ ! -z "${authorProfile}" ]; then 
+             authorFullName="$(echo ${authorProfile} | jq .fullname | tr -d '\"' || echo "")"
+             [ -z "${authorFullName}" ] || authorLink=$(echo "<a target=\"_self\" rel=\"noopener\" href=\"https://community.exoplatform.com/portal/dw/profile/${authorTribeID}\" class=\"user-suggester\">${authorFullName}</a>")
+             [ -z "${authorFullName}" ] || setStat $authorTribeID $userStat
+           fi
+        fi
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
         fomattedCommitId=$(echo $commitId | head -c 7)
         buildersTasks=$(echo  $message | grep -oPi '(BUILDER|MEED)(S)?-[0-9]+' | sort -u | xargs)
@@ -73,8 +139,8 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
           eXoTaskID=$(echo $eXoTask | sed -E 's/(TASK|MAINT)-//gi')
           transormedMessage=$(echo $transormedMessage | sed "s|$eXoTask|<a href=\"https://community.exoplatform.com/portal/dw/tasks/taskDetail/$eXoTaskID\">$eXoTask</a>|g")
         done
-        elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$author</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
-        echo "$commitLink $message *** $author"
+        elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+        echo "$commitLink $message *** $author -- $authorTribeID"
         echo "	($fomattedCommitId) $message --- $author" >> $changelogfile
         subbody="$subbody$elt"
     done
@@ -105,8 +171,17 @@ body=$body$downloadinfo
 body=$body$dep_status #$yearnotif
 curl -T ${changelogfile} ${uploadlink}
 echo "Generating activity..."
+activityIds=""
 for SPACE_ID in ${SPACES_IDS/,/ }; do
-  curl --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
+  activityId=$(curl --fail --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/spaces/${SPACE_ID}/activities" \
     -H 'Content-Type: application/json' \
-    --data "{\"title\":\"<p>${changeloghash} ${cicdhash} generated $(date).</p>\n\n$body\n\",\"type\":\"\",\"templateParams\":{},\"files\":[]}" >/dev/null && echo OK
+    --data "{\"title\":\"<p>${changeloghash} ${cicdhash} generated $(date).</p>\n\n$body\n\",\"type\":\"\",\"templateParams\":{},\"files\":[]}" 2>/dev/null | jq .id 2>/dev/null | tr -d '"' || echo "")
+  activityIds="${activityId} ${activityIds}"
 done
+winner=$(getWinner)
+if [ ! -z "${activityId}" ] && [ ! -z "${winner}" ]; then 
+  echo "Generating Kudos on activity #${activityId}... Winner is ${winner}."
+  curl --fail --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/kudos/api/kudos" \
+    -H 'Content-Type: application/json' \
+    --data "{\"entityType\":\"ACTIVITY\",\"entityId\":\"${activityId}\",\"parentEntityId\":\"\",\"receiverType\":\"user\",\"receiverId\":\"${winner}\",\"message\":\"<div>Congratulations, you are the winner of ${plfVersion}'s changelog! Keep it up !</div>\n\"}"
+fi
