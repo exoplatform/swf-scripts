@@ -20,7 +20,7 @@ if [ -z "${TASK_ID}" ]; then
   exit 1
 fi
 
-if ! grep -Pq "^([-0-9a-zA-Z]+:[1-9]+(\.[0-9]+)+(\-[A-Za-z0-9]+)*\,?){1,30}$" <<<${REPOSITORIES}; then
+if ! grep -qP "^([-0-9a-zA-Z]+:[0-9]+(\.[0-9]+)*(\-[A-Za-z0-9]+)*\,?){1,30}$" <<<${REPOSITORIES}; then
   echo "Error: Unknown format for REPOSITORIES! Only <reponame1>:tagversion,<reponame2>:tagversion,...<reponameN>:tagversion[,] format are accepted"
   exit 1
 fi
