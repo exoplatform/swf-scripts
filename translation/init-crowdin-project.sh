@@ -30,10 +30,11 @@ NOTES_VERSION=1.1.x
 POLL_VERSION=1.0.x
 GAMIFICATION_GITHUB_VERSION=1.0.x
 MAIL_INTEGRATION_VERSION=1.0.x
-MULTIFACTOR_AUTHENTICATION_VERSION=1.0.x
+MULTIFACTOR_AUTHENTICATION_VERSION=1.1.x
 AUTOMATIC_TRANSLATION_VERSION=1.0.x
 DOCUMENTS_VERSION=1.0.x
 PROCESSES_VERSION=1.0.x
+AGENDA_CONNECTORS_VERSION=1.0.x
 
 CROWDIN_PROJECT_NAME=$1
 CROWDIN_PROJECT_KEY=$2
@@ -66,7 +67,7 @@ function initTranslation() {
 set -e
 mkdir -p sources
 
-projects=("gatein-portal:${PLF_VERSION}" "platform-ui:${PLF_VERSION}" "commons:${PLF_VERSION}" "ecms:${PLF_VERSION}" "social:${PLF_VERSION}" "notes:${NOTES_VERSION}" "analytics:${ANALYTICS_VERSION}" "meeds:${MEEDS_VERSION}" "platform-private-distributions:${PLF_VERSION}" "chat-application:${CHAT_ADDON_VERSION}" "push-notifications:${PUSH_NOTIFICATIONS_ADDON_VERSION}" "task:${TASK_ADDON_VERSION}" "web-conferencing:${WEB_CONFERENCING_ADDON_VERSION}" "wallet:${WALLET_ADDON_VERSION}" "kudos:${KUDOS_ADDON_VERSION}" "perk-store:${PERKSTORE_ADDON_VERSION}" "gamification:${GAMIFICATION_VERSION}" "news:${NEWS_VERSION}" "onlyoffice:${ONLYOFFICE_VERSION}" "app-center:${APPCENTER_VERSION}" "digital-workplace:${DIGITAL_WORKPLACE_VERSION}" "agenda:${AGENDA_VERSION}" "jitsi:${JITSI_VERSION}" "poll:${POLL_VERSION}" "gamification-github:${GAMIFICATION_GITHUB_VERSION}" "mail-integration:${MAIL_INTEGRATION_VERSION}" "multifactor-authentication:${MULTIFACTOR_AUTHENTICATION_VERSION}" "automatic-translation:${AUTOMATIC_TRANSLATION_VERSION}" "documents:${DOCUMENTS_VERSION}" "processes:${PROCESSES_VERSION}") 
+projects=("gatein-portal:${PLF_VERSION}" "platform-ui:${PLF_VERSION}" "commons:${PLF_VERSION}" "ecms:${PLF_VERSION}" "social:${PLF_VERSION}" "notes:${NOTES_VERSION}" "analytics:${ANALYTICS_VERSION}" "meeds:${MEEDS_VERSION}" "platform-private-distributions:${PLF_VERSION}" "chat-application:${CHAT_ADDON_VERSION}" "push-notifications:${PUSH_NOTIFICATIONS_ADDON_VERSION}" "task:${TASK_ADDON_VERSION}" "web-conferencing:${WEB_CONFERENCING_ADDON_VERSION}" "wallet:${WALLET_ADDON_VERSION}" "kudos:${KUDOS_ADDON_VERSION}" "perk-store:${PERKSTORE_ADDON_VERSION}" "gamification:${GAMIFICATION_VERSION}" "news:${NEWS_VERSION}" "onlyoffice:${ONLYOFFICE_VERSION}" "app-center:${APPCENTER_VERSION}" "digital-workplace:${DIGITAL_WORKPLACE_VERSION}" "agenda:${AGENDA_VERSION}" "jitsi:${JITSI_VERSION}" "poll:${POLL_VERSION}" "gamification-github:${GAMIFICATION_GITHUB_VERSION}" "mail-integration:${MAIL_INTEGRATION_VERSION}" "multifactor-authentication:${MULTIFACTOR_AUTHENTICATION_VERSION}" "automatic-translation:${AUTOMATIC_TRANSLATION_VERSION}" "documents:${DOCUMENTS_VERSION}" "processes:${PROCESSES_VERSION}" "agenda-connectors:${AGENDA_CONNECTORS_VERSION}") 
 
 for projectWithVersion in "${projects[@]}"
 do
