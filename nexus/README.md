@@ -15,6 +15,13 @@ export NEXUS_PASSWORD
 export NEXUS_URL=https://repository.exoplatform.org
 ```
 
+Update `CURRENT_MONTH` property which CI/CD version month to removed
+
+```bash
+CURRENT_MONTH="07"
+```
+:warning: Keeping `0` as padding character + String interpretation are stricly required! 
+
 To perform a dry-run operation, remove the following sublock
 ```bash
  -exec rm -rvf {} \; 2>/dev/null || true
