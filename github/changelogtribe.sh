@@ -57,9 +57,9 @@ grafana_dashboard="https://mon.exoplatform.org/d/g5gmgcpnz/deployed-exo-version"
 echo "Done. Performing action..."
 git clone git@github.com:exoplatform/platform-private-distributions &>/dev/null
 pushd platform-private-distributions &>/dev/null
-tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | tail -1)
-before_tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | tail -2 | head -1)
-plfVersion=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${tag_name_suffix}$ )
+tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | grep -Pv '(exo|meed)' | tail -1)
+before_tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | grep -Pv '(exo|meed)' | tail -2 | head -1)
+plfVersion=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${tag_name_suffix}$ )
 popd &>/dev/null
 rm -rf platform-private-distributions &>/dev/null
 changelogfile="/tmp/CHANGE_LOG.txt"
@@ -83,8 +83,8 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     pushd $item &>/dev/null
     git fetch --tags --prune &>/dev/null
     set +e
-    tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${tag_name_suffix}$ )
-    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -P .*-${before_tag_name_suffix}$)
+    tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${tag_name_suffix}$ )
+    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${before_tag_name_suffix}$)
     if [ -z "$tag_name" ] || [ -z "$before_tag_name" ]; then
       popd &>/dev/null
       continue
