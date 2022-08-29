@@ -6,6 +6,25 @@
 declare -A buildersGithbIds=( [exo-swf]=NA )
 declare -A githubScore=( [exo-swf]=-1000000000 )
 
+
+findSourceCommit() {
+  local ref="develop"
+  local TARGET_COMMIT_PATCHID=$(
+    git show --patch-with-raw "$1" |
+	  git patch-id |
+	  cut -d' ' -f1
+  )
+
+  local MATCHING_COMMIT_SHA=""
+  for c in $(git rev-list origin/$ref ); do
+	  if [[ $(git show --patch-with-raw "$c" | git patch-id | cut -d' ' -f1) == "${TARGET_COMMIT_PATCHID}" ]]; then 
+      MATCHING_COMMIT_SHA=$c 
+	    break; 
+	  fi
+  done
+    echo "$MATCHING_COMMIT_SHA"
+  }
+
 getCommitAuthorFromGithub() {
   local _id="$1"
   echo $(curl --fail -XGET -H "Authorization: token ${GIT_TOKEN}" \
@@ -130,7 +149,13 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
           eXoTaskID=$(echo $eXoTask | sed -E 's/(TASK|MAINT|EXO)-//gi')
           transormedMessage=$(echo $transormedMessage | sed "s|$eXoTask|<a href=\"https://community.exoplatform.com/portal/dw/tasks/taskDetail/$eXoTaskID\">$eXoTask</a>|g")
         done
-        elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+        sourceCommitID=$(findSourceCommit $commitId)
+        if [ ! -z "${sourceCommitID}" ]; then 
+          sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
+          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)[<a href=\"$sourceCommitLink\">CP</a>] $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+        else
+          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+        fi
         echo "$commitLink $message *** $author -- $authorBuildersID"
         subbody="$subbody$elt"
     done
