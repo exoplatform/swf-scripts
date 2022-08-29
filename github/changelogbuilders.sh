@@ -10,7 +10,7 @@ getCommitAuthorFromGithub() {
   local _id="$1"
   echo $(curl --fail -XGET -H "Authorization: token ${GIT_TOKEN}" \
     -H 'Accept: application/vnd.github.luke-cage-preview+json' \
-    -L "https://api.github.com/search/issues?q=${_id}" 2>/dev/null | jq .items[0].user.login | tr -d '"' 2>/dev/null || echo "")
+    -L "https://api.github.com/search/issues?q=${_id}" 2>/dev/null | jq .items[0].user.login | tr -d '"' 2>/dev/null || echo $_id)
 }
 
 getBuildersAuthorFromGithb() {
