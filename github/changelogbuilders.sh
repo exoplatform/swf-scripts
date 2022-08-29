@@ -152,7 +152,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         sourceCommitID=$(findSourceCommit $commitId)
         if [ ! -z "${sourceCommitID}" ]; then 
           sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)[<a href=\"$sourceCommitLink\">CP</a>] $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)[<a href=\"$sourceCommitLink\" title=\"Cherry-picked source commit\">CP</a>] $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         else
           elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         fi
