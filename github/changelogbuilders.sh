@@ -4,7 +4,7 @@
 
 
 declare -A buildersGithbIds=( [exo-swf]=NA )
-declare -A githubScore=( [exo-swf]=0 )
+declare -A githubScore=( [exo-swf]=-1000000000 )
 
 getCommitAuthorFromGithub() {
   local _id="$1"
