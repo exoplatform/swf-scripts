@@ -57,8 +57,8 @@ grafana_dashboard="https://mon.exoplatform.org/d/g5gmgcpnz/deployed-exo-version"
 echo "Done. Performing action..."
 git clone git@github.com:exoplatform/platform-private-distributions &>/dev/null
 pushd platform-private-distributions &>/dev/null
-tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | grep -Pv '(exo|meed)' | tail -1)
-before_tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | grep -Pv '(exo|meed)' | tail -2 | head -1)
+tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -oP [0-9]{8}$ | tail -1)
+before_tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -oP [0-9]{8}$ | tail -2 | head -1)
 plfVersion=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${tag_name_suffix}$ )
 popd &>/dev/null
 rm -rf platform-private-distributions &>/dev/null

@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -u
 # Args:
 # Generate changelog of CI/CD as Builders Space Activity
 
@@ -56,8 +56,8 @@ plf_range=""
 echo "Done. Performing action..."
 git clone git@github.com:Meeds-io/meeds &>/dev/null
 pushd meeds &>/dev/null
-tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | grep 'meed' | tail -1)
-before_tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP [0-9]{8}$ | grep 'meed' | tail -2 | head -1)
+tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep 'meed' | grep -oP [0-9]{8}$ | tail -1)
+before_tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep 'meed' | grep -oP [0-9]{8}$ | tail -2 | head -1)
 plfVersion=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep 'meed' | grep -P .*-${tag_name_suffix}$ )
 popd &>/dev/null
 rm -rf meeds &>/dev/null
