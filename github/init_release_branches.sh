@@ -33,8 +33,16 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     module_version=$(echo $version | sed "s/\${release-version}/${RELEASE_SUFFIX}/g")
     milestone_version=$(echo $version | sed "s/\${release-version}/${MILESTONE_SUFFIX}/g")
     git checkout -b ${TARGET_BRANCH} ${module_version}
-    # Revert 2 SWF Release commits
-    git revert HEAD HEAD^ --no-commit 
+    commitsSWFCount="$(git log --grep '\[exo-release\]' HEAD~2..HEAD --oneline | wc -l)" # HEAD~2..HEAD: Max two commits checks to expand if needed
+    # Revert SWF Release commits
+    if [ "${commitsSWFCount}" = "2" ]; then 
+        git revert HEAD HEAD^ --no-commit # Revert two commits
+    elif [ "${commitsSWFCount}" = "1" ]; then 
+        git revert HEAD --no-commit # Revert one commit
+    else 
+        echo "Error! Unmanaged commits number ${commitsSWFCount}! Abort"
+        exit 1
+    fi
     git commit -m "TASK-${TASK_ID}: Prepare Release ${milestone_version} based on ${module_version}"
     git push origin ${TARGET_BRANCH} --force
     popd &>/dev/null
