@@ -27,9 +27,10 @@ findSourceCommit() {
 
 getCommitAuthorFromGithub() {
   local _id="$1"
+  local _repo="$2"
   echo $(curl --fail -XGET -H "Authorization: token ${GIT_TOKEN}" \
     -H 'Accept: application/vnd.github.luke-cage-preview+json' \
-    -L "https://api.github.com/search/issues?q=${_id}" 2>/dev/null | jq .items[0].user.login | tr -d '"' 2>/dev/null || echo $_id)
+    -L "https://api.github.com/repos/${_repo}/commits/${_id}" 2>/dev/null | jq .author.login | tr -d '"' 2>/dev/null || echo "")
 }
 
 getBuildersAuthorFromGithb() {
@@ -120,7 +121,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         #echo $message | grep -q "Merge Translation" && continue
         author=$(git show --format="%an" -s $commitId | xargs)
         userStat=$(git show --numstat --pretty="%H" $commitId | awk 'NF==3 {score+=$1+$2} END {printf("+%d\n", score)}')
-        _githubusername=$(getCommitAuthorFromGithub $commitId)
+        _githubusername=$(getCommitAuthorFromGithub $commitId $org/$item)
         authorLink="${author}"
         if [ ! -z "${_githubusername}" ]; then 
            if checkElementExists ${_githubusername}; then 
