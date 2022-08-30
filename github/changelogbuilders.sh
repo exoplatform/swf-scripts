@@ -133,7 +133,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
            authorProfile=$(getBuildersProfile $authorBuildersID)
            if [ ! -z "${authorProfile}" ]; then 
              authorFullName="$(echo ${authorProfile} | jq .fullname | tr -d '\"' || echo "")"
-             [ -z "${authorFullName}" ] || authorLink=$(echo "<a target=\"_self\" rel=\"noopener\" href=\"https://builders.meeds.io/portal/dw/profile/${authorBuildersID}\" class=\"user-suggester\">${authorFullName}</a>")
+             [ -z "${authorFullName}" ] || authorLink=$(echo "<a target=\"_self\" rel=\"noopener\" href=\"${SERVER_URL}/portal/meeds/profile/${authorBuildersID}\" class=\"user-suggester\">${authorFullName}</a>")
              [ -z "${authorFullName}" ] || setStat $authorBuildersID $userStat
            fi
         fi
