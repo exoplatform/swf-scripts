@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash
 # Args:
 # Generate changelog of CI/CD as Builders Space Activity
 
