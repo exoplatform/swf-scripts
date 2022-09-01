@@ -33,6 +33,20 @@ getCommitAuthorFromGithub() {
     -L "https://api.github.com/repos/${_repo}/commits/${_id}" 2>/dev/null | jq .author.login | tr -d '"' 2>/dev/null || echo "")
 }
 
+getUserFullNameFromGithub() {
+  local _id="$1"
+  echo $(curl --fail -XGET \
+    -H 'Accept: application/vnd.github.luke-cage-preview+json' \
+    -L "https://api.github.com/users/${_id}" 2>/dev/null | jq .name | tr -d '"' 2>/dev/null || echo "")
+}
+
+getUserAvatarURLFromGithub() {
+  local _id="$1"
+  echo $(curl --fail -XGET \
+    -H 'Accept: application/vnd.github.luke-cage-preview+json' \
+    -L "https://api.github.com/users/${_id}" 2>/dev/null | jq .avatar_url | tr -d '"' 2>/dev/null || echo "")
+}
+
 getBuildersAuthorFromGithb() {
   curl --fail -XGET --user "${USER_NAME}:${USER_PASSWORD}" "${SERVER_URL}/rest/private/gamification/connectors/github/hooksmanagement/users/$1" 2>/dev/null || echo "NA"
 }
@@ -168,9 +182,24 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     set -e
     popd &>/dev/null
 done
+bodyStatus="$body"
 [ -z "$(echo $body | xargs)" ] && body="<p>The changelog $plf_range is empty now, but awesome things are coming... stay tuned :)</p>" || body="<ul>\n\t$body</ul>"
 dep_status=$(echo "Deployment status: \n\t\n\t<a href=\"$grafana_dashboard\">Grafana Dashboard</a>.\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
 #yearnotif=$(echo "<br/><br/>This is the <b>latest changelog</b> of $(date +%Y)! See you next year! 🎊 🎊 🥳 🥳\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+
+if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
+  contributors="<p>Github Contributors:</p>\n\n"
+  for githubUser in ${!buildersGithbIds[@]}; do 
+    [ "${githubUser}" = "exo-swf" ] && continue
+    githubFullName=$(getUserFullNameFromGithub $githubUser)
+    githubAvatarURL=$(getUserAvatarURLFromGithub $githubUser)
+    githubURL="https://github.com/${githubUser}"
+    score=${githubScore[${buildersGithbIds[$githubUser]}]}
+    contrib=$(echo "<ul style=\"display: inline-block;text-align: center;\"><a href=\"${githubAvatarURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" height=\"30px\"></a><br/><span>${score} pts</span></ul>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+    contributors="${contributors}${contrib}"
+  done
+  body=$body$contributors
+fi
 body=$body$dep_status #$yearnotif
 changeloghash=$(echo '<a target="_blank" class="metadata-tag" rel="noopener" title="Start a search based on this tag">#Changelog</a>' | gawk '{ gsub(/"/,"\\\"") } 1')
 cicdhash=$(echo '<a target="_blank" class="metadata-tag" rel="noopener" title="Start a search based on this tag">#cicd</a>' | gawk '{ gsub(/"/,"\\\"") } 1')
