@@ -73,6 +73,7 @@ modules=$(curl -H "Authorization: token ${GIT_TOKEN}" \
 
 body=""
 plf_range=""
+grafana_dashboard="https://mon.exoplatform.org/d/g5gmgcpnz/deployed-exo-version"
 echo "Done. Performing action..."
 git clone git@github.com:Meeds-io/meeds &>/dev/null
 pushd meeds &>/dev/null
@@ -168,7 +169,9 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     popd &>/dev/null
 done
 [ -z "$(echo $body | xargs)" ] && body="<p>The changelog $plf_range is empty now, but awesome things are coming... stay tuned :)</p>" || body="<ul>\n\t$body</ul>"
+dep_status=$(echo "Deployment status: \n\t\n\t<a href=\"$grafana_dashboard\">Grafana Dashboard</a>.\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
 #yearnotif=$(echo "<br/><br/>This is the <b>latest changelog</b> of $(date +%Y)! See you next year! 🎊 🎊 🥳 🥳\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+body=$body$dep_status #$yearnotif
 changeloghash=$(echo '<a target="_blank" class="metadata-tag" rel="noopener" title="Start a search based on this tag">#Changelog</a>' | gawk '{ gsub(/"/,"\\\"") } 1')
 cicdhash=$(echo '<a target="_blank" class="metadata-tag" rel="noopener" title="Start a search based on this tag">#cicd</a>' | gawk '{ gsub(/"/,"\\\"") } 1')
 echo "Generating activity..."
