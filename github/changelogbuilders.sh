@@ -197,7 +197,7 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
     githubURL="https://github.com/${githubUser}"
     score=${githubScore[${buildersGithbIds[$githubUser]}]}
     contrib=$(echo "<ul style=\"display: inline-block;text-align: center;list-style-type: none;\"><a href=\"${githubURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" style=\"height:30px;\"></a><br/><span>${score} pts</span></ul>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
-    contributors="${contributors}${contrib}"
+    contributors="${contributors}${contrib}<br/>"
   done
   body=$body$contributors
 fi
