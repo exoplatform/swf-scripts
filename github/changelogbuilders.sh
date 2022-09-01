@@ -104,6 +104,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     org=$(_jq '.git_organization')
     version=$(_jq '.release.version')
     [ -z "${item}" ] && continue
+    [ "${item}" = "gamification" ] || continue # DELETE ME
     [ -z "${org}" ] && continue
     [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
     git clone git@github.com:${org}/$item &>/dev/null
