@@ -136,6 +136,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         #echo $message | grep -q "Merge Translation" && continue
         author=$(git show --format="%an" -s $commitId | xargs)
         userStat=$(git show --numstat --pretty="%H" $commitId | awk 'NF==3 {score+=$1+$2} END {printf("+%d\n", score)}')
+        git config diff.renames 0
         _githubusername=$(getCommitAuthorFromGithub $commitId $org/$item)
         authorLink="${author}"
         if [ ! -z "${_githubusername}" ]; then 
