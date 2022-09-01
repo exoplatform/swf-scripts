@@ -188,6 +188,7 @@ dep_status=$(echo "Deployment status: \n\t\n\t<a href=\"$grafana_dashboard\">Gra
 #yearnotif=$(echo "<br/><br/>This is the <b>latest changelog</b> of $(date +%Y)! See you next year! 🎊 🎊 🥳 🥳\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
 
 if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
+  listitemsCount=0
   contributors="<p>Github Contributors:</p>\n\n"
   for githubUser in ${!buildersGithbIds[@]}; do 
     [ "${githubUser}" = "exo-swf" ] && continue
@@ -197,8 +198,9 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
     score=${githubScore[${buildersGithbIds[$githubUser]}]}
     contrib=$(echo "<ol style=\"display: inline-block;text-align: center;list-style-type: none;\"><a href=\"${githubURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" style=\"height:30px;\"></a><br/><span>${score} pts</span></ol>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
     contributors="${contributors}${contrib}<br/>"
+    ((listitemsCount++))
   done
-  body=$body$contributors
+  [ "$listitemsCount" -gt "0" ] && body=$body$contributors
 fi
 body=$body$dep_status #$yearnotif
 changeloghash=$(echo '<a target="_blank" class="metadata-tag" rel="noopener" title="Start a search based on this tag">#Changelog</a>' | gawk '{ gsub(/"/,"\\\"") } 1')
