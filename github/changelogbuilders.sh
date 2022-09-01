@@ -196,7 +196,7 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
     githubAvatarURL=$(getUserAvatarURLFromGithub $githubUser)
     githubURL="https://github.com/${githubUser}"
     score=${githubScore[${buildersGithbIds[$githubUser]}]}
-    contrib=$(echo "<ul style=\"display: inline-block;text-align: center;\"><a href=\"${githubAvatarURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" style=\"height:30px;\"></a><br/><span>${score} pts</span></ul>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+    contrib=$(echo "<ul style=\"display: inline-block;text-align: center;list-style: none;\"><a href=\"${githubURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" style=\"height:30px;\"></a><br/><span>${score} pts</span></ul>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
     contributors="${contributors}${contrib}"
   done
   body=$body$contributors
