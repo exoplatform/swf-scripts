@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -eu
 # Args:
 # Generate changelog of CI/CD as Builders Space Activity
 
@@ -199,7 +199,7 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
     score=${githubScore[${buildersGithbIds[$githubUser]}]}
     contrib=$(echo "<ol style=\"display: inline-block;text-align: center;list-style-type: none;\"><a href=\"${githubURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" style=\"height:30px;\"></a><br/><span>${score} pts</span></ol>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
     contributors="${contributors}${contrib}<br/>"
-    ((listitemsCount++))
+    listitemsCount=$((listitemsCount+1))
   done
   [ "$listitemsCount" -gt "0" ] && body=$body$contributors
 fi
