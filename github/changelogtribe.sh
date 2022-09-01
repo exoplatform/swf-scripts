@@ -109,6 +109,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "eXo Tasks notifications" && continue
         echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
         #echo $message | grep -q "Merge Translation" && continue
+        git config diff.renames 0
         author=$(git show --format="%an" -s $commitId | xargs)
         userStat=$(git show --numstat --pretty="%H" $commitId | awk 'NF==3 {score+=$1+$2} END {printf("+%d\n", score)}')
         _githubusername=$(getCommitAuthorFromGithub $commitId $org/$item)
