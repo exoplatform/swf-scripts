@@ -199,10 +199,10 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
     githubURL="https://github.com/${githubUser}"
     score=${githubScore[${buildersGithbIds[$githubUser]}]}
     contrib=$(echo "<ol style=\"display: inline-block;text-align: center;list-style-type: none;\"><a href=\"${githubURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" style=\"height:30px;border-radius: 50%;\"></a><br/><span>${score} pts</span></ol>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
-    contributors="${contributors}${contrib}<br/>"
+    contributors=${contributors}${contrib}
     listitemsCount=$((listitemsCount+1))
   done
-  [ "$listitemsCount" -gt "0" ] && body=$body$contributors
+  [ "$listitemsCount" -gt "0" ] && body="$body$contributors<br/>"
 fi
 body=$body$dep_status #$yearnotif
 changeloghash=$(echo '<a target="_blank" class="metadata-tag" rel="noopener" title="Start a search based on this tag">#Changelog</a>' | gawk '{ gsub(/"/,"\\\"") } 1')
