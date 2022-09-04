@@ -197,7 +197,7 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
     githubFullName=$(getUserFullNameFromGithub $githubUser)
     githubAvatarURL=$(getUserAvatarURLFromGithub $githubUser)
     githubURL="https://github.com/${githubUser}"
-    score=${githubScore[${buildersGithbIds[$githubUser]}]}
+    score=$((${githubScore[${buildersGithbIds[$githubUser]}]}))
     contrib=$(echo "<ol style=\"display: inline-block;text-align: center;list-style-type: none;\"><a href=\"${githubURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" style=\"height:30px;border-radius: 50%;\"></a><br/><span>${score} pts</span></ol>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
     contributors=${contributors}${contrib}
     listitemsCount=$((listitemsCount+1))
