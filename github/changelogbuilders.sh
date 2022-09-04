@@ -193,6 +193,7 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
   contributors="<p>Github Contributors:</p>\n\n"
   for githubUser in ${!buildersGithbIds[@]}; do 
     [ "${githubUser}" = "exo-swf" ] && continue
+    [ -z "${githubScore[${buildersGithbIds[$githubUser]:-}]:-}" ] && continue
     githubFullName=$(getUserFullNameFromGithub $githubUser)
     githubAvatarURL=$(getUserAvatarURLFromGithub $githubUser)
     githubURL="https://github.com/${githubUser}"
