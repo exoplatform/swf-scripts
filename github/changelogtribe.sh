@@ -3,6 +3,9 @@
 # Generate changelog of CI/CD as Tribe Space Activity
 
 
+# 2 max commit after released dev commit (generated commits swf release)
+MAX_RELEASE_COMMITS_FETCH_DEPTH=2
+
 declare -A tribeGithbIds=( [exo-swf]=NA )
 declare -A githubScore=( [exo-swf]=0 )
 
@@ -91,8 +94,10 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
       continue
     fi
     echo "*** $item $before_tag_name -> $tag_name"
-    commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~2...$tag_name~2 | xargs)
-    commitstats=$(git log --no-merges --numstat --pretty="%H" $before_tag_name~2...$tag_name~2 | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}')
+    commitDepth=$(git log --grep '\[exo-release\]' $tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$tag_name --oneline | wc -l)
+    beforeCommitDepth=$(git log --grep '\[exo-release\]' $before_tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$before_tag_name --oneline | wc -l)
+    commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth | xargs)
+    commitstats=$(git log --no-merges --numstat --pretty="%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}')
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
