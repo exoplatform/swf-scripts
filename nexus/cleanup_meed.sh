@@ -7,7 +7,7 @@
 #####
 
 get_suffix() {
-    echo $1 | cut -d '-' -f2
+    echo $1 | cut -d '-' -f3
 }
 
 do_delete_curl() {
