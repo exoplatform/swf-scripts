@@ -69,7 +69,7 @@ counter=1
 for release in ${releases_to_be_dropped[@]}; do
     rel_suffix=$(get_suffix $release)
     echo "==========================================================================================="
-    echo " ($counter/${#releases_to_be_dropped[@]}) Dropping Release:  $PLATFORM_PRIVATE_DISTRIBUTIONS-$rel_suffix..."
+    echo " ($counter/${#releases_to_be_dropped[@]}) Dropping Release:  $MEEDS-$rel_suffix..."
     echo "==========================================================================================="
     echo "maven-depmgt-pom:$MAVEN_DEPMGT_POM-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/maven-depmgt-pom -type d -name $MAVEN_DEPMGT_POM-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
