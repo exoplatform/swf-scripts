@@ -72,55 +72,55 @@ for release in ${releases_to_be_dropped[@]}; do
     echo " ($counter/${#releases_to_be_dropped[@]}) Dropping Release:  $PLATFORM_PRIVATE_DISTRIBUTIONS-$rel_suffix..."
     echo "==========================================================================================="
     echo "maven-depmgt-pom:$MAVEN_DEPMGT_POM-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/maven-depmgt-pom -type d -name $MAVEN_DEPMGT_POM-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/maven-depmgt-pom -type d -name $MAVEN_DEPMGT_POM-$rel_suffix
     echo "gatein-wci:$GATEIN_WCI-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/wci -type d -name $GATEIN_WCI-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/wci -type d -name $GATEIN_WCI-$rel_suffix
     echo "kernel:$KERNEL-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/kernel -type d -name $KERNEL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/kernel -type d -name $KERNEL-$rel_suffix
     echo "core:$CORE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/core -type d -name $CORE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/core -type d -name $CORE-$rel_suffix
     echo "ws:$WS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/ws -type d -name $WS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/ws -type d -name $WS-$rel_suffix
     echo "gatein-pc:$GATEIN_PC-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/pc -type d -name $GATEIN_PC-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/pc -type d -name $GATEIN_PC-$rel_suffix
     echo "gatein-sso:$GATEIN_SSO-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/sso -type d -name $GATEIN_SSO-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/sso -type d -name $GATEIN_SSO-$rel_suffix
     echo "gatein-portal:$GATEIN_PORTAL-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/portal -type d -name $GATEIN_PORTAL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/portal -type d -name $GATEIN_PORTAL-$rel_suffix
     echo "platform-ui:$PLATFORM_UI-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/platform-ui -type d -name $PLATFORM_UI-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/platform-ui -type d -name $PLATFORM_UI-$rel_suffix
     echo "commons:$COMMONS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/commons -type d -name $COMMONS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/commons -type d -name $COMMONS-$rel_suffix
     echo "social:$SOCIAL-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/social -type d -name $SOCIAL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/social -type d -name $SOCIAL-$rel_suffix
     echo "gamification:$GAMIFICATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification -type d -name $GAMIFICATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification -type d -name $GAMIFICATION-$rel_suffix
     echo "kudos:$KUDOS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/kudos -type d -name $KUDOS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/kudos -type d -name $KUDOS-$rel_suffix
     echo "perk-store:$PERK_STORE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/perk-store -type d -name $PERK_STORE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/perk-store -type d -name $PERK_STORE-$rel_suffix
     echo "wallet:$WALLET-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/wallet -type d -name $WALLET-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/wallet -type d -name $WALLET-$rel_suffix
     echo "app-center:$APP_CENTER-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/app-center -type d -name $APP_CENTER-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/app-center -type d -name $APP_CENTER-$rel_suffix
     echo "push-notifications:$PUSH_NOTIFICATIONS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/push-notifications -type d -name $PUSH_NOTIFICATIONS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/push-notifications -type d -name $PUSH_NOTIFICATIONS-$rel_suffix
     echo "addons-manager:$ADDONS_MANAGER-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/platform/addons-manager -type d -name $ADDONS_MANAGER-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/platform/addons-manager -type d -name $ADDONS_MANAGER-$rel_suffix
     echo "meeds:$MEEDS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/io/meeds/distribution -type d -name $MEEDS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/io/meeds/distribution -type d -name $MEEDS-$rel_suffix
     echo "task:$TASK-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/task -type d -name $TASK-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/task -type d -name $TASK-$rel_suffix
     echo "analytics:$ANALYTICS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/analytics -type d -name $ANALYTICS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/analytics -type d -name $ANALYTICS-$rel_suffix
     echo "poll:$POLL-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/poll -type d -name $POLL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/poll -type d -name $POLL-$rel_suffix
     echo "notes:$NOTES-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/addons/notes -type d -name $NOTES-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/addons/notes -type d -name $NOTES-$rel_suffix
     echo "deeds-dapp:$DEEDS_DAPP-$rel_suffix"
-    find $BASE_PATH/meeds-releases/io/meeds/deeds-dapp -type d -name $DEEDS_DAPP-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH/meeds-releases/io/meeds/deeds-dapp -type d -name $DEEDS_DAPP-$rel_suffix
     echo "deeds-tenant:$DEEDS_TENANT-$rel_suffix"
-    find $BASE_PATH/meeds-releases/io/meeds/deeds-tenant -type d -name $DEEDS_TENANT-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    find $BASE_PATH/meeds-releases/io/meeds/deeds-tenant -type d -name $DEEDS_TENANT-$rel_suffix
     ((counter++))
 done
 
