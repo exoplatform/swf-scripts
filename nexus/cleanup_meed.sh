@@ -1,5 +1,5 @@
 #!/bin/bash -eu
-# This script removes old continuous deployment releases
+# This script removes old continuous deployment releases of meed distribution
 # Requried Env vars:
 # NEXUS_ADMIN: admin's username
 # NEXUS_PASSWORD: admin's password
@@ -7,7 +7,7 @@
 #####
 
 get_suffix() {
-    echo $1 | cut -d '-' -f2
+    echo $1 | cut -d '-' -f3
 }
 
 do_delete_curl() {
@@ -22,61 +22,36 @@ BASE_PATH_HOSTED=$BASE_PATH/hosted
 
 ######################
 ##Modules
-MAVEN_DEPMGT_POM=21.0
-GATEIN_WCI=6.4.0
-KERNEL=6.4.0
-CORE=6.4.0
-WS=6.4.0
-GATEIN_PC=6.4.0
-GATEIN_SSO=6.4.0
-GATEIN_PORTAL=6.4.0
-PLATFORM_UI=6.4.0
-COMMONS=6.4.0
-SOCIAL=6.4.0
-GAMIFICATION=2.4.0
-KUDOS=2.4.0
-PERK_STORE=2.4.0
-WALLET=2.4.0
-APP_CENTER=2.4.0
-PUSH_NOTIFICATIONS=2.4.0
-ADDONS_MANAGER=2.4.0
-MEEDS=1.4.0
-JCR=6.4.0
-ECMS=6.4.0
-AGENDA=1.3.0
-CHAT_APPLICATION=2.4.0
-DATA_UPGRADE=6.4.0
-DIGITAL_WORKPLACE=1.4.0
-LAYOUT_MANAGEMENT=1.4.0
-NEWS=2.4.0
-ONLYOFFICE=2.4.0
-SAML2_ADDON=2.4.0
-TASK=3.4.0
-WEB_CONFERENCING=3.4.0
-JITSI=1.3.0
-ANALYTICS=1.3.0
-AUTOMATIC_TRANSLATION=1.1.0
-DOCUMENTS=1.1.0
-POLL=1.1.0
-PROCESSES=1.1.0
-MAIL_INTEGRATION=1.1.0
-NOTES=1.2.0
-MULTIFACTOR_AUTHENTICATION=1.2.0
-AGENDA_CONNECTORS=1.1.0
-DLP=1.0.0
-ANTI_MALWARE=1.0.0
-ANTI_BRUTEFORCE=1.0.0
-CLOUD_DRIVE_CONNECTORS=1.0.0
-PLATFORM_PRIVATE_DISTRIBUTIONS=6.4.0
-###### CWI
-COMMUNITY_WEBSITE=6.4.0
+MAVEN_DEPMGT_POM=21.0-meed
+GATEIN_WCI=6.4.0-meed
+KERNEL=6.4.0-meed
+CORE=6.4.0-meed
+WS=6.4.0-meed
+GATEIN_PC=6.4.0-meed
+GATEIN_SSO=6.4.0-meed
+GATEIN_PORTAL=6.4.0-meed
+PLATFORM_UI=6.4.0-meed
+COMMONS=6.4.0-meed
+SOCIAL=6.4.0-meed
+GAMIFICATION=2.4.0-meed
+KUDOS=2.4.0-meed
+PERK_STORE=2.4.0-meed
+WALLET=2.4.0-meed
+APP_CENTER=2.4.0-meed
+PUSH_NOTIFICATIONS=2.4.0-meed
+ADDONS_MANAGER=2.4.0-meed
+MEEDS=1.4.0-meed
+TASK=3.4.0-meed
+ANALYTICS=1.3.0-meed
+POLL=1.1.0-meed
+NOTES=1.2.0-meed
 ######
 # Non-product modules
-DEEDS_DAPP=1.0.0
-DEEDS_TENANT=1.0.0
+DEEDS_DAPP=1.0.0-meed
+DEEDS_TENANT=1.0.0-meed
 #####
 # Rest API Nexus repositories list
-NEXUS_REPOSITORIES_LIST="exo-addons-releases exo-private-releases exo-releases cp-cwi-releases meeds-releases"
+NEXUS_REPOSITORIES_LIST="exo-addons-releases exo-releases meeds-releases"
 
 # Fetch releases 
 releases=($(cat "$BASE_PATH_HOSTED/exo-releases/org/exoplatform/maven-depmgt-pom/maven-metadata.xml" | grep -oP $MAVEN_DEPMGT_POM-${CURRENT_YEAR}${CURRENT_MONTH}[0-9][0-9] | sort --version-sort | uniq | xargs))
@@ -134,62 +109,14 @@ for release in ${releases_to_be_dropped[@]}; do
     find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/platform/addons-manager -type d -name $ADDONS_MANAGER-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "meeds:$MEEDS-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-releases/io/meeds/distribution -type d -name $MEEDS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "jcr:$JCR-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/jcr -type d -name $JCR-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "ecms:$ECMS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/ecms -type d -name $ECMS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "agenda:$AGENDA-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/agenda -type d -name $AGENDA-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "chat-application:$CHAT_APPLICATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/chat -type d -name $CHAT_APPLICATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "data-upgrade:$DATA_UPGRADE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/upgrade -type d -name $DATA_UPGRADE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "digital-workplace:$DIGITAL_WORKPLACE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/digital-workplace -type d -name $DIGITAL_WORKPLACE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "layout-management:$LAYOUT_MANAGEMENT-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/layout-management -type d -name $LAYOUT_MANAGEMENT-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "news:$NEWS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/news -type d -name $NEWS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "onlyoffice:$ONLYOFFICE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/onlyoffice -type d -name $ONLYOFFICE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "saml2-addon:$SAML2_ADDON-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/sso/saml2-addon-* -type d -name $SAML2_ADDON-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "task:$TASK-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/task -type d -name $TASK-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "web-conferencing:$WEB_CONFERENCING-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/web-conferencing -type d -name $WEB_CONFERENCING-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "jitsi:$JITSI-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/jitsi -type d -name $JITSI-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "analytics:$ANALYTICS-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/analytics -type d -name $ANALYTICS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "multifactor-authentication:$MULTIFACTOR_AUTHENTICATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/multifactor-authentication -type d -name $MULTIFACTOR_AUTHENTICATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "automatic-translation:$AUTOMATIC_TRANSLATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/automatic-translation -type d -name $AUTOMATIC_TRANSLATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "documents:$DOCUMENTS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/documents -type d -name $DOCUMENTS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "processes:$PROCESSES-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/processes -type d -name $PROCESSES-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "poll:$POLL-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/poll -type d -name $POLL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "mail-integration:$MAIL_INTEGRATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/mail-integration -type d -name $MAIL_INTEGRATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "notes:$NOTES-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/addons/notes -type d -name $NOTES-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "agenda-connectors:$AGENDA_CONNECTORS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/agenda-connectors -type d -name $AGENDA_CONNECTORS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "dlp:$DLP-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/dlp -type d -name $DLP-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "cloud-drive-connectors:$CLOUD_DRIVE_CONNECTORS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/cloud-drive-connectors -type d -name $CLOUD_DRIVE_CONNECTORS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "anti-malware:$ANTI_MALWARE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/anti-malware -type d -name $ANTI_MALWARE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "anti-bruteforce:$ANTI_BRUTEFORCE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/anti-bruteforce -type d -name $ANTI_BRUTEFORCE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "platform-private-distributions:$PLATFORM_PRIVATE_DISTRIBUTIONS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-private-releases/com/exoplatform/platform/distributions -type d -name $PLATFORM_PRIVATE_DISTRIBUTIONS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "community-website:$COMMUNITY_WEBSITE-$rel_suffix"
-    find $BASE_PATH_HOSTED/cp-cwi-releases/org/exoplatform/community -type d -name $COMMUNITY_WEBSITE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "deeds-dapp:$DEEDS_DAPP-$rel_suffix"
     find $BASE_PATH/meeds-releases/io/meeds/deeds-dapp -type d -name $DEEDS_DAPP-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "deeds-tenant:$DEEDS_TENANT-$rel_suffix"
