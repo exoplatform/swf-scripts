@@ -40,7 +40,7 @@ while IFS= read -r line; do
     pushd $item &>/dev/null
     git remote add origin git@github.com:${org}/${item}.git &>/dev/null
     git fetch origin develop ${DIST_BRANCH} &>/dev/null
-    git checkout develop &>/dev/null
+    git checkout develop >/dev/null
     prev_head=$(git rev-parse --short origin/$DIST_BRANCH)
     # Rebase local develop branch on target dist develop as preparation for FF merge (linear history)
     git rebase origin/$DIST_BRANCH develop &>/dev/null
