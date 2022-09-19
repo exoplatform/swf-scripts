@@ -38,15 +38,12 @@ while IFS= read -r line; do
     echo "================================================================================================="
     git init $item &>/dev/null
     pushd $item &>/dev/null
-    git remote add -t develop -t ${DIST_BRANCH} origin git@github.com:${org}/${item}.git &>/dev/null
-    default_branch=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
-    git fetch &>/dev/null
-    default_branch="develop"
-    tmpbranch=$(basename $seedfileraw | sed 's/\./_/g')
-    git checkout -b $tmpbranch origin/$default_branch &>/dev/null
+    git remote add origin git@github.com:${org}/${item}.git &>/dev/null
+    git fetch origin develop ${DIST_BRANCH} &>/dev/null
+    git checkout develop &>/dev/null
     prev_head=$(git rev-parse --short origin/$DIST_BRANCH)
-    # Rebase as preparation for FF merge (linear history)
-    git rebase origin/$DIST_BRANCH ${tmpbranch} &>/dev/null
+    # Rebase local develop branch on target dist develop as preparation for FF merge (linear history)
+    git rebase origin/$DIST_BRANCH develop &>/dev/null
     if [ ! -z "$(git diff origin/${DIST_BRANCH} 2>/dev/null)" ]; then
       info "Reseting commits authors..."
       git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/$DIST_BRANCH..HEAD
@@ -54,17 +51,13 @@ while IFS= read -r line; do
       echo -e "\033[1;32m****\033[0m"
       git log origin/${DIST_BRANCH}..HEAD --oneline --pretty=format:"(%C(yellow)%h%Creset) %s" 
       echo -e "\n\033[1;32m****\033[0m"
-      git checkout $DIST_BRANCH
-      git reset --hard origin/$DIST_BRANCH
-      git merge ${tmpbranch}
     else 
       info "No changes detected!"  
     fi
     new_head=$(git rev-parse --short HEAD)
     if [ "${prev_head}" != "${new_head}" ]; then
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
-      git push origin ${DIST_BRANCH} | grep -v remote ||:
-      git branch -D $tmpbranch
+      git push origin HEAD:${DIST_BRANCH} | grep -v remote ||:
     fi
     ((counter++))  
     popd &>/dev/null
