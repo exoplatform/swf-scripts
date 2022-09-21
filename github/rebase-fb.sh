@@ -15,6 +15,7 @@ echo -e "\033[1;32m[Success]\033[0m $1"
 ###
 
 [ -z "${FB_NAME}" ] && exit 1
+[ -z "${BASE_BRANCH:-}" ] && BASE_BRANCH="develop"
 info "Parsing FB ${FB_NAME} Seed Job Configuration..."
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 current_date=$(date '+%s')
@@ -37,24 +38,22 @@ while IFS= read -r line; do
     echo "================================================================================================="
     git init $item &>/dev/null
     pushd $item &>/dev/null
-    git remote add -t develop -t feature/${FB_NAME} origin git@github.com:${org}/${item}.git &>/dev/null
-    default_branch=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+    git remote add -t ${BASE_BRANCH} -t feature/${FB_NAME} origin git@github.com:${org}/${item}.git &>/dev/null
     git fetch &>/dev/null
-    default_branch="develop"
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
-    if ! git rebase origin/$default_branch feature/${FB_NAME} >/dev/null; then
+    if ! git rebase origin/${BASE_BRANCH} feature/${FB_NAME} >/dev/null; then
       info "Rebase with recursive strategy has failed! Trying ours rebase strategy without detecting changes loss (helpful for detecting and removing backported commits)..."
       git rebase --abort || :
-      if ! git rebase origin/$default_branch feature/${FB_NAME} --strategy-option ours >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
+      if ! git rebase origin/${BASE_BRANCH} feature/${FB_NAME} --strategy-option ours >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
         error "Could not rebase feature/${FB_NAME}!"
         exit 1
       fi
     fi
-    git log --oneline --cherry origin/$default_branch..HEAD
+    git log --oneline --cherry origin/${BASE_BRANCH}..HEAD
     if [ ! -z "$(git diff origin/feature/${FB_NAME} 2>/dev/null)" ]; then
       info "Reseting commits authors..."
-      git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/$default_branch..HEAD
+      git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/${BASE_BRANCH}..HEAD
       info "Changes before the rebase:"
       echo -e "\033[1;32m****\033[0m"
       git log HEAD..origin/feature/${FB_NAME} --oneline --pretty=format:"(%C(yellow)%h%Creset) %s"
