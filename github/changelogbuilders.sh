@@ -162,6 +162,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         buildersTasks=$(echo  $message | grep -oPi '(BUILDER|MEED)(S)?-[0-9]+' | sort -u | xargs)
         eXoTasks=$(echo  $message | grep -oPi '(TASK|MAINT|EXO)-[0-9]+' | sort -u | xargs)
         githubIssues=$(echo  $message | grep -oPi 'Meeds-io/meeds#[0-9]+' | sort -u | xargs)
+        githubMIPSIssues=$(echo  $message | grep -oPi 'Meeds-io/MIPs#[0-9]+' | sort -u | xargs)
         transormedMessage="$message"
         for buildersTask in $buildersTasks; do 
           buildersTaskID=$(echo $buildersTask | sed -E 's/(BUILDER|MEED)(S)?-//gi')
@@ -174,6 +175,10 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         for githubIssue in $githubIssues; do 
           githubIssueID=$(echo $githubIssue | sed 's|Meeds-io/meeds#||gi')
           transormedMessage=$(echo $transormedMessage | sed "s|$githubIssue|<a href=\"https://github.com/Meeds-io/meeds/issues/$githubIssueID\">$githubIssue</a>|g")
+        done
+        for githubMIPSIssue in $githubMIPSIssues; do 
+          githubMIPSIssueID=$(echo $githubMIPSIssue | sed 's|Meeds-io/MIPs#||gi')
+          transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"https://github.com/Meeds-io/MIPs/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
         done
         sourceCommitID=$(findSourceCommit $commitId)
         if [ ! -z "${sourceCommitID}" ]; then 
