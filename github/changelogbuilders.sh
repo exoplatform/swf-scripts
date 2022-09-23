@@ -178,7 +178,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         done
         for githubMIPSIssue in $githubMIPSIssues; do 
           githubMIPSIssueID=$(echo $githubMIPSIssue | sed 's|Meeds-io/MIPs#||gi')
-          transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"https://github.com/Meeds-io/MIPs/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
+          transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"https://github.com/Meeds-io/MIPs/issues/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
         done
         sourceCommitID=$(findSourceCommit $commitId)
         if [ ! -z "${sourceCommitID}" ]; then 
