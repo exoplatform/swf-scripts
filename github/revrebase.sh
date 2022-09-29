@@ -28,6 +28,7 @@ cat ${seedfilefiltred} | grep "${DIST_BRANCH}" | grep "project:" > ${seedfileraw
 modules_length=$(wc -l ${seedfileraw} | awk '{ print $1 }')
 counter=1
 echo "Done. Performing action..."
+ret=0
 while IFS= read -r line; do
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
@@ -43,7 +44,7 @@ while IFS= read -r line; do
     git checkout develop >/dev/null
     prev_head=$(git rev-parse --short origin/$DIST_BRANCH)
     # Rebase local develop branch on target dist develop as preparation for FF merge (linear history)
-    git rebase origin/$DIST_BRANCH develop &>/dev/null
+    git rebase origin/$DIST_BRANCH develop &>/dev/null || ret=$?
     if [ ! -z "$(git diff origin/${DIST_BRANCH} 2>/dev/null)" ]; then
       info "Reseting commits authors..."
       git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/$DIST_BRANCH..HEAD
@@ -66,4 +67,9 @@ echo "Cleaning up temorary files..."
 rm -v ${seedfileraw}
 rm -v ${seedfilefiltred}
 echo "================================================================================================="
-success "Reverse Rebase done!"
+if [ $ret -eq "0" ]; then
+  success "Reverse Rebase done!"
+else 
+  error "Some rebase have failed!"
+fi
+exit $ret
