@@ -44,7 +44,30 @@ while IFS= read -r line; do
     git checkout develop >/dev/null
     prev_head=$(git rev-parse --short origin/$DIST_BRANCH)
     # Rebase local develop branch on target dist develop as preparation for FF merge (linear history)
-    git rebase origin/$DIST_BRANCH develop &>/dev/null || ret=$?
+    if ! git rebase origin/$DIST_BRANCH develop &>/dev/null; then  
+      ret=1
+      echo ""
+      echo "==========================================================="
+      error "Fatal! Failed to perform reverse rebase! please fix it manually!"
+      echo "Hint:"
+      echo "  git fetch"
+      echo "  git checkout develop && git reset --hard origin/develop"
+      echo "  git checkout -b fixrebase$(date '+%s')"
+      echo "  git rebase origin/$DIST_BRANCH"
+      echo ">>Fix conflicts and continue rebasing by using command: "
+      echo "  git rebase --continue"
+      echo ">>Reset committer name and email: "
+      echo "  git filter-branch --commit-filter 'export GIT_COMMITTER_NAME=\"\$GIT_AUTHOR_NAME\"; export GIT_COMMITTER_EMAIL=\"\$GIT_AUTHOR_EMAIL\"; git commit-tree \"\$@\"' -- origin/$DIST_BRANCH..HEAD"
+      echo ">>Push to remote repository"
+      echo "  git push origin HEAD"
+      echo ">>Create Pull Request to $DIST_BRANCH (or push directly for admins)"
+      echo ">>Once approved, do not squash nor rebase & merge !! Perform a Fast forward Merge"
+      echo "  git push origin HEAD:$DIST_BRANCH"
+      echo "==========================================================="
+      echo ""
+      popd &>/dev/null
+      continue
+    fi
     if [ ! -z "$(git diff origin/${DIST_BRANCH} 2>/dev/null)" ]; then
       info "Reseting commits authors..."
       git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/$DIST_BRANCH..HEAD
