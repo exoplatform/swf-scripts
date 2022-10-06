@@ -87,8 +87,13 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     pushd $item &>/dev/null
     git fetch --tags --prune &>/dev/null
     set +e
-    tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${tag_name_suffix}$ )
-    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${before_tag_name_suffix}$)
+    if [ ${org,,} != "meeds-io" ]; then
+      tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${tag_name_suffix}$ )
+      before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${before_tag_name_suffix}$)
+    else 
+      tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep 'exo' | grep -P .*-${tag_name_suffix}$ )
+      before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep 'exo' | grep -P .*-${before_tag_name_suffix}$)
+    fi
     if [ -z "$tag_name" ] || [ -z "$before_tag_name" ]; then
       popd &>/dev/null
       continue
