@@ -8,6 +8,9 @@ MAX_RELEASE_COMMITS_FETCH_DEPTH=2
 declare -A buildersGithbIds=( [exo-swf]=NA )
 declare -A githubScore=( [exo-swf]=-1000000000 )
 
+isSameCommit() {
+  [ "$(git rev-parse $1)" = "$(git rev-parse $2)" ]
+}
 
 findSourceCommit() {
   local ref="develop"
@@ -184,7 +187,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
           transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"https://github.com/Meeds-io/MIPs/issues/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
         done
         sourceCommitID=$(findSourceCommit $commitId)
-        if [ ! -z "${sourceCommitID}" ]; then 
+        if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then 
           sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
           elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)[<a href=\"$sourceCommitLink\" title=\"Cherry-picked source commit\">CP</a>] $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         else
@@ -212,6 +215,7 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
     [ "${githubUser}" = "exo-swf" ] && continue
     [ -z "${githubScore[${buildersGithbIds[$githubUser]:-}]:-}" ] && continue
     githubFullName=$(getUserFullNameFromGithub $githubUser)
+    [ "${githubFullName,,}" = "null" ] && githubFullName=$githubUser
     githubAvatarURL=$(getUserAvatarURLFromGithub $githubUser)
     githubURL="https://github.com/${githubUser}"
     score=$((${githubScore[${buildersGithbIds[$githubUser]}]}))
