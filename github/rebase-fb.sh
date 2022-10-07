@@ -38,7 +38,7 @@ while IFS= read -r line; do
     echo "================================================================================================="
     git init $item &>/dev/null
     pushd $item &>/dev/null
-    if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ]; then 
+    if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]]; then 
       git remote add -t develop-exo -t feature/${FB_NAME} origin git@github.com:${org}/${item}.git &>/dev/null
     else 
       git remote add -t ${BASE_BRANCH} -t feature/${FB_NAME} origin git@github.com:${org}/${item}.git &>/dev/null
