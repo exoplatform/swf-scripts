@@ -36,14 +36,12 @@ while IFS= read -r line; do
     echo "================================================================================================="
     echo -e " Module (${counter}/${modules_length}): \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a"
     echo "================================================================================================="
-    git init $item &>/dev/null
+    git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
     baseBranch="${BASE_BRANCH}"
     if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]]; then 
       baseBranch=develop-exo
     fi
-    git remote add -t ${baseBranch} -t feature/${FB_NAME} origin git@github.com:${org}/${item}.git &>/dev/null
-    git fetch &>/dev/null
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
     if ! git rebase origin/${BASE_BRANCH} feature/${FB_NAME} >/dev/null; then
