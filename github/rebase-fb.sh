@@ -38,7 +38,11 @@ while IFS= read -r line; do
     echo "================================================================================================="
     git init $item &>/dev/null
     pushd $item &>/dev/null
-    git remote add -t ${BASE_BRANCH} -t feature/${FB_NAME} origin git@github.com:${org}/${item}.git &>/dev/null
+    if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ]; then 
+      git remote add -t develop-exo -t feature/${FB_NAME} origin git@github.com:${org}/${item}.git &>/dev/null
+    else 
+      git remote add -t ${BASE_BRANCH} -t feature/${FB_NAME} origin git@github.com:${org}/${item}.git &>/dev/null
+    fi
     git fetch &>/dev/null
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
