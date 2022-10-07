@@ -39,8 +39,11 @@ while IFS= read -r line; do
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
     baseBranch="${BASE_BRANCH}"
-    if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]] && [[ ! $item =~ ^deeds ]]; then 
+    if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]]; then 
       baseBranch=develop-exo
+    fi
+    if [[ $item =~ ^deeds ]]; then 
+      baseBranch="develop"
     fi
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
