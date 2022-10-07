@@ -15,7 +15,7 @@ do_delete_curl() {
 }
 
 NB_RELEASES_TO_KEEP=0 # Nothing in month
-CURRENT_MONTH="08"
+CURRENT_MONTH="09"
 CURRENT_YEAR=2022
 BASE_PATH=/srv/nexus/storage
 BASE_PATH_HOSTED=$BASE_PATH/hosted
@@ -70,10 +70,6 @@ CLOUD_DRIVE_CONNECTORS=1.0.0
 PLATFORM_PRIVATE_DISTRIBUTIONS=6.4.0
 ###### CWI
 COMMUNITY_WEBSITE=6.4.0
-######
-# Non-product modules
-DEEDS_DAPP=1.0.0
-DEEDS_TENANT=1.0.0
 #####
 # Rest API Nexus repositories list
 NEXUS_REPOSITORIES_LIST="exo-addons-releases exo-private-releases exo-releases cp-cwi-releases meeds-releases"
@@ -190,11 +186,6 @@ for release in ${releases_to_be_dropped[@]}; do
     find $BASE_PATH_HOSTED/exo-private-releases/com/exoplatform/platform/distributions -type d -name $PLATFORM_PRIVATE_DISTRIBUTIONS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "community-website:$COMMUNITY_WEBSITE-$rel_suffix"
     find $BASE_PATH_HOSTED/cp-cwi-releases/org/exoplatform/community -type d -name $COMMUNITY_WEBSITE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "deeds-dapp:$DEEDS_DAPP-$rel_suffix"
-    find $BASE_PATH/meeds-releases/io/meeds/deeds-dapp -type d -name $DEEDS_DAPP-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "deeds-tenant:$DEEDS_TENANT-$rel_suffix"
-    find $BASE_PATH/meeds-releases/io/meeds/deeds-tenant -type d -name $DEEDS_TENANT-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    ((counter++))
 done
 
 # Rest API Call 

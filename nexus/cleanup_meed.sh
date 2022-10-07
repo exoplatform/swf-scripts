@@ -15,7 +15,7 @@ do_delete_curl() {
 }
 
 NB_RELEASES_TO_KEEP=0 # Nothing in month
-CURRENT_MONTH="08"
+CURRENT_MONTH="09"
 CURRENT_YEAR=2022
 BASE_PATH=/srv/nexus/storage
 BASE_PATH_HOSTED=$BASE_PATH/hosted
