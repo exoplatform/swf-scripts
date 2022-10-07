@@ -167,9 +167,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         githubIssues=$(echo  $message | grep -oPi 'Meeds-io/meeds#[0-9]+' | sort -u | xargs)
         githubMIPSIssues=$(echo  $message | grep -oPi 'Meeds-io/MIPs#[0-9]+' | sort -u | xargs)
         transormedMessage="$message"
-        sparklesImg=$(echo "<img src=\"https://github.githubassets.com/images/icons/emoji/unicode/2728.png\" title=\"feature\" style=\"height:15px;\">\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
-        fixImg=$(echo "<img src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f41b.png\" title=\"fix\" style=\"height:15px;\">\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
-        transormedMessage=$(echo $transormedMessage | sed -e "s|feat:|${sparklesImg}|gi" -e "s|fix:|${fixImg}|gi")
+        transormedMessage=$(echo $transormedMessage | sed -e "s|feat:|✨|gi" -e "s|fix:|🐛|gi" -e "s|Merge Translations|🏁 Merge Translations|g")
         for buildersTask in $buildersTasks; do 
           buildersTaskID=$(echo $buildersTask | sed -E 's/(BUILDER|MEED)(S)?-//gi')
           transormedMessage=$(echo $transormedMessage | sed "s|$buildersTask|<a href=\"https://builders.meeds.io/portal/meeds/tasks/taskDetail/$buildersTaskID\">$buildersTask</a>|g")
