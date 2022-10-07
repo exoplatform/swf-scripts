@@ -39,7 +39,7 @@ while IFS= read -r line; do
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
     baseBranch="${BASE_BRANCH}"
-    if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]]; then 
+    if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]] && [[ ! $item =~ ^deeds ]]; then 
       baseBranch=develop-exo
     fi
     git checkout feature/${FB_NAME} &>/dev/null
