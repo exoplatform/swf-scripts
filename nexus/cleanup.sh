@@ -186,6 +186,7 @@ for release in ${releases_to_be_dropped[@]}; do
     find $BASE_PATH_HOSTED/exo-private-releases/com/exoplatform/platform/distributions -type d -name $PLATFORM_PRIVATE_DISTRIBUTIONS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "community-website:$COMMUNITY_WEBSITE-$rel_suffix"
     find $BASE_PATH_HOSTED/cp-cwi-releases/org/exoplatform/community -type d -name $COMMUNITY_WEBSITE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    ((counter++))
 done
 
 # Rest API Call 
