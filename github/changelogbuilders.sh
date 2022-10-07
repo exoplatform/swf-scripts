@@ -133,7 +133,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         unset authorBuildersID
         unset authorProfile
         unset authorFullName
-        message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs -0)
+        message=$(git show --format="%<(100,trunc)%s" -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs -0)
         echo $message | grep -q "Prepare Release" && continue
         echo $message | grep -q "continuous-release-template" && continue
         echo $message | grep -q "exo-release" && continue
