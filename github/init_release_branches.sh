@@ -11,7 +11,7 @@ echo "Parsing CI CD Release modules..."
 current_date=$(date '+%s')
 modules=$(curl -H "Authorization: token ${GIT_TOKEN}" \
     -H 'Accept: application/vnd.github.v3.raw' \
-    -L "https://api.github.com/repos/exoplatform/swf-release-manager-catalog/contents/exo-platform/continuous-release-template.json" )
+    -L "https://api.github.com/repos/exoplatform/swf-release-manager-catalog/contents/exo-platform/continuous-release-template-exo.json" )
 
 [ -z "${TARGET_BRANCH:-}" ] && TARGET_BRANCH="milestone_release"
 
