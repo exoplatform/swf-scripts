@@ -47,18 +47,18 @@ while IFS= read -r line; do
     fi
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
-    if ! git rebase origin/${BASE_BRANCH} feature/${FB_NAME} >/dev/null; then
+    if ! git rebase origin/${baseBranch} feature/${FB_NAME} >/dev/null; then
       info "Rebase with recursive strategy has failed! Trying ours rebase strategy without detecting changes loss (helpful for detecting and removing backported commits)..."
       git rebase --abort || :
-      if ! git rebase origin/${BASE_BRANCH} feature/${FB_NAME} --strategy-option ours >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
+      if ! git rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option ours >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
         error "Could not rebase feature/${FB_NAME}!"
         exit 1
       fi
     fi
-    git log --oneline --cherry origin/${BASE_BRANCH}..HEAD
+    git log --oneline --cherry origin/${baseBranch}..HEAD
     if [ ! -z "$(git diff origin/feature/${FB_NAME} 2>/dev/null)" ]; then
       info "Reseting commits authors..."
-      git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/${BASE_BRANCH}..HEAD
+      git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/${baseBranch}..HEAD
       info "Changes before the rebase:"
       echo -e "\033[1;32m****\033[0m"
       git log HEAD..origin/feature/${FB_NAME} --oneline --pretty=format:"(%C(yellow)%h%Creset) %s"
