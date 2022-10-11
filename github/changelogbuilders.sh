@@ -125,7 +125,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     commitDepth=$(git log --grep '\[exo-release\]' $tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$tag_name --oneline | wc -l)
     beforeCommitDepth=$(git log --grep '\[exo-release\]' $before_tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$before_tag_name --oneline | wc -l)
     commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth | xargs)
-    commitstats=$(git log --no-merges --numstat --pretty="%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("<font color=\"green\">+%d</font>, <font color=\"red\">-%d</font>,\n", plus, minus)}')
+    commitstats=$(git log --no-merges --numstat --pretty="%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}')
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "meeds" ] && plf_range="of $before_tag_name -> $tag_name"
@@ -197,7 +197,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     beforeTagCommitID=$(git rev-parse --short $before_tag_name~2)
     tagCommitID=$(git rev-parse --short $tag_name~2)
     fullchangeloglink=$(echo "<a href=\"https://github.com/${org}/${item}/compare/${beforeTagCommitID}...${tagCommitID}\">$before_tag_name..$tag_name</a>" | gawk '{ gsub(/"/,"\\\"") } 1')
-    [ -z "$subbody" ] || body="$body<li><b>$item</b> ${fullchangeloglink} ${commitstats}:\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
+    [ -z "$subbody" ] || body="$body<li><b>$item</b> ${fullchangeloglink} (${commitstats}):\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
     set -e
     popd &>/dev/null
 done
