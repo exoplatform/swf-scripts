@@ -187,9 +187,9 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         sourceCommitID=$(findSourceCommit $commitId)
         if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then 
           sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Cherry-picked source commit\">🍒</a> $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+          elt=$(echo "<li><a href=\"$commitLink\" style=\"color: \#e28743\;\">$fomattedCommitId</a><a href=\"$sourceCommitLink\" title=\"Cherry-picked source commit\">🍒</a> $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         else
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+          elt=$(echo "<li><a href=\"$commitLink\" style=\"color: \#e28743\;\">$fomattedCommitId</a> $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         fi
         echo "$commitLink $message *** $author -- $authorBuildersID"
         subbody="$subbody$elt"
