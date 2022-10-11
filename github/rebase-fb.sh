@@ -15,7 +15,6 @@ echo -e "\033[1;32m[Success]\033[0m $1"
 ###
 
 [ -z "${FB_NAME}" ] && exit 1
-[ -z "${BASE_BRANCH:-}" ] && BASE_BRANCH="develop"
 info "Parsing FB ${FB_NAME} Seed Job Configuration..."
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 current_date=$(date '+%s')
@@ -38,12 +37,16 @@ while IFS= read -r line; do
     echo "================================================================================================="
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
-    baseBranch="${BASE_BRANCH}"
-    if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]]; then 
-      baseBranch=develop-exo
-    fi
-    if [[ $item =~ ^deeds ]]; then 
-      baseBranch="develop"
+    if [ -z "${BASE_BRANCH:-}" ]; then 
+      if [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]] && [[ ! $item =~ ^deeds ]]; then 
+        baseBranch=develop-exo
+      else 
+        baseBranch=develop
+      fi
+    elif [[ $item =~ ^deeds ]]; then 
+      baseBranch=develop
+    else
+      baseBranch="${BASE_BRANCH}"
     fi
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
