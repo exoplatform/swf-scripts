@@ -28,12 +28,14 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     set +e
     tag_name=${version}
     before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -oP ^[1-9].[0-9].[0-9]$ | grep -B 1 ${version} | head -1)
+    tag_date=$(git tag -l --format='%(taggerdate)' ${tag_name})
+    before_tag_date=$(git tag -l --format='%(taggerdate)' ${before_tag_name})
     if [ -z "$tag_name" ] || [ -z "$before_tag_name" ]; then
       popd &>/dev/null
       continue
     fi
     echo "*** $item $before_tag_name -> $tag_name"
-    commitIds=$(git log --no-merges --pretty=format:"%h" $before_tag_name~2...$tag_name~2 | xargs)
+    commitIds=$(git log --no-merges --pretty=format:"%h" --since="${before_tag_date}" --until="${tag_date}" $before_tag_name~2...$tag_name~2 | xargs)
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
@@ -43,6 +45,9 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "continuous-release-template" && continue
         echo $message | grep -q "exo-release" && continue
         echo $message | grep -q "parent-pom" && continue
+        echo $message | grep -q "eXo Tasks notifications" && continue
+        echo $message | grep -q "Merge Translations" && continue
+        echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
         #echo $message | grep -q "Merge Translation" && continue
         author=$(git show --format="%an" -s $commitId)
         commitLink="$modulelink/commit/$(git rev-parse $commitId)"
