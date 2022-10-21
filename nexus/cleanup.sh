@@ -15,32 +15,37 @@ do_delete_curl() {
 }
 
 NB_RELEASES_TO_KEEP=0 # Nothing in month
-CURRENT_MONTH="09"
+CURRENT_MONTH="10"
 CURRENT_YEAR=2022
 BASE_PATH=/srv/nexus/storage
 BASE_PATH_HOSTED=$BASE_PATH/hosted
 
 ######################
 ##Modules
-MAVEN_DEPMGT_POM=21.0
-GATEIN_WCI=6.4.0
-KERNEL=6.4.0
-CORE=6.4.0
-WS=6.4.0
-GATEIN_PC=6.4.0
-GATEIN_SSO=6.4.0
-GATEIN_PORTAL=6.4.0
-PLATFORM_UI=6.4.0
-COMMONS=6.4.0
-SOCIAL=6.4.0
-GAMIFICATION=2.4.0
-KUDOS=2.4.0
-PERK_STORE=2.4.0
-WALLET=2.4.0
-APP_CENTER=2.4.0
-PUSH_NOTIFICATIONS=2.4.0
-ADDONS_MANAGER=2.4.0
-MEEDS=1.4.0
+MAVEN_DEPMGT_POM=21.0-exo
+GATEIN_WCI=6.4.0-exo
+KERNEL=6.4.0-exo
+CORE=6.4.0-exo
+WS=6.4.0-exo
+GATEIN_PC=6.4.0-exo
+GATEIN_SSO=6.4.0-exo
+GATEIN_PORTAL=6.4.0-exo
+PLATFORM_UI=6.4.0-exo
+COMMONS=6.4.0-exo
+SOCIAL=6.4.0-exo
+GAMIFICATION=2.4.0-exo
+GAMIFICATION_GITHUB=1.1.0-exo
+KUDOS=2.4.0-exo
+PERK_STORE=2.4.0-exo
+WALLET=2.4.0-exo
+APP_CENTER=2.4.0-exo
+PUSH_NOTIFICATIONS=2.4.0-exo
+ADDONS_MANAGER=2.4.0-exo
+TASK=3.4.0-exo
+ANALYTICS=1.3.0-exo
+POLL=1.1.0-exo
+NOTES=1.2.0-exo
+MEEDS=1.4.0-exo
 JCR=6.4.0
 ECMS=6.4.0
 AGENDA=1.3.0
@@ -51,16 +56,12 @@ LAYOUT_MANAGEMENT=1.4.0
 NEWS=2.4.0
 ONLYOFFICE=2.4.0
 SAML2_ADDON=3.4.0
-TASK=3.4.0
 WEB_CONFERENCING=2.4.0
 JITSI=1.3.0
-ANALYTICS=1.3.0
 AUTOMATIC_TRANSLATION=1.1.0
 DOCUMENTS=1.1.0
-POLL=1.1.0
 PROCESSES=1.1.0
 MAIL_INTEGRATION=1.1.0
-NOTES=1.2.0
 MULTIFACTOR_AUTHENTICATION=1.2.0
 AGENDA_CONNECTORS=1.1.0
 DLP=1.0.0
@@ -116,6 +117,8 @@ for release in ${releases_to_be_dropped[@]}; do
     find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/social -type d -name $SOCIAL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "gamification:$GAMIFICATION-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification -type d -name $GAMIFICATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    echo "gamification-github:$GAMIFICATION-GAMIFICATION_GITHUB-$rel_suffix"
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification-github -type d -name $GAMIFICATION_GITHUB-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "kudos:$KUDOS-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/kudos -type d -name $KUDOS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "perk-store:$PERK_STORE-$rel_suffix"
