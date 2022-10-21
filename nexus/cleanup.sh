@@ -7,7 +7,7 @@
 #####
 
 get_suffix() {
-    echo $1 | cut -d '-' -f2
+    echo $1 | grep -o '[^-]*$'
 }
 
 do_delete_curl() {
