@@ -7,7 +7,7 @@
 #####
 
 get_suffix() {
-    echo $1 | cut -d '-' -f3
+    echo $1 | grep -o '[^-]*$'
 }
 
 do_delete_curl() {
@@ -15,7 +15,7 @@ do_delete_curl() {
 }
 
 NB_RELEASES_TO_KEEP=0 # Nothing in month
-CURRENT_MONTH="09"
+CURRENT_MONTH="10"
 CURRENT_YEAR=2022
 BASE_PATH=/srv/nexus/storage
 BASE_PATH_HOSTED=$BASE_PATH/hosted
@@ -34,6 +34,7 @@ PLATFORM_UI=6.4.0-meed
 COMMONS=6.4.0-meed
 SOCIAL=6.4.0-meed
 GAMIFICATION=2.4.0-meed
+GAMIFICATION_GITHUB=1.1.0-meed
 KUDOS=2.4.0-meed
 PERK_STORE=2.4.0-meed
 WALLET=2.4.0-meed
@@ -95,6 +96,8 @@ for release in ${releases_to_be_dropped[@]}; do
     find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/social -type d -name $SOCIAL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "gamification:$GAMIFICATION-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification -type d -name $GAMIFICATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    echo "gamification-github:$GAMIFICATION_GITHUB-$rel_suffix"
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification-github -type d -name $GAMIFICATION_GITHUB-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "kudos:$KUDOS-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/kudos -type d -name $KUDOS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "perk-store:$PERK_STORE-$rel_suffix"
