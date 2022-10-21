@@ -16,6 +16,9 @@ echo -e "\033[1;32m[Success]\033[0m $1"
 
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 
+seedfileraw=$(mktemp)
+seedfilefiltred=$(mktemp)
+
 current_date=$(date '+%s')
 echo "Parsing FB repositories from catalog..."
 curl -H "Authorization: token ${GIT_TOKEN}" \
