@@ -96,7 +96,7 @@ for release in ${releases_to_be_dropped[@]}; do
     find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/social -type d -name $SOCIAL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "gamification:$GAMIFICATION-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification -type d -name $GAMIFICATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "gamification-github:$GAMIFICATION-GAMIFICATION_GITHUB-$rel_suffix"
+    echo "gamification-github:$GAMIFICATION_GITHUB-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification-github -type d -name $GAMIFICATION_GITHUB-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "kudos:$KUDOS-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/kudos -type d -name $KUDOS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
