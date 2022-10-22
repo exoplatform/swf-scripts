@@ -154,6 +154,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         echo $message | grep -q "parent-pom" && continue
         echo $message | grep -q "eXo Tasks notifications" && continue
         echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
+        echo $message | grep -q "SWF:" && continue
         #echo $message | grep -q "Merge Translation" && continue
         git config diff.renames 0
         author=$(git show --format="%an" -s $commitId | xargs)
