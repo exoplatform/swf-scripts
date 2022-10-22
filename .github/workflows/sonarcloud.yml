@@ -12,6 +12,9 @@ on:
         default: 11
         required: false
         type: number
+    secrets:
+      SONAR_TOKEN:
+        required: true
 jobs:
   build:
     name: Analyse Module with SonarCloud
