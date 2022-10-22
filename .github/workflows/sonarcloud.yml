@@ -1,0 +1,46 @@
+name: Sonar Analysis
+on:
+  workflow_call:
+    inputs:
+      extra_maven_opts:
+        description: Extra Maven OPTS
+        default: ''
+        required: false
+        type: string
+      jdk_major_version:
+        description: JDK Major version (eg 8, 11, 14, 17,...)
+        default: 11
+        required: false
+        type: number
+    secrets:
+      SONAR_TOKEN:
+        required: true
+jobs:
+  build:
+    name: Analyse Module with SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK ${{ inputs.jdk_major_version }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ inputs.jdk_major_version }}
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B test org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage ${{ inputs.extra_maven_opts }}
