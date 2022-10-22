@@ -16,7 +16,7 @@ jobs:
   check_tasks:
     name: Check for eXo tasks identifiers
     runs-on: ubuntu-latest
-    if: contains(env.message, env.global_filter_regex) 
+    if: contains(message, global_filter_regex) 
     steps:
       - name: eXo Tasks Webhook
         run: |
