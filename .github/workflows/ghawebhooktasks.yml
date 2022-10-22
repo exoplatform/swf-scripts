@@ -11,14 +11,16 @@ env:
   creator: ${{ github.event.pull_request.user.login }}
   repo_name: ${{ github.event.repository.full_name }}
   base_branch_name: ${{ github.event.pull_request.base.ref }}
+  global_filter_regex: '(task|maint|exo)((-|_)[0-9]{4,})+'
 jobs:
   check_tasks:
     name: Check for eXo tasks identifiers
     runs-on: ubuntu-latest
+    if: contains(env.message, env.global_filter_regex) 
     steps:
       - name: eXo Tasks Webhook
         run: |
-          TASKS_IDS="$(echo ${message:-}| grep -ioP '(task|maint|exo)((-|_)[0-9]{4,})+' | grep -oP [0-9]+ | xargs)"
+          TASKS_IDS="$(echo ${message:-}| grep -ioP "${global_filter_regex}" | grep -oP [0-9]+ | xargs)"
           if [ -z "${TASKS_IDS}" ]; then
             echo "No tasks found! Abort."
             exit 0
