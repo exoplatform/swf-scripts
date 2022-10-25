@@ -63,40 +63,46 @@ while IFS= read -r line; do
     git remote add origin git@github.com:${org}/${item}.git &>/dev/null
     git fetch origin develop ${DIST_BRANCH} --tags &>/dev/null
     checkpointTag="@cp-${DIST_BRANCH}"
-    if ! git rev-parse $checkpointTag 2>/dev/null; then
+    if ! git rev-parse ${checkpointTag} 2>/dev/null; then
       tag_commit=$(git log --no-merges --pretty=format:"%H" --since="${DEFAULT_CP_DAYS_BEFORE}days" | tail -1)
-      git tag $checkpointTag $tag_commit
+      git tag ${checkpointTag} ${tag_commit}
     fi 
-    messageCP=$(git show --pretty=format:%s -s $checkpointTag )
-    echo "Cherry-pick checkpoint is at: ($(git rev-parse --short $checkpointTag)) $messageCP."
+    messageCP=$(git show --pretty=format:%s -s ${checkpointTag} )
+    info "Cherry-pick checkpoint is at: ($(git rev-parse --short ${checkpointTag})) $messageCP."
     prev_head=$(git rev-parse --short origin/$DIST_BRANCH)
     # Applying cherry-picks 
-    commitIds=$(git log --no-merges --pretty=format:"%H" $checkpointTag..develop | xargs)
+    commitIds=$(git log --no-merges --pretty=format:"%H" ${checkpointTag}..origin/develop | xargs)
     if [ -z "${commitIds:-}" ]; then 
-      echo "Nothing to backport!"
+      info "Nothing to backport!"
       git push origin ${checkpointTag} -f &>/dev/null
+      continue
     fi
     echo "Start backporting..."
     echo
-    git checkout $DIST_BRANCH
+    cherryPickFailed=false
     for commitId in $commitIds; do
       message=$(git show --pretty=format:%s -s $commitId )
       body=$(git show --pretty=format:%b -s $commitId )
       if [[ "${body:-}" =~ "#dontcp" ]]; then 
-        echo "Skipped marked commit: ($(git rev-parse --short $commitId)) $message!"
+        info "Skipped marked commit: ($(git rev-parse --short $commitId)) $message!"
         continue 
       fi
-      if isAlreadyBackported $commitId origin/$DIST_BRANCH; then 
-        echo "Skipped already backported commit: ($(git rev-parse --short $commitId)) $message!"
+      if isAlreadyBackported $commitId $DIST_BRANCH; then 
+        info "Skipped already backported commit: ($(git rev-parse --short $commitId)) $message!"
         continue 
       fi
-      echo "Cherry-picking commit: ($(git rev-parse --short $commitId)) $message..."
+      info "Cherry-picking commit: ($(git rev-parse --short $commitId)) $message..."
       if ! git cherry-pick -x $commitId; then 
         ret=1
-        echo "Failed to cherry-pick $commitId! Please fix it manually and update tag: ${checkpointTag} on the source commit: $commitId of develop branch, then relaunch this job!"
-        continue
+        error "Cherry-pick failed! Please fix it manually and update tag: ${checkpointTag} on the source commit: $commitId of develop branch, then relaunch this job!"
+        cherryPickFailed=true
+        break
       fi
     done 
+    if $cherryPickFailed; then 
+      error "Failed to backport commits for ${org}/${item}!"
+      continue
+    fi
     if [ ! -z "$(git diff origin/${DIST_BRANCH} 2>/dev/null)" ]; then
       info "Reseting commits authors..."
       git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/$DIST_BRANCH..HEAD
@@ -112,9 +118,9 @@ while IFS= read -r line; do
       info "Previous $DIST_BRANCH HEAD: \033[1;31m${prev_head}\033[0m, New $DIST_BRANCH HEAD: \033[1;32m${new_head}\033[0m."
       git push origin HEAD:${DIST_BRANCH} | grep -v remote ||:
     fi
-    info "Previous CP Checkpoint HEAD: \033[1;31m$(git rev-parse --short ${$checkpointTag})\033[0m, New CP Checkpoint HEAD: \033[1;32m$(git rev-parse --short origin/develop)\033[0m."
-    git tag ${$checkpointTag} origin/develop -f 
-    git push origin ${$checkpointTag} -f   
+    info "Previous CP Checkpoint HEAD: \033[1;31m$(git rev-parse --short ${checkpointTag})\033[0m, New CP Checkpoint HEAD: \033[1;32m$(git rev-parse --short origin/develop)\033[0m."
+    git tag ${checkpointTag} origin/develop -f 
+    git push origin ${checkpointTag} -f   
 done < ${seedfileraw}
 echo "Cleaning up temporary files..."
 rm -v ${seedfileraw}
