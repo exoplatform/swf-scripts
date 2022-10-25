@@ -78,7 +78,6 @@ while IFS= read -r line; do
       continue
     fi
     echo "Start backporting..."
-    echo
     cherryPickFailed=false
     for commitId in $commitIds; do
       message=$(git show --pretty=format:%s -s $commitId )
