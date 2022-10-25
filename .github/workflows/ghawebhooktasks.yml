@@ -1,4 +1,4 @@
-name: eXo PR Task Webhook
+name: PLF PR Task Webhook
 
 on:
   workflow_call:
@@ -27,10 +27,10 @@ env:
   base_branch_name: ${{ github.event.pull_request.base.ref }}
 jobs:
   check_tasks:
-    name: Check for eXo tasks identifiers
+    name: Check for tasks identifiers
     runs-on: ubuntu-latest
     steps:
-      - name: eXo Tasks Webhook
+      - name: PLF Tasks Webhook
         run: |
           case ${{ inputs.TARGET_SERVER }} in
             tribe)
