@@ -39,6 +39,15 @@ getCommitAuthorFromGithub() {
     -L "https://api.github.com/repos/${_repo}/commits/${_id}" 2>/dev/null | jq .author.login | tr -d '"' 2>/dev/null || echo "")
 }
 
+isCommitVerified() {
+  local _id="$1"
+  local _repo="$2"
+  local status=$(curl --fail -XGET -H "Authorization: token ${GIT_TOKEN}" \
+    -H 'Accept: application/vnd.github.luke-cage-preview+json' \
+    -L "https://api.github.com/repos/${_repo}/commits/${_id}" 2>/dev/null | jq .commit.verification.verified | tr -d '"' 2>/dev/null || echo "false")
+  [ "${status}" = "true" ]
+}
+
 getUserFullNameFromGithub() {
   local _id="$1"
   echo $(curl --fail -XGET \
@@ -201,11 +210,15 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
           transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"https://github.com/Meeds-io/MIPs/issues/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
         done
         sourceCommitID=$(findSourceCommit $commitId)
+        $verificationCheck=""
+        if isCommitVerified $commitId $org/$item; then 
+          $verificationCheck="✅"
+        fi
         if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then 
           sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Cherry-picked source commit\">🍒</a> $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Cherry-picked source commit\">🍒</a> $transormedMessage <b>$authorLink</b> $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         else
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b></li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b> $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         fi
         echo "$commitLink $message *** $author -- $authorTribeID"
         echo "	($fomattedCommitId) $message --- $author" >> $changelogfile
