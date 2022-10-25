@@ -63,12 +63,22 @@ while IFS= read -r line; do
     git remote add origin git@github.com:${org}/${item}.git &>/dev/null
     git fetch origin develop ${DIST_BRANCH} --tags &>/dev/null
     checkpointTag="@cp-${DIST_BRANCH}"
-    if ! git rev-parse ${checkpointTag} 2>/dev/null; then
+    # if CP-Checkpoint (cherry-pick checkpoint) is not created; create a new one base on develop with some days delay 
+    # else, check if this checkpoint belongs to the develop history (Opposite can be caused by commits removal on develop branch); OK, else create a new one with some days delay.
+    if ! git rev-parse ${checkpointTag} 2>/dev/null || ! git rev-list origin/develop | grep -q $(git rev-parse ${checkpointTag}); then
+      if git rev-parse ${checkpointTag} >/dev/null; then 
+        info "Dangling CP-Checkpoint ($(git rev-parse --short ${checkpointTag})) is not found on base branch!"
+        echo "Reseting it..."
+      else 
+        info "CP-Checkpoint is not found"
+        echo "Generating new one..."
+      fi
       tag_commit=$(git log --no-merges --pretty=format:"%H" --since="${DEFAULT_CP_DAYS_BEFORE}days" | tail -1)
       git tag ${checkpointTag} ${tag_commit}
+      info "OK"
     fi 
     messageCP=$(git show --pretty=format:%s -s ${checkpointTag} )
-    info "Cherry-pick checkpoint is at: ($(git rev-parse --short ${checkpointTag})) $messageCP."
+    info "CP-Checkpoint is at: ($(git rev-parse --short ${checkpointTag})) $messageCP."
     prev_head=$(git rev-parse --short origin/$DIST_BRANCH)
     # Applying cherry-picks 
     commitIds=$(git log --no-merges --pretty=format:"%H" ${checkpointTag}..origin/develop --reverse | xargs)
@@ -117,7 +127,7 @@ while IFS= read -r line; do
       info "Previous $DIST_BRANCH HEAD: \033[1;31m${prev_head}\033[0m, New $DIST_BRANCH HEAD: \033[1;32m${new_head}\033[0m."
       git push origin HEAD:${DIST_BRANCH} | grep -v remote ||:
     fi
-    info "Previous CP Checkpoint HEAD: \033[1;31m$(git rev-parse --short ${checkpointTag})\033[0m, New CP Checkpoint HEAD: \033[1;32m$(git rev-parse --short origin/develop)\033[0m."
+    info "Previous CP-Checkpoint HEAD: \033[1;31m$(git rev-parse --short ${checkpointTag})\033[0m, New CP-Checkpoint HEAD: \033[1;32m$(git rev-parse --short origin/develop)\033[0m."
     git tag ${checkpointTag} origin/develop -f 
     git push origin ${checkpointTag} -f   
 done < ${seedfileraw}
