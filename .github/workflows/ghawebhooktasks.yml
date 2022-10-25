@@ -2,7 +2,21 @@ name: eXo PR Task Webhook
 
 on:
   workflow_call:
-
+    inputs:
+      TARGET_SERVER:
+        description: Target Server (tribe or builders)
+        default: 'tribe'
+        required: false
+        type: string
+    secrets:
+      SERVER_USERNAME:
+        required: true
+      SERVER_PASSWORD:
+        required: true
+      SERVER_TASK_REST_PREFIXE_URL:
+        required: true
+      SERVER_GAMGH_CONNECTOR_REST_URL:
+        required: true
 env:
   message: ${{ github.event.pull_request.title }}
   state: ${{ github.event.pull_request.state }}
@@ -18,7 +32,21 @@ jobs:
     steps:
       - name: eXo Tasks Webhook
         run: |
-          TASKS_IDS="$(echo ${message:-}| grep -ioP '(task|maint|exo)((-|_)[0-9]{4,})+' | grep -oP [0-9]+ | xargs)"
+          case ${{ inputs.TARGET_SERVER }} in
+            tribe)
+              regexFilter='(task|maint|exo)((-|_)[0-9]{4,})+'
+              ;;
+
+            builders)
+              regexFilter='meed((-|_)[0-9]{4,})+'
+              ;;
+
+            *)
+              echo "Error target Server ${{ inputs.TARGET_SERVER }} is not yet supported!"
+              exit 1
+            ;;
+          esac 
+          TASKS_IDS="$(echo ${message:-}| grep -ioP ${regexFilter} | grep -oP [0-9]+ | xargs)"
           if [ -z "${TASKS_IDS}" ]; then
             echo "No tasks found! Abort."
             exit 0
@@ -27,12 +55,12 @@ jobs:
           link="PR <a href=\"https://github.com/${repo_name}/pull/${pull_number}\">${repo_name}#${pull_number}</a>"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             if [ "${{ github.event.action }}" = "review_requested" ]; then
-              tribeUser=$(curl -s -f -L -u ${TRIBE_USERNAME}:${TRIBE_PASSWORD} -XGET "${TRIBE_GAMGH_CONNECTOR_REST_URL}/users/${requested_reviewer}" || echo "")
-              if [ ! -z "${tribeUser}" ]; then
-                echo "Requested reviewer is: ${tribeUser}."
-                msg="💭 $link requested a review from @${tribeUser} "
+              serverUser=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${requested_reviewer}" || echo "")
+              if [ ! -z "${serverUser}" ]; then
+                echo "Requested reviewer is: ${serverUser}."
+                msg="💭 $link requested a review from @${serverUser} "
               else
-                echo "Could not get Tribe user identifier! Abort"
+                echo "Could not get Server user identifier! Abort"
                 exit 0
               fi
             elif [ "${{ github.event.pull_request.merged }}" = "true" ]; then
@@ -43,7 +71,7 @@ jobs:
           elif [ "${{ github.event_name }}" = "pull_request_review" ] && [ "${{ github.event.action }}" = "submitted" ]; then
             mentionCreator=""
             commentMentionFilterRegex='( |^)@[a-zA-Z0-9]+-?[a-zA-Z0-9]+( |$)'
-            response=$(curl -s -f -L -u ${TRIBE_USERNAME}:${TRIBE_PASSWORD} -XGET "${TRIBE_GAMGH_CONNECTOR_REST_URL}/users/${creator}" || echo "")
+            response=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${creator}" || echo "")
             [ -z "${response}" ] || mentionCreator=" FYI @${response} "
             if [ "${{ github.event.review.state }}" = "changes_requested" ]; then
               msg="🛠️ $link requires some changes.${mentionCreator}"
@@ -51,14 +79,14 @@ jobs:
               msg="✅ $link has been ${{ github.event.review.state }}.${mentionCreator}"
             elif [ "${{ github.event.review.state }}" = "commented" ] && [[ "${{ github.event.review.body }}" =~ $commentMentionFilterRegex ]]; then
               mentionedGithubUsers=$(${{ github.event.review.body }} | grep -oP $commentMentionFilterRegex | tr -d '@' | xargs)
-              mentionedTribeUsers=""
+              mentionedServerUsers=""
               for mentionedGithubUser in ${mentionedGithubUsers}; do 
-                response=$(curl -s -f -L -u ${TRIBE_USERNAME}:${TRIBE_PASSWORD} -XGET "${TRIBE_GAMGH_CONNECTOR_REST_URL}/users/${mentionedGithubUser}" || echo "")
+                response=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${mentionedGithubUser}" || echo "")
                 [ -z "${response}" ] && continue
-                [ -z "${mentionedTribeUsers}" ] && mentionedTribeUsers="@${response}" || mentionedTribeUsers="${mentionedTribeUsers} and @${response}"
+                [ -z "${mentionedServerUsers}" ] && mentionedServerUsers="@${response}" || mentionedServerUsers="${mentionedServerUsers} and @${response}"
               done
-              [ -z "${mentionedTribeUsers}" ] && mentionedTribeUsers="$(echo $mentionedGithubUsers | wc -w ) user(s)"
-              msg="🙋 $link has mentioned ${mentionedTribeUsers} in a comment."
+              [ -z "${mentionedServerUsers}" ] && mentionedServerUsers="$(echo $mentionedGithubUsers | wc -w ) user(s)"
+              msg="🙋 $link has mentioned ${mentionedServerUsers} in a comment."
             else
               msg="ℹ️ $link has been ${{ github.event.review.state }}."
             fi
@@ -68,10 +96,10 @@ jobs:
           echo "***"
           for TASK_ID in ${TASKS_IDS}; do
             echo "Commenting to Task #${TASK_ID}..."
-            curl -so /dev/null -w '%{http_code}' -L -u ${TRIBE_USERNAME}:${TRIBE_PASSWORD} -XPOST --data-urlencode "<p>${msg}</p>" "${TRIBE_TASK_REST_PREFIXE_URL}/comments/${TASK_ID}" || :
+            curl -so /dev/null -w '%{http_code}' -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XPOST --data-urlencode "<p>${msg}</p>" "${SERVER_TASK_REST_PREFIXE_URL}/comments/${TASK_ID}"
           done
         env:
-          TRIBE_USERNAME: ${{ secrets.TRIBE_USERNAME }}
-          TRIBE_PASSWORD: ${{ secrets.TRIBE_PASSWORD }}
-          TRIBE_TASK_REST_PREFIXE_URL: ${{ secrets.TRIBE_TASK_REST_PREFIXE_URL }}
-          TRIBE_GAMGH_CONNECTOR_REST_URL: ${{ secrets.TRIBE_GAMGH_CONNECTOR_REST_URL }}
+          SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
+          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+          SERVER_TASK_REST_PREFIXE_URL: ${{ secrets.SERVER_TASK_REST_PREFIXE_URL }}
+          SERVER_GAMGH_CONNECTOR_REST_URL: ${{ secrets.SERVER_GAMGH_CONNECTOR_REST_URL }}
