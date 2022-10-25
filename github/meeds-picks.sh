@@ -71,7 +71,7 @@ while IFS= read -r line; do
     info "Cherry-pick checkpoint is at: ($(git rev-parse --short ${checkpointTag})) $messageCP."
     prev_head=$(git rev-parse --short origin/$DIST_BRANCH)
     # Applying cherry-picks 
-    commitIds=$(git log --no-merges --pretty=format:"%H" ${checkpointTag}..origin/develop | xargs | tac -s ' ' | xargs)
+    commitIds=$(git log --no-merges --pretty=format:"%H" ${checkpointTag}..origin/develop --reverse | xargs)
     if [ -z "${commitIds:-}" ]; then 
       info "Nothing to backport!"
       git push origin ${checkpointTag} -f &>/dev/null
