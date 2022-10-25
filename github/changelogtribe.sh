@@ -210,9 +210,9 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
           transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"https://github.com/Meeds-io/MIPs/issues/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
         done
         sourceCommitID=$(findSourceCommit $commitId)
-        $verificationCheck=""
+        verificationCheck=""
         if isCommitVerified $commitId $org/$item; then 
-          $verificationCheck="✅"
+          verificationCheck="✅"
         fi
         if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then 
           sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
