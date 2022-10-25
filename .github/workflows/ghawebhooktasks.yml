@@ -68,7 +68,7 @@ jobs:
           echo "***"
           for TASK_ID in ${TASKS_IDS}; do
             echo "Commenting to Task #${TASK_ID}..."
-            curl -so /dev/null -w '%{response_code}' -L -u ${TRIBE_USERNAME}:${TRIBE_PASSWORD} -XPOST --data-urlencode "<p>${msg}</p>" "${TRIBE_TASK_REST_PREFIXE_URL}/comments/${TASK_ID}"
+            curl -so /dev/null -w '%{http_code}' -L -u ${TRIBE_USERNAME}:${TRIBE_PASSWORD} -XPOST --data-urlencode "<p>${msg}</p>" "${TRIBE_TASK_REST_PREFIXE_URL}/comments/${TASK_ID}"
           done
         env:
           TRIBE_USERNAME: ${{ secrets.TRIBE_USERNAME }}
