@@ -35,10 +35,12 @@ jobs:
           case ${{ inputs.TARGET_SERVER }} in
             tribe)
               regexFilter='(task|maint|exo)((-|_)[0-9]{4,})+'
+              portalsite='dw'
               ;;
 
             builders)
               regexFilter='meed((-|_)[0-9]{2,})+'
+              portalSite='meeds'
               ;;
 
             *)
@@ -46,6 +48,7 @@ jobs:
               exit 1
             ;;
           esac 
+          SERVER_URL="https://$(echo $SERVER_TASK_REST_PREFIXE_URL | awk -F/ '{print $3}')"
           TASKS_IDS="$(echo ${message:-}| grep -ioP ${regexFilter} | grep -oP [0-9]+ | xargs)"
           if [ -z "${TASKS_IDS}" ]; then
             echo "No tasks found! Abort."
@@ -73,10 +76,23 @@ jobs:
             commentMentionFilterRegex='( |^)@[a-zA-Z0-9]+-?[a-zA-Z0-9]+( |$)'
             response=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${creator}" || echo "")
             [ -z "${response}" ] || mentionCreator=" FYI @${response} "
+            reviewerGithubUser="${{ github.event.review.user.login }}"
+            reviewerServerUser=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${reviewerGithubUser}" || echo "")
+            reviewerServerProfile=$(curl -s -f -L -u "${SERVER_USERNAME}:${SERVER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/users/${reviewerServerUser}" 2>/dev/null || echo "")
+            reviewerServerFullName="$(echo ${reviewerServerProfile} | jq .fullname | tr -d '\"' || echo "")"
+            reviewerServerLink="<a target=\"_self\" rel=\"noopener\" href=\"/portal/${portalSite}/profile/${reviewerServerUser}\" class=\"user-suggester\">${reviewerServerFullName}</a>"
             if [ "${{ github.event.review.state }}" = "changes_requested" ]; then
-              msg="🛠️ $link requires some changes.${mentionCreator}"
+              if [ -z "${reviewerServerFullName:-}" ]; then 
+                msg="🛠️ $link requires some changes.${mentionCreator}"
+              else 
+                msg="🛠️ $link requires some changes from ${reviewerServerLink}.${mentionCreator}"
+              fi
             elif [ "${{ github.event.review.state }}" = "approved" ]; then
-              msg="✅ $link has been ${{ github.event.review.state }}.${mentionCreator}"
+              if [ -z "${reviewerServerFullName:-}" ]; then 
+                msg="✅ $link has been ${{ github.event.review.state }}.${mentionCreator}"
+              else 
+                msg="✅ $link has been ${{ github.event.review.state }} by ${reviewerServerLink}.${mentionCreator}"
+              fi
             elif [ "${{ github.event.review.state }}" = "commented" ] && [[ "${{ github.event.review.body }}" =~ $commentMentionFilterRegex ]]; then
               mentionedGithubUsers=$(echo ${{ github.event.review.body }} | grep -oP $commentMentionFilterRegex | tr -d '@' | xargs)
               mentionedServerUsers=""
