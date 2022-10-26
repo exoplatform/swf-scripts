@@ -67,7 +67,9 @@ jobs:
                 exit 0
               fi
             elif [ "${{ github.event.pull_request.merged }}" = "true" ]; then
-              msg="🌟 $link has been merged into ${base_branch_name}."
+              mergedCommitlink="<a href=\"https://github.com/${repo_name}/commit/${{ github.event.pull_request.merge_commit_sha }}\">merged</a>"
+              base_branch_link="<a href=\"https://github.com/${repo_name}/tree/${base_branch_name}\">${base_branch_name}</a>"
+              msg="🌟 $link has been ${mergedCommitlink} into ${base_branch_link}."
             else
               msg="ℹ️ $link has been ${{ github.event.action }}."
             fi
@@ -81,19 +83,23 @@ jobs:
             reviewerServerProfile=$(curl -s -f -L -u "${SERVER_USERNAME}:${SERVER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/users/${reviewerServerUser}" 2>/dev/null || echo "")
             reviewerServerFullName="$(echo ${reviewerServerProfile} | jq .fullname | tr -d '\"' || echo "")"
             reviewerServerLink="<a target=\"_self\" rel=\"noopener\" href=\"/portal/${portalSite}/profile/${reviewerServerUser}\" class=\"user-suggester\">${reviewerServerFullName}</a>"
+            reviewEventLink="${{ github.event.review.html_url }}"
             if [ "${{ github.event.review.state }}" = "changes_requested" ]; then
+              requestChangesEventLink="<a href=\"$reviewEventLink\">changes</a>"
               if [ -z "${reviewerServerFullName:-}" ]; then 
-                msg="🛠️ $link requires some changes.${mentionCreator}"
+                msg="🛠️ $link requires ${requestChangesEventLink}.${mentionCreator}"
               else 
-                msg="🛠️ $link requires some changes from ${reviewerServerLink}.${mentionCreator}"
+                msg="🛠️ $link requires ${requestChangesEventLink} from ${reviewerServerLink}.${mentionCreator}"
               fi
             elif [ "${{ github.event.review.state }}" = "approved" ]; then
+              approvedEventLink="<a href=\"$reviewEventLink\">approved</a>"
               if [ -z "${reviewerServerFullName:-}" ]; then 
-                msg="✅ $link has been ${{ github.event.review.state }}.${mentionCreator}"
+                msg="✅ $link has been ${approvedEventLink}.${mentionCreator}"
               else 
-                msg="✅ $link has been ${{ github.event.review.state }} by ${reviewerServerLink}.${mentionCreator}"
+                msg="✅ $link has been ${approvedEventLink} by ${reviewerServerLink}.${mentionCreator}"
               fi
             elif [ "${{ github.event.review.state }}" = "commented" ] && [[ "${{ github.event.review.body }}" =~ $commentMentionFilterRegex ]]; then
+              mentionEventLink="<a href=\"$reviewEventLink\">mentioned</a>"
               mentionedGithubUsers=$(echo ${{ github.event.review.body }} | grep -oP $commentMentionFilterRegex | tr -d '@' | xargs)
               mentionedServerUsers=""
               for mentionedGithubUser in ${mentionedGithubUsers}; do 
@@ -102,9 +108,10 @@ jobs:
                 [ -z "${mentionedServerUsers}" ] && mentionedServerUsers="@${response}" || mentionedServerUsers="${mentionedServerUsers} and @${response}"
               done
               [ -z "${mentionedServerUsers}" ] && mentionedServerUsers="$(echo $mentionedGithubUsers | wc -w ) user(s)"
-              msg="🙋 $link has mentioned ${mentionedServerUsers} in a comment."
+              msg="🙋 $link has ${mentionEventLink} ${mentionedServerUsers} in a comment."
             else
-              msg="ℹ️ $link has been ${{ github.event.review.state }}."
+              stateEventLink="<a href=\"$reviewEventLink\">${{ github.event.review.state }}</a>"
+              msg="ℹ️ $link has been ${stateEventLink}."
             fi
           fi
           echo "*** Message is:"
