@@ -4,141 +4,109 @@
 
 BRANCH=security-fix
 ISSUE=TASK-58581
-ORIGIN_BRANCH=develop
+ORIGIN_BRANCH=develop-exo # develop-meed or develop 
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.4.x-SNAPSHOT
 TARGET_VERSION=6.4.x-$BRANCH-SNAPSHOT
+MEEDS_DISTRIB="-exo" # '-meed' or ''
+
 # Maven DEPMGT
-DEPMGT_ORIGIN_VERSION=21.x-SNAPSHOT
+DEPMGT_ORIGIN_VERSION=21.x${MEEDS_DISTRIB}-SNAPSHOT
 DEPMGT_TARGET_VERSION=21.x-$BRANCH-SNAPSHOT
-# GateIn DEPMGT
-GATEIN_DEP_ORIGIN_VERSION=2.4.x-SNAPSHOT
-GATEIN_DEP_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo Cas
-ADDON_CAS_ORIGIN_VERSION=3.4.x-SNAPSHOT
-ADDON_CAS_TARGET_VERSION=3.4.x-$BRANCH-SNAPSHOT
+# Add-on Meeds Gamification
+ADDON_GAMIFICATION_ORIGIN_VERSION=2.4.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDON_GAMIFICATION_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
+# Add-on Meeds Perk Store
+ADDON_PERK_STORE_ORIGIN_VERSION=2.4.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDON_PERK_STORE_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
+# Add-on Meeds Push notifications
+ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION=2.4.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
+# Add-on Meeds Task
+ADDON_TASK_ORIGIN_VERSION=3.4.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDON_TASK_TARGET_VERSION=3.4.x-$BRANCH-SNAPSHOT
+# Add-on Meeds Wallet
+ADDON_WALLET_ORIGIN_VERSION=2.4.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDON_WALLET_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
+# Add-on Meeds App Center
+ADDON_APP_CENTER_ORIGIN_VERSION=2.4.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDON_APP_CENTER_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
+# Add-on manager
+ADDONS_MANAGER_ORIGIN_VERSION=2.4.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDONS_MANAGER_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
+# Add-on Meeds Notes
+ADDONS_NOTES_ORIGIN_VERSION=1.2.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDONS_NOTES_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
+# Add-on Meeds Analytics
+ADDONS_ANALYTICS_ORIGIN_VERSION=1.3.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDONS_ANALYTICS_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
+# Add-on Meeds poll
+ADDONS_POLL_ORIGIN_VERSION=1.1.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDONS_POLL_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+# Add-on Meeds Gamification-github
+ADDONS_GAMIFICATION_GITHUB_ORIGIN_VERSION=1.1.x${MEEDS_DISTRIB}-SNAPSHOT
+ADDONS_GAMIFICATION_GITHUB_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
+# Meeds Distribution
+MEEDS_ORIGIN_VERSION=1.4.x-SNAPSHOT
+MEEDS_TARGET_VERSION=1.4.x-$BRANCH-SNAPSHOT
+
 # Add-on eXo Chat
 ADDON_CHAT_ORIGIN_VERSION=3.4.x-SNAPSHOT
 ADDON_CHAT_TARGET_VERSION=3.4.x-$BRANCH-SNAPSHOT
 # Add-on DW Homepage
 ADDON_DIGITAL_WORKPLACE_ORIGIN_VERSION=1.4.x-SNAPSHOT
 ADDON_DIGITAL_WORKPLACE_TARGET_VERSION=1.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo ElasticSearch Embedded
-ADDON_ES_EMBED_ORIGIN_VERSION=3.4.x-SNAPSHOT
-ADDON_ES_EMBED_TARGET_VERSION=3.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo Gamification
-ADDON_GAMIFICATION_ORIGIN_VERSION=2.4.x-SNAPSHOT
-ADDON_GAMIFICATION_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
 # Add-on eXo Kudos
 ADDON_KUDOS_ORIGIN_VERSION=2.4.x-SNAPSHOT
 ADDON_KUDOS_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
 # Add-on eXo Layout Management
 ADDON_LAYOUT_MANAGEMENT_ORIGIN_VERSION=1.4.x-SNAPSHOT
 ADDON_LAYOUT_MANAGEMENT_TARGET_VERSION=1.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo Lecko
-ADDON_LECKO_ORIGIN_VERSION=2.4.x-SNAPSHOT
-ADDON_LECKO_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
 # Add-on eXo news
 ADDON_NEWS_ORIGIN_VERSION=2.4.x-SNAPSHOT
 ADDON_NEWS_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo Openam
-ADDON_OPENAM_ORIGIN_VERSION=3.4.x-SNAPSHOT
-ADDON_OPENAM_TARGET_VERSION=3.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo Remote Edit
-ADDON_REMOTE_EDIT_ORIGIN_VERSION=3.4.x-SNAPSHOT
-ADDON_REMOTE_EDIT_TARGET_VERSION=3.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo Perk Store
-ADDON_PERK_STORE_ORIGIN_VERSION=2.4.x-SNAPSHOT
-ADDON_PERK_STORE_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
 # Add-on eXo OnlyOffice
 ADDON_ONLYOFFICE_ORIGIN_VERSION=2.4.x-SNAPSHOT
 ADDON_ONLYOFFICE_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo Push notifications
-ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION=2.4.x-SNAPSHOT
-ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
 # Add-on eXo saml2	
 ADDON_SAML2_ORIGIN_VERSION=3.4.x-SNAPSHOT
 ADDON_SAML2_TARGET_VERSION=3.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo Task
-ADDON_TASK_ORIGIN_VERSION=3.4.x-SNAPSHOT
-ADDON_TASK_TARGET_VERSION=3.4.x-$BRANCH-SNAPSHOT
-# Add-on Wallet
-ADDON_WALLET_ORIGIN_VERSION=2.4.x-SNAPSHOT
-ADDON_WALLET_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
 # Add-on eXo Web Conferencing
 ADDON_WEB_CONFERENCING_ORIGIN_VERSION=2.4.x-SNAPSHOT
 ADDON_WEB_CONFERENCING_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
-# Add-on eXo App Center
-ADDON_APP_CENTER_ORIGIN_VERSION=2.4.x-SNAPSHOT
-ADDON_APP_CENTER_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
-# Add-on manager
-ADDONS_MANAGER_ORIGIN_VERSION=2.4.x-SNAPSHOT
-ADDONS_MANAGER_TARGET_VERSION=2.4.x-$BRANCH-SNAPSHOT
 # Add-on eXo agenda
 ADDONS_AGENDA_ORIGIN_VERSION=1.3.x-SNAPSHOT
 ADDONS_AGENDA_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
 # Add-on eXo Data upgrade
 ADDONS_DATA_UPGRADE_ORIGIN_VERSION=6.4.x-SNAPSHOT
 ADDONS_DATA_UPGRADE_TARGET_VERSION=6.4.x-$BRANCH-SNAPSHOT
-
 # Add-on eXo jitsi
 ADDONS_JITSI_ORIGIN_VERSION=1.3.x-SNAPSHOT
 ADDONS_JITSI_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
-
 # Add-on eXo Multifactor Authentication
 ADDONS_MULTIFACTOR_AUTHENTICATION_ORIGIN_VERSION=1.2.x-SNAPSHOT
 ADDONS_MULTIFACTOR_AUTHENTICATION_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
-
-# Add-on eXo Notes
-ADDONS_NOTES_ORIGIN_VERSION=1.2.x-SNAPSHOT
-ADDONS_NOTES_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
-
-# Add-on eXo Analytics
-ADDONS_ANALYTICS_ORIGIN_VERSION=1.3.x-SNAPSHOT
-ADDONS_ANALYTICS_TARGET_VERSION=1.3.x-$BRANCH-SNAPSHOT
-
-# Meeds Distribution
-MEEDS_ORIGIN_VERSION=1.4.x-SNAPSHOT
-MEEDS_TARGET_VERSION=1.4.x-$BRANCH-SNAPSHOT
-
-# Add-on poll
-ADDONS_POLL_ORIGIN_VERSION=1.1.x-SNAPSHOT
-ADDONS_POLL_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
-
-
 # Add-on eXo processes
 ADDONS_PROCESSES_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDONS_PROCESSES_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
-
-
 # Automatic Translation
 ADDONS_AUTOMATIC_TRANSLATION_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDONS_AUTOMATIC_TRANSLATION_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
-
 # Add-on eXo Documents
 ADDONS_DOCUMENTS_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDONS_DOCUMENTS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
-
 # Add-on mail-integration
 ADDONS_MAIL_INTEGRATION_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDONS_MAIL_INTEGRATION_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
-
-# Add-on Gamification-github
-ADDONS_GAMIFICATION_GITHUB_ORIGIN_VERSION=1.1.x-SNAPSHOT
-ADDONS_GAMIFICATION_GITHUB_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
-
 # Add-on Anti-bruteforce
 ADDONS_ANTI_BRUTEFORCE_ORIGIN_VERSION=1.0.x-SNAPSHOT
 ADDONS_ANTI_BRUTEFORCE_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
-
 # Add-on Anti-malware
 ADDONS_ANTI_MALWARE_ORIGIN_VERSION=1.0.x-SNAPSHOT
 ADDONS_ANTI_MALWARE_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
-
 # Add-on dlp
 ADDONS_DLP_ORIGIN_VERSION=1.0.x-SNAPSHOT
 ADDONS_DLP_TARGET_VERSION=1.0.x-$BRANCH-SNAPSHOT
-
 # Add-on agenda connectors
 ADDONS_AGENDA_CONNECTORS_ORIGIN_VERSION=1.1.x-SNAPSHOT
 ADDONS_AGENDA_CONNECTORS_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
@@ -205,27 +173,20 @@ function replaceProjectVersion() {
 	agenda) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_AGENDA_ORIGIN_VERSION</version>" "<version>$ADDONS_AGENDA_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	analytics) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_ANALYTICS_ORIGIN_VERSION</version>" "<version>$ADDONS_ANALYTICS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	poll) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_POLL_ORIGIN_VERSION</version>" "<version>$ADDONS_POLL_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	answers) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ANSWERS_ORIGIN_VERSION</version>" "<version>$ADDON_ANSWERS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	app-center) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_APP_CENTER_ORIGIN_VERSION</version>" "<version>$ADDON_APP_CENTER_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	cas-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CAS_ORIGIN_VERSION</version>" "<version>$ADDON_CAS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	chat-application) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_CHAT_ORIGIN_VERSION</version>" "<version>$ADDON_CHAT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	exo-es-embedded) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ES_EMBED_ORIGIN_VERSION</version>" "<version>$ADDON_ES_EMBED_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	digital-workplace) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_DIGITAL_WORKPLACE_ORIGIN_VERSION</version>" "<version>$ADDON_DIGITAL_WORKPLACE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	gatein-dep) $SCRIPTDIR/../replaceInFile.sh "<version>$GATEIN_DEP_ORIGIN_VERSION</version>" "<version>$GATEIN_DEP_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	gamification) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_GAMIFICATION_ORIGIN_VERSION</version>" "<version>$ADDON_GAMIFICATION_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	jitsi) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_JITSI_ORIGIN_VERSION</version>" "<version>$ADDONS_JITSI_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	jitsi-call) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_JITSI_ORIGIN_VERSION</version>" "<version>$ADDONS_JITSI_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	multifactor-authentication) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_MULTIFACTOR_AUTHENTICATION_ORIGIN_VERSION</version>" "<version>$ADDONS_MULTIFACTOR_AUTHENTICATION_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	kudos) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_KUDOS_ORIGIN_VERSION</version>" "<version>$ADDON_KUDOS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	layout-management) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LAYOUT_MANAGEMENT_ORIGIN_VERSION</version>" "<version>$ADDON_LAYOUT_MANAGEMENT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	lecko) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_LECKO_ORIGIN_VERSION</version>" "<version>$ADDON_LECKO_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	news) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_NEWS_ORIGIN_VERSION</version>" "<version>$ADDON_NEWS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	maven-depmgt-pom) $SCRIPTDIR/../replaceInFile.sh "<version>$DEPMGT_ORIGIN_VERSION</version>" "<version>$DEPMGT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	onlyoffice) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_ONLYOFFICE_ORIGIN_VERSION</version>" "<version>$ADDON_ONLYOFFICE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	openam-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_OPENAM_ORIGIN_VERSION</version>" "<version>$ADDON_OPENAM_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	perk-store) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PERK_STORE_ORIGIN_VERSION</version>" "<version>$ADDON_PERK_STORE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	push-notifications) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</version>" "<version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
-	remote-edit) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</version>" "<version>$ADDON_REMOTE_EDIT_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	saml2-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_SAML2_ORIGIN_VERSION</version>" "<version>$ADDON_SAML2_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	task) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_TASK_ORIGIN_VERSION</version>" "<version>$ADDON_TASK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	wallet) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WALLET_ORIGIN_VERSION</version>" "<version>$ADDON_WALLET_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -248,9 +209,6 @@ function replaceProjectVersion() {
 function replaceProjectDeps() {
 	printf "\e[1;33m# %s\e[m\n" "Modifying dependencies versions in the project POMs ($repo_name) ..."
 
-	## GateIn Dep
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.gatein.dep.version>$GATEIN_DEP_ORIGIN_VERSION</org.exoplatform.gatein.dep.version>" "<org.exoplatform.gatein.dep.version>$GATEIN_DEP_TARGET_VERSION</org.exoplatform.gatein.dep.version>" "pom.xml -not -wholename \"*/target/*\""
-
 	## GateIn WCI
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.gatein.wci.version>$ORIGIN_VERSION</org.exoplatform.gatein.wci.version>" "<org.exoplatform.gatein.wci.version>$TARGET_VERSION</org.exoplatform.gatein.wci.version>" "pom.xml -not -wholename \"*/target/*\""
 
@@ -267,10 +225,7 @@ function replaceProjectDeps() {
 
 	## PLF
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.depmgt.version>$DEPMGT_ORIGIN_VERSION</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>$DEPMGT_TARGET_VERSION</org.exoplatform.depmgt.version>" "pom.xml -not -wholename \"*/target/*\""
-	# $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.doc.doc-style.version>$ORIGIN_VERSION</org.exoplatform.doc.doc-style.version>" "<org.exoplatform.doc.doc-style.version>$TARGET_VERSION</org.exoplatform.doc.doc-style.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform-ui.version>$ORIGIN_VERSION</org.exoplatform.platform-ui.version>" "<org.exoplatform.platform-ui.version>$TARGET_VERSION</org.exoplatform.platform-ui.version>" "pom.xml -not -wholename \"*/target/*\""
-	# Temporary after lightweight merge
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.calendar.version>$ORIGIN_VERSION</org.exoplatform.calendar.version>" "<org.exoplatform.calendar.version>$TARGET_VERSION</org.exoplatform.calendar.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.commons.version>$ORIGIN_VERSION</org.exoplatform.commons.version>" "<org.exoplatform.commons.version>$TARGET_VERSION</org.exoplatform.commons.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.ecms.version>$ORIGIN_VERSION</org.exoplatform.ecms.version>" "<org.exoplatform.ecms.version>$TARGET_VERSION</org.exoplatform.ecms.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.jcr.version>$ORIGIN_VERSION</org.exoplatform.jcr.version>" "<org.exoplatform.jcr.version>$TARGET_VERSION</org.exoplatform.jcr.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -278,9 +233,6 @@ function replaceProjectDeps() {
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.social.version>$ORIGIN_VERSION</org.exoplatform.social.version>" "<org.exoplatform.social.version>$TARGET_VERSION</org.exoplatform.social.version>" "pom.xml -not -wholename \"*/target/*\""	
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.notes.version>$ADDONS_NOTES_ORIGIN_VERSION</addon.exo.notes.version>" "<addon.exo.notes.version>$ADDONS_NOTES_TARGET_VERSION</addon.exo.notes.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.agenda.version>$ADDONS_AGENDA_ORIGIN_VERSION</org.exoplatform.agenda.version>" "<org.exoplatform.agenda.version>$ADDONS_AGENDA_TARGET_VERSION</org.exoplatform.agenda.version>" "pom.xml -not -wholename \"*/target/*\""	
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.forum.version>$ORIGIN_VERSION</org.exoplatform.forum.version>" "<org.exoplatform.forum.version>$TARGET_VERSION</org.exoplatform.forum.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.integ.version>$ORIGIN_VERSION</org.exoplatform.integ.version>" "<org.exoplatform.integ.version>$TARGET_VERSION</org.exoplatform.integ.version>" "pom.xml -not -wholename \"*/target/*\""
-	# $SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.version>$ORIGIN_VERSION</org.exoplatform.platform.version>" "<org.exoplatform.platform.version>$TARGET_VERSION</org.exoplatform.platform.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.distribution.version>$MEEDS_ORIGIN_VERSION</io.meeds.distribution.version>" "<io.meeds.distribution.version>$MEEDS_TARGET_VERSION</io.meeds.distribution.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.distributions.version>$ORIGIN_VERSION</org.exoplatform.platform.distributions.version>" "<org.exoplatform.platform.distributions.version>$TARGET_VERSION</org.exoplatform.platform.distributions.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.addons-manager.version>$ADDONS_MANAGER_ORIGIN_VERSION</org.exoplatform.platform.addons-manager.version>" "<org.exoplatform.platform.addons-manager.version>$ADDONS_MANAGER_TARGET_VERSION</org.exoplatform.platform.addons-manager.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -289,11 +241,7 @@ function replaceProjectDeps() {
 function replaceProjectAddons() {
 	printf "\e[1;33m# %s\e[m\n" "Modifying add-ons versions in the packaging project POMs ($repo_name) ..."
 
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_ORIGIN_VERSION</addon.exo.es.embedded.version>" "<addon.exo.es.embedded.version>$ADDON_ES_EMBED_TARGET_VERSION</addon.exo.es.embedded.version>" "pom.xml -not -wholename \"*/target/*\""
-	#	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.answers.version>$ADDON_ANSWERS_ORIGIN_VERSION</addon.exo.answers.version>" "<addon.exo.answers.version>$ADDON_ANSWERS_TARGET_VERSION</addon.exo.answers.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.app-center.version>$ADDON_APP_CENTER_ORIGIN_VERSION</addon.exo.app-center.version>" "<addon.exo.app-center.version>$ADDON_APP_CENTER_TARGET_VERSION</addon.exo.app-center.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.calendar.version>$ORIGIN_VERSION</addon.exo.calendar.version>" "<addon.exo.calendar.version>$TARGET_VERSION</addon.exo.calendar.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.cas-addon.version>$ADDON_CAS_ORIGIN_VERSION</addon.exo.cas-addon.version>" "<addon.exo.cas-addon.version>$ADDON_CAS_TARGET_VERSION</addon.exo.cas-addon.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.chat.version>$ADDON_CHAT_ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$ADDON_CHAT_TARGET_VERSION</addon.exo.chat.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.digital-workplace.version>$ADDON_DIGITAL_WORKPLACE_ORIGIN_VERSION</addon.exo.digital-workplace.version>" "<addon.exo.digital-workplace.version>$ADDON_DIGITAL_WORKPLACE_TARGET_VERSION</addon.exo.digital-workplace.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.ecms.version>$ORIGIN_VERSION</addon.exo.ecms.version>" "<addon.exo.ecms.version>$TARGET_VERSION</addon.exo.ecms.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -301,12 +249,9 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.jcr.version>$ORIGIN_VERSION</addon.exo.jcr.version>" "<addon.exo.jcr.version>$TARGET_VERSION</addon.exo.jcr.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.kudos.version>$ADDON_KUDOS_ORIGIN_VERSION</addon.exo.kudos.version>" "<addon.exo.kudos.version>$ADDON_KUDOS_TARGET_VERSION</addon.exo.kudos.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.layout-management.version>$ADDON_LAYOUT_MANAGEMENT_ORIGIN_VERSION</addon.exo.layout-management.version>" "<addon.exo.layout-management.version>$ADDON_LAYOUT_MANAGEMENT_TARGET_VERSION</addon.exo.layout-management.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.lecko.version>$ADDON_LECKO_ORIGIN_VERSION</addon.exo.lecko.version>" "<addon.exo.lecko.version>$ADDON_LECKO_TARGET_VERSION</addon.exo.lecko.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.onlyoffice.version>$ADDON_ONLYOFFICE_ORIGIN_VERSION</addon.exo.onlyffice.version>" "<addon.exo.onlyoffice.version>$ADDON_ONLYOFFICE_TARGET_VERSION</addon.exo.onlyoffice.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.openam-addon.version>$ADDON_OPENAM_ORIGIN_VERSION</addon.exo.openam-addon.version>" "<addon.exo.openam-addon.version>$ADDON_OPENAM_TARGET_VERSION</addon.exo.openam-addon.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.perk-store.version>$ADDON_PERK_STORE_ORIGIN_VERSION</addon.exo.perk-store.version>" "<addon.exo.perk-store.version>$ADDON_PERK_STORE_TARGET_VERSION</addon.exo.perk-store.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</addon.exo.push-notifications.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_ORIGIN_VERSION</addon.exo.remote-edit.version>" "<addon.exo.remote-edit.version>$ADDON_REMOTE_EDIT_TARGET_VERSION</addon.exo.remote-edit.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.saml2-addon.version>$ADDON_SAML2_ORIGIN_VERSION</addon.exo.saml2-addon.version>" "<addon.exo.saml2-addon.version>$ADDON_SAML2_TARGET_VERSION</addon.exo.saml2-addon.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.wallet.version>$ADDON_WALLET_ORIGIN_VERSION</addon.exo.wallet.version>" "<addon.exo.wallet.version>$ADDON_WALLET_TARGET_VERSION</addon.exo.wallet.version>" "pom.xml -not -wholename \"*/target/*\""
