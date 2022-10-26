@@ -35,7 +35,7 @@ jobs:
           case ${{ inputs.TARGET_SERVER }} in
             tribe)
               regexFilter='(task|maint|exo)((-|_)[0-9]{4,})+'
-              portalsite='dw'
+              portalSite='dw'
               ;;
 
             builders)
