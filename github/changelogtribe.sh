@@ -5,6 +5,7 @@
 
 # 2 max commit after released dev commit (generated commits swf release)
 MAX_RELEASE_COMMITS_FETCH_DEPTH=2
+MAX_COMMITS_LISTING_PER_MODULE=15
 
 declare -A tribeGithbIds=( [exo-swf]=NA )
 declare -A githubScore=( [exo-swf]=0 )
@@ -143,12 +144,11 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
       popd &>/dev/null
       continue
     fi
-    since=$(date -d $(echo $before_tag_name_suffix | grep -oP '[0-9]{8}'))
     echo "*** $item $before_tag_name -> $tag_name"
     commitDepth=$(git log --grep '\[exo-release\]' $tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$tag_name --oneline | wc -l)
     beforeCommitDepth=$(git log --grep '\[exo-release\]' $before_tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$before_tag_name --oneline | wc -l)
-    commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth --since="${since}" | xargs)
-    commitstats=$(git log --no-merges --numstat --pretty="%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth --since="${since}" | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}')
+    commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth --first-parent -n ${MAX_COMMITS_LISTING_PER_MODULE} | xargs)
+    commitstats=$(git log --no-merges --numstat --pretty="%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth --first-parent -n ${MAX_COMMITS_LISTING_PER_MODULE} | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}')
     subbody=""
     modulelink="https://github.com/$org/$item"
     [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
