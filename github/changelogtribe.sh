@@ -6,6 +6,7 @@
 # 2 max commit after released dev commit (generated commits swf release)
 MAX_RELEASE_COMMITS_FETCH_DEPTH=2
 MAX_COMMITS_LISTING_PER_MODULE=15
+MAX_REV_LIST_DEPTH=200
 
 declare -A tribeGithbIds=( [exo-swf]=NA )
 declare -A githubScore=( [exo-swf]=0 )
@@ -23,7 +24,7 @@ findSourceCommit() {
   )
 
   local MATCHING_COMMIT_SHA=""
-  for c in $(git rev-list origin/$ref ); do
+  for c in $(git rev-list origin/$ref -n ${MAX_REV_LIST_DEPTH} ); do
 	  if [[ $(git show --patch-with-raw "$c" | git patch-id | cut -d' ' -f1) == "${TARGET_COMMIT_PATCHID}" ]]; then 
       MATCHING_COMMIT_SHA=$c 
 	    break; 
