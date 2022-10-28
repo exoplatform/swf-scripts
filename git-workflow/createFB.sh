@@ -5,6 +5,7 @@
 BRANCH=security-fix
 ISSUE=TASK-58581
 ORIGIN_BRANCH=develop-exo # develop-meed or develop 
+DEFAULT_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.4.x-SNAPSHOT
 TARGET_VERSION=6.4.x-$BRANCH-SNAPSHOT
@@ -145,7 +146,7 @@ function repoCleanup() {
 	# git branch -D $TARGET_BRANCH
 	git remote update --prune
 	git reset --hard HEAD
-	git checkout $ORIGIN_BRANCH
+	[ ! -z "{ORIGIN_BRANCH:-}" ] && git checkout $ORIGIN_BRANCH || git checkout $DEFAULT_BRANCH
 	git reset --hard HEAD
 	git pull
 	printf "\e[1;33m# %s\e[m\n" "Testing if ${TARGET_BRANCH} branch doesn't already exists and reuse it ($repo_name) ..."
@@ -157,7 +158,7 @@ function repoCleanup() {
 	else
 		printf "\e[1;35m# %s\e[m\n" "WARNING : the ${TARGET_BRANCH} branch already exists so we will delete it (you have 5 seconds to cancel with CTRL+C) ($repo_name) ..."
 		# sleep 5
-		git checkout $ORIGIN_BRANCH
+		[ ! -z "{ORIGIN_BRANCH:-}" ] && git checkout $ORIGIN_BRANCH || git checkout $DEFAULT_BRANCH
 		git branch -D $TARGET_BRANCH
 		git checkout -b $TARGET_BRANCH
 		GIT_PUSH_PARAMS="--force"
@@ -298,7 +299,7 @@ function createFB() {
 		printf "\e[1;33m# %s\e[m\n" "Pushing commit to ${TARGET_BRANCH} ..."
 		git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream
 		# Return on dev branch only in real runs to easily debug during test phase
-		git checkout ${ORIGIN_BRANCH}
+		[ ! -z "{ORIGIN_BRANCH:-}" ] && git checkout $ORIGIN_BRANCH || git checkout $DEFAULT_BRANCH
 	else
 		printf "\e[1;35m# %s\e[m\n" "Push is disabled (use -p to activate it) ..."
 		printf "\e[1;33m# %s\e[m\n" "Following command would have been executed : |git push $GIT_PUSH_PARAMS origin $TARGET_BRANCH --set-upstream|"
