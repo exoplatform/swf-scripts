@@ -17,6 +17,9 @@ on:
         required: true
       SERVER_GAMGH_CONNECTOR_REST_URL:
         required: true
+permissions:
+  pull-requests: write
+        
 env:
   message: ${{ github.event.pull_request.title }}
   state: ${{ github.event.pull_request.state }}
@@ -126,3 +129,9 @@ jobs:
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
           SERVER_TASK_REST_PREFIXE_URL: ${{ secrets.SERVER_TASK_REST_PREFIXE_URL }}
           SERVER_GAMGH_CONNECTOR_REST_URL: ${{ secrets.SERVER_GAMGH_CONNECTOR_REST_URL }}
+  assign-author:
+    name: Assign Pull Request Author
+    runs-on: ubuntu-latest
+    if: ${{ github.event.action == 'opened' }}
+    steps:
+      - uses: toshimaru/auto-author-assign@v1.6.1         
