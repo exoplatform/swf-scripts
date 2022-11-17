@@ -34,7 +34,7 @@ sudo docker run --rm -v ${PWD}/exo-android:/src \
     -e APPALOOSA_EXO_API_TOKEN=${APPALOOSA_EXO_API_TOKEN:-} \
     ${IMAGE_NAME} android ${OPERATION} || [ "${OPERATION}" = "store" ]
 if [ "${OPERATION}" = "store" ]; then
-    aabfile=$(find exo-android/app/build/outputs/bundle/store/Release -maxdepth 1 -name *.aab | head -n 1)
+    aabfile=$(find exo-android/app/build/outputs/bundle/store/release -maxdepth 1 -name *.aab | head -n 1)
     curl -T ${aabfile} "${STORAGE_URL}" # May contain credentials to be hidden by Jenkins
     echo "AAB has been released! You can download it from https://storage.exoplatform.org/private/android/$(basename ${aabfile})"
 fi
