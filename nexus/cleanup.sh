@@ -14,11 +14,31 @@ do_delete_curl() {
     curl -u $NEXUS_ADMIN:$NEXUS_PASSWORD -X "DELETE" -w "%{http_code}" "$NEXUS_URL/$1"
 }
 
+do_delete_artifact_version() {
+    module_name="$1"
+    version_preffix="$2"
+    version_suffix="$3"
+    storage_dir="$4"
+    artifact_dir="$5"
+    echo "$module_name:$version_preffix-$version_suffix"
+    find "$storage_dir/$artifact_dir" -type d -name $version_preffix-$version_suffix | while read dirname; do
+    relativePath=$(echo $dirname | sed "s|$storage_dir/$artifact_dir|$storage_dir/./$artifact_dir|g")
+    relativeAttributesPath=$(echo $dirname | sed "s|$storage_dir/$artifact_dir|$storage_dir/$NEXUS_ATTRIBUTES_FOLDER/./$artifact_dir|g")
+    attributesPath=$(echo $dirname | sed "s|$storage_dir/$artifact_dir|$storage_dir/$NEXUS_ATTRIBUTES_FOLDER/$artifact_dir|g")
+    rsync -avPR "$relativePath" $storage_dir/$NEXUS_TRASH_FOLDER/
+    rsync -avPR "$relativeAttributesPath" $storage_dir/$NEXUS_TRASH_FOLDER/$NEXUS_ATTRIBUTES_FOLDER/
+    rm -rvf $dirname 
+    rm -rvf $attributesPath
+    done 
+}
+
 NB_RELEASES_TO_KEEP=0 # Nothing in month
 CURRENT_MONTH="11"
 CURRENT_YEAR=2022
 BASE_PATH=/srv/nexus/storage
 BASE_PATH_HOSTED=$BASE_PATH/hosted
+NEXUS_ATTRIBUTES_FOLDER=".nexus/attributes"
+NEXUS_TRASH_FOLDER=".nexus/trash"
 
 ######################
 ##Modules
@@ -94,104 +114,63 @@ for release in ${releases_to_be_dropped[@]}; do
     echo "==========================================================================================="
     echo " ($counter/${#releases_to_be_dropped[@]}) Dropping Release:  $PLATFORM_PRIVATE_DISTRIBUTIONS-$rel_suffix..."
     echo "==========================================================================================="
-    echo "maven-depmgt-pom:$MAVEN_DEPMGT_POM-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/maven-depmgt-pom -type d -name $MAVEN_DEPMGT_POM-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "gatein-wci:$GATEIN_WCI-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/wci -type d -name $GATEIN_WCI-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "kernel:$KERNEL-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/kernel -type d -name $KERNEL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "core:$CORE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/core -type d -name $CORE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "ws:$WS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/ws -type d -name $WS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "gatein-pc:$GATEIN_PC-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/pc -type d -name $GATEIN_PC-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "gatein-sso:$GATEIN_SSO-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/sso -type d -name $GATEIN_SSO-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "gatein-portal:$GATEIN_PORTAL-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/gatein/portal -type d -name $GATEIN_PORTAL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "platform-ui:$PLATFORM_UI-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/platform-ui -type d -name $PLATFORM_UI-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "commons:$COMMONS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/commons -type d -name $COMMONS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "social:$SOCIAL-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/social -type d -name $SOCIAL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "gamification:$GAMIFICATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification -type d -name $GAMIFICATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "gamification-github:$GAMIFICATION_GITHUB-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/gamification-github -type d -name $GAMIFICATION_GITHUB-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "kudos:$KUDOS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/kudos -type d -name $KUDOS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "perk-store:$PERK_STORE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/perk-store -type d -name $PERK_STORE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "wallet:$WALLET-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/wallet -type d -name $WALLET-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "app-center:$APP_CENTER-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/app-center -type d -name $APP_CENTER-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "push-notifications:$PUSH_NOTIFICATIONS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/push-notifications -type d -name $PUSH_NOTIFICATIONS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "addons-manager:$ADDONS_MANAGER-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/platform/addons-manager -type d -name $ADDONS_MANAGER-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "meeds:$MEEDS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/io/meeds/distribution -type d -name $MEEDS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "jcr:$JCR-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/jcr -type d -name $JCR-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "ecms:$ECMS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/ecms -type d -name $ECMS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "agenda:$AGENDA-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/agenda -type d -name $AGENDA-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "chat-application:$CHAT_APPLICATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/chat -type d -name $CHAT_APPLICATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "data-upgrade:$DATA_UPGRADE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/upgrade -type d -name $DATA_UPGRADE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "digital-workplace:$DIGITAL_WORKPLACE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/digital-workplace -type d -name $DIGITAL_WORKPLACE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "layout-management:$LAYOUT_MANAGEMENT-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/layout-management -type d -name $LAYOUT_MANAGEMENT-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "news:$NEWS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/news -type d -name $NEWS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "onlyoffice:$ONLYOFFICE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/onlyoffice -type d -name $ONLYOFFICE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "saml2-addon:$SAML2_ADDON-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/sso/saml2-addon-* -type d -name $SAML2_ADDON-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "task:$TASK-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/task -type d -name $TASK-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "web-conferencing:$WEB_CONFERENCING-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/web-conferencing -type d -name $WEB_CONFERENCING-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "jitsi:$JITSI-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/jitsi -type d -name $JITSI-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "jitsi-call:$JITSI_CALL-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/jitsi-call -type d -name $JITSI_CALL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "analytics:$ANALYTICS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/analytics -type d -name $ANALYTICS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "multifactor-authentication:$MULTIFACTOR_AUTHENTICATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/multifactor-authentication -type d -name $MULTIFACTOR_AUTHENTICATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "automatic-translation:$AUTOMATIC_TRANSLATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/automatic-translation -type d -name $AUTOMATIC_TRANSLATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "documents:$DOCUMENTS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/documents -type d -name $DOCUMENTS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "processes:$PROCESSES-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/processes -type d -name $PROCESSES-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "poll:$POLL-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/poll -type d -name $POLL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "mail-integration:$MAIL_INTEGRATION-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/mail-integration -type d -name $MAIL_INTEGRATION-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "notes:$NOTES-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-releases/org/exoplatform/addons/notes -type d -name $NOTES-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "agenda-connectors:$AGENDA_CONNECTORS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/agenda-connectors -type d -name $AGENDA_CONNECTORS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "dlp:$DLP-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/dlp -type d -name $DLP-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "cloud-drive-connectors:$CLOUD_DRIVE_CONNECTORS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/cloud-drive-connectors -type d -name $CLOUD_DRIVE_CONNECTORS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "anti-malware:$ANTI_MALWARE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/anti-malware -type d -name $ANTI_MALWARE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "anti-bruteforce:$ANTI_BRUTEFORCE-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/anti-bruteforce -type d -name $ANTI_BRUTEFORCE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "platform-private-distributions:$PLATFORM_PRIVATE_DISTRIBUTIONS-$rel_suffix"
-    find $BASE_PATH_HOSTED/exo-private-releases/com/exoplatform/platform/distributions -type d -name $PLATFORM_PRIVATE_DISTRIBUTIONS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
-    echo "community-website:$COMMUNITY_WEBSITE-$rel_suffix"
-    find $BASE_PATH_HOSTED/cp-cwi-releases/org/exoplatform/community -type d -name $COMMUNITY_WEBSITE-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    # Meeds Core (exo-releases)
+    do_delete_artifact_version "maven-depmgt-pom" $MAVEN_DEPMGT_POM $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/maven-depmgt-pom
+    do_delete_artifact_version "kernel" $KERNEL $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/kernel
+    do_delete_artifact_version "core" $CORE $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/core
+    do_delete_artifact_version "ws" $WS $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/ws
+    do_delete_artifact_version "gatein-pc" $GATEIN_PC $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/gatein/pc
+    do_delete_artifact_version "gatein-wci" $GATEIN_WCI $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/gatein/wci
+    do_delete_artifact_version "gatein-sso" $GATEIN_SSO $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/gatein/sso
+    do_delete_artifact_version "gatein-portal" $GATEIN_PORTAL $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/gatein/portal
+    do_delete_artifact_version "gatein-portal" $GATEIN_PORTAL $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/gatein/portal
+    do_delete_artifact_version "platform-ui" $PLATFORM_UI $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/platform-ui
+    do_delete_artifact_version "commons" $COMMONS $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/commons
+    do_delete_artifact_version "social" $SOCIAL $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/social
+    # Meeds Addons (exo-addons-releases)
+    do_delete_artifact_version "gamification" $GAMIFICATION $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/gamification
+    do_delete_artifact_version "gamification-github" $GAMIFICATION_GITHUB $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/gamification-github
+    do_delete_artifact_version "kudos" $KUDOS $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/kudos
+    do_delete_artifact_version "perk-store" $PERK_STORE $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/perk-store
+    do_delete_artifact_version "wallet" $WALLET $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/wallet
+    do_delete_artifact_version "app-center" $APP_CENTER $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/app-center
+    do_delete_artifact_version "push-notifications" $PUSH_NOTIFICATIONS $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/push-notifications
+    do_delete_artifact_version "poll" $POLL $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/poll
+    do_delete_artifact_version "task" $TASK $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/task
+    do_delete_artifact_version "analytics" $ANALYTICS $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/analytics
+    # Meeds Addons (exo-releases)
+    do_delete_artifact_version "notes" $NOTES $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/addons/notes
+    do_delete_artifact_version "addons-manager" $ADDONS_MANAGER $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/platform/addons-manager
+    # Meeds Packaging (exo-releases)
+    do_delete_artifact_version "meeds" $MEEDS $rel_suffix $BASE_PATH_HOSTED/exo-releases io/meeds/distribution
+    # eXo Addons (exo-addons-releases)
+    do_delete_artifact_version "agenda" $AGENDA $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/agenda
+    do_delete_artifact_version "chat-application" $CHAT_APPLICATION $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/chat
+    do_delete_artifact_version "data-upgrade" $DATA_UPGRADE $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/upgrade
+    do_delete_artifact_version "digital-workplace" $DIGITAL_WORKPLACE $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/digital-workplace
+    do_delete_artifact_version "layout-management" $LAYOUT_MANAGEMENT $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/layout-management
+    do_delete_artifact_version "news" $NEWS $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/news
+    do_delete_artifact_version "onlyoffice" $ONLYOFFICE $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/onlyoffice
+    do_delete_artifact_version "saml2-addon" $SAML2_ADDON $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/sso/saml2-addon-*
+    do_delete_artifact_version "web-conferencing" $WEB_CONFERENCING $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/web-conferencing
+    do_delete_artifact_version "jitsi" $JITSI $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/jitsi
+    do_delete_artifact_version "multifactor-authentication" $MULTIFACTOR_AUTHENTICATION $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/multifactor-authentication
+    do_delete_artifact_version "automatic-translation" $AUTOMATIC_TRANSLATION $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/automatic-translation
+    do_delete_artifact_version "documents" $DOCUMENTS $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/documents
+    do_delete_artifact_version "processes" $PROCESSES $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/processes
+    do_delete_artifact_version "mail-integration" $MAIL_INTEGRATION $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/mail-integration
+    do_delete_artifact_version "agenda-connectors" $AGENDA_CONNECTORS $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/agenda-connectors
+    do_delete_artifact_version "dlp" $DLP $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/dlp
+    do_delete_artifact_version "cloud-drive-connectors" $CLOUD_DRIVE_CONNECTORS $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/cloud-drive-connectors
+    do_delete_artifact_version "anti-malware" $ANTI_MALWARE $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/anti-malware
+    do_delete_artifact_version "anti-bruteforce" $ANTI_BRUTEFORCE $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/anti-bruteforce
+    # eXo Addons (exo-releases)
+    do_delete_artifact_version "jcr" $JCR $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/jcr
+    do_delete_artifact_version "ecms" $ECMS $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/ecms
+    # eXo Packaging (exo-private-releases)    
+    do_delete_artifact_version "platform-private-distributions" $PLATFORM_PRIVATE_DISTRIBUTIONS $rel_suffix $BASE_PATH_HOSTED/exo-private-releases/com/exoplatform/platform/distributions
+    # eXo CWI (cp-cwi-releases)    
+    do_delete_artifact_version "community-website" $COMMUNITY_WEBSITE $rel_suffix $BASE_PATH_HOSTED/cp-cwi-releases org/exoplatform/community
     ((counter++))
 done
 
