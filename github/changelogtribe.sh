@@ -194,7 +194,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         githubIssues=$(echo  $message | grep -oPi 'Meeds-io/meeds#[0-9]+' | sort -u | xargs)
         githubMIPSIssues=$(echo  $message | grep -oPi 'Meeds-io/MIPs#[0-9]+' | sort -u | xargs)
         transormedMessage="$message"
-        transormedMessage=$(echo $transormedMessage | sed -e "s|feat:|✨|gi" -e "s|fix:|🐛|gi" -e "s|Merge Translations|🏁 Merge Translations|g")
+        transormedMessage=$(echo $transormedMessage | sed -e "s|feat:|<span title=\"Feature\">✨</span>|gi" -e "s|fix:|<span title=\"Fix\">🐛</span>|gi" -e "s|Merge Translations|<span title=\"i18n\">🏁</span> Merge Translations|g")
         for buildersTask in $buildersTasks; do 
           buildersTaskID=$(echo $buildersTask | sed -E 's/(BUILDER|MEED)(S)?-//gi')
           transormedMessage=$(echo $transormedMessage | sed "s|$buildersTask|<a href=\"https://builders.meeds.io/portal/meeds/tasks/taskDetail/$buildersTaskID\">$buildersTask</a>|g")
@@ -214,11 +214,11 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         sourceCommitID=$(findSourceCommit $commitId)
         verificationCheck=""
         if isCommitVerified $commitId $org/$item; then 
-          verificationCheck="✅"
+          verificationCheck="<span title=\"Verified commit\">✅</span>"
         fi
         if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then 
           sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Cherry-picked source commit\">🍒</a> $transormedMessage <b>$authorLink</b> $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Source commit\">🍒</a> $transormedMessage <b>$authorLink</b> $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         else
           elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b> $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         fi
