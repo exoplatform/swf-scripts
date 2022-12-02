@@ -15,7 +15,7 @@ do_delete_curl() {
 }
 
 do_empty_trash() {
-    do_delete_curl "service/local/wastebasket"    
+    do_delete_curl "service/local/wastebasket"
 }
 
 do_delete_artifact_version() {
@@ -26,14 +26,14 @@ do_delete_artifact_version() {
     artifact_dir="$5"
     echo "$module_name:$version_preffix-$version_suffix"
     find "$storage_dir/$artifact_dir" -type d -name $version_preffix-$version_suffix | while read dirname; do
-    relativePath=$(echo $dirname | sed "s|$storage_dir/$artifact_dir|$storage_dir/./$artifact_dir|g")
-    relativeAttributesPath=$(echo $dirname | sed "s|$storage_dir/$artifact_dir|$storage_dir/$NEXUS_ATTRIBUTES_FOLDER/./$artifact_dir|g")
-    attributesPath=$(echo $dirname | sed "s|$storage_dir/$artifact_dir|$storage_dir/$NEXUS_ATTRIBUTES_FOLDER/$artifact_dir|g")
-    rsync -avPR "$relativePath" $storage_dir/$NEXUS_TRASH_FOLDER/
-    rsync -avPR "$relativeAttributesPath" $storage_dir/$NEXUS_TRASH_FOLDER/$NEXUS_ATTRIBUTES_FOLDER/
-    rm -rvf $dirname 
-    rm -rvf $attributesPath
-    done 
+        relativePath=$(echo $dirname | sed "s|$storage_dir/$artifact_dir|$storage_dir/./$artifact_dir|g")
+        relativeAttributesPath=$(echo $dirname | sed "s|$storage_dir/$artifact_dir|$storage_dir/$NEXUS_ATTRIBUTES_FOLDER/./$artifact_dir|g")
+        attributesPath=$(echo $dirname | sed "s|$storage_dir/$artifact_dir|$storage_dir/$NEXUS_ATTRIBUTES_FOLDER/$artifact_dir|g")
+        rsync -avPR "$relativePath" $storage_dir/$NEXUS_TRASH_FOLDER/
+        rsync -avPR "$relativeAttributesPath" $storage_dir/$NEXUS_TRASH_FOLDER/$NEXUS_ATTRIBUTES_FOLDER/
+        rm -rvf $dirname
+        rm -rvf $attributesPath
+    done
 }
 
 NB_RELEASES_TO_KEEP=0 # Nothing in month
@@ -100,7 +100,7 @@ COMMUNITY_WEBSITE=6.4.0
 # Rest API Nexus repositories list
 NEXUS_REPOSITORIES_LIST="exo-addons-releases exo-private-releases exo-releases cp-cwi-releases meeds-releases"
 
-# Fetch releases 
+# Fetch releases
 releases=($(cat "$BASE_PATH_HOSTED/exo-releases/org/exoplatform/maven-depmgt-pom/maven-metadata.xml" | grep -oP $MAVEN_DEPMGT_POM-${CURRENT_YEAR}${CURRENT_MONTH}[0-9][0-9] | sort --version-sort | uniq | xargs))
 echo "Available releases are:"
 echo ${releases[@]}
@@ -171,14 +171,14 @@ for release in ${releases_to_be_dropped[@]}; do
     # eXo Addons (exo-releases)
     do_delete_artifact_version "jcr" $JCR $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/jcr
     do_delete_artifact_version "ecms" $ECMS $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/ecms
-    # eXo Packaging (exo-private-releases)    
+    # eXo Packaging (exo-private-releases)
     do_delete_artifact_version "platform-private-distributions" $PLATFORM_PRIVATE_DISTRIBUTIONS $rel_suffix $BASE_PATH_HOSTED/exo-private-releases/com/exoplatform/platform/distributions
-    # eXo CWI (cp-cwi-releases)    
+    # eXo CWI (cp-cwi-releases)
     do_delete_artifact_version "community-website" $COMMUNITY_WEBSITE $rel_suffix $BASE_PATH_HOSTED/cp-cwi-releases org/exoplatform/community
     ((counter++))
 done
 
-# Rest API Call 
+# Rest API Call
 for repository in ${NEXUS_REPOSITORIES_LIST}; do
     do_delete_curl "service/local/metadata/repositories/${repository}/content"
     do_delete_curl "service/local/data_index/repositories/${repository}/content"
