@@ -112,7 +112,7 @@ jobs:
               fi
             elif [ "${{ github.event.review.state }}" = "commented" ] && [[ "${{ github.event.review.body }}" =~ $commentMentionFilterRegex ]]; then
               mentionEventLink="<a href=\"$reviewEventLink\">mentioned</a>"
-              mentionedGithubUsers=$(echo ${{ github.event.review.body }} | grep -oP $commentMentionFilterRegex | tr -d '@' | xargs)
+              mentionedGithubUsers=$(echo "${{ github.event.review.body }}" | grep -oP "$commentMentionFilterRegex" | tr -d '@' | xargs)
               mentionedServerUsers=""
               for mentionedGithubUser in ${mentionedGithubUsers}; do 
                 response=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${mentionedGithubUser}" || echo "")
