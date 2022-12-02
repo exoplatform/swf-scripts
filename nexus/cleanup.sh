@@ -14,6 +14,10 @@ do_delete_curl() {
     curl -u $NEXUS_ADMIN:$NEXUS_PASSWORD -X "DELETE" -w "%{http_code}" "$NEXUS_URL/$1"
 }
 
+do_empty_trash() {
+    do_delete_curl "service/local/wastebasket"    
+}
+
 do_delete_artifact_version() {
     module_name="$1"
     version_preffix="$2"
@@ -179,3 +183,6 @@ for repository in ${NEXUS_REPOSITORIES_LIST}; do
     do_delete_curl "service/local/metadata/repositories/${repository}/content"
     do_delete_curl "service/local/data_index/repositories/${repository}/content"
 done
+
+# Empty Trash
+do_empty_trash
