@@ -72,7 +72,16 @@ jobs:
             elif [ "${{ github.event.pull_request.merged }}" = "true" ]; then
               mergedCommitlink="<a href=\"https://github.com/${repo_name}/commit/${{ github.event.pull_request.merge_commit_sha }}\">merged</a>"
               base_branch_link="<a href=\"https://github.com/${repo_name}/tree/${base_branch_name}\">${base_branch_name}</a>"
-              msg="🌟 $link has been ${mergedCommitlink} into ${base_branch_link}."
+              mergerGithubUser="${{ github.event.pull_request.merged_by.login }}"
+              mergerServerUser=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${mergerGithubUser}" || echo "")
+              mergerServerProfile=$(curl -s -f -L -u "${SERVER_USERNAME}:${SERVER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/users/${mergerServerUser}" 2>/dev/null || echo "")
+              mergerServerFullName="$(echo ${mergerServerProfile} | jq .fullname | tr -d '\"' || echo "")"
+              mergerServerLink="<a target=\"_self\" rel=\"noopener\" href=\"/portal/${portalSite}/profile/${mergerServerUser}\" class=\"user-suggester\">${mergerServerFullName}</a>"
+              if [ -z "${mergerServerFullName:-}" ]; then 
+                msg="🌟 $link has been ${mergedCommitlink} into ${base_branch_link}."
+              else
+                msg="🌟 $link has been ${mergedCommitlink} into ${base_branch_link} by ${mergerServerLink}."
+              fi
             else
               msg="ℹ️ $link has been ${{ github.event.action }}."
             fi
