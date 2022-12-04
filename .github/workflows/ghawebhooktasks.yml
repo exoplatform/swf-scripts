@@ -26,7 +26,8 @@ env:
   pull_number: ${{ github.event.pull_request.number }}
   requested_reviewer: ${{ github.event.requested_reviewer.login }}
   creator: ${{ github.event.pull_request.user.login }}
-  repo_name: ${{ github.event.repository.full_name }}
+  full_repo_name: ${{ github.event.repository.full_name }}
+  repo_name: ${{ github.event.repository.name }}
   base_branch_name: ${{ github.event.pull_request.base.ref }}
 jobs:
   check_tasks:
@@ -58,7 +59,7 @@ jobs:
             exit 0
           fi
           echo "OK Task(s) found! Starting notifications..."
-          link="PR <a href=\"https://github.com/${repo_name}/pull/${pull_number}\">${repo_name}#${pull_number}</a>"
+          link="PR <a href=\"https://github.com/${full_repo_name}/pull/${pull_number}\">${full_repo_name}#${pull_number}</a>"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             if [ "${{ github.event.action }}" = "review_requested" ]; then
               serverUser=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${requested_reviewer}" || echo "")
@@ -70,8 +71,8 @@ jobs:
                 exit 0
               fi
             elif [ "${{ github.event.pull_request.merged }}" = "true" ]; then
-              mergedCommitlink="<a href=\"https://github.com/${repo_name}/commit/${{ github.event.pull_request.merge_commit_sha }}\">merged</a>"
-              base_branch_link="<a href=\"https://github.com/${repo_name}/tree/${base_branch_name}\">${base_branch_name}</a>"
+              mergedCommitlink="<a href=\"https://github.com/${full_repo_name}/commit/${{ github.event.pull_request.merge_commit_sha }}\">merged</a>"
+              base_branch_link="<a href=\"https://github.com/${full_repo_name}/tree/${base_branch_name}\">${base_branch_name}</a>"
               mergerGithubUser="${{ github.event.pull_request.merged_by.login }}"
               mergerServerUser=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${mergerGithubUser}" || echo "")
               mergerServerProfile=$(curl -s -f -L -u "${SERVER_USERNAME}:${SERVER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/users/${mergerServerUser}" 2>/dev/null || echo "")
@@ -81,6 +82,12 @@ jobs:
                 msg="🌟 $link has been ${mergedCommitlink} into ${base_branch_link}."
               else
                 msg="🌟 $link has been ${mergedCommitlink} into ${base_branch_link} by ${mergerServerLink}."
+              fi
+            elif [ "${{ github.event.action }}" = "opened" ]; then
+              if gh api -H "Accept: application/vnd.github+json" /repos/${full_repo_name}/hooks 2>/dev/null | grep -q 'ci.exoplatform.org'; then 
+                msg="ℹ️ $link has been ${{ github.event.action }}. Build status: <img src=\"https://ci.exoplatform.org/buildStatus/icon?job=pr/${repo_name}-pr-${pull_number}-ci&style=plastic\" title=\"Jenkins CI Status\">"                
+              else
+                msg="ℹ️ $link has been ${{ github.event.action }}."
               fi
             else
               msg="ℹ️ $link has been ${{ github.event.action }}."
@@ -138,6 +145,7 @@ jobs:
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
           SERVER_TASK_REST_PREFIXE_URL: ${{ secrets.SERVER_TASK_REST_PREFIXE_URL }}
           SERVER_GAMGH_CONNECTOR_REST_URL: ${{ secrets.SERVER_GAMGH_CONNECTOR_REST_URL }}
+          GH_TOKEN: ${{ github.token }}
   assign-author:
     name: Assign Pull Request Author
     runs-on: ubuntu-latest
