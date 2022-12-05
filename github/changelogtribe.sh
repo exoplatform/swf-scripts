@@ -8,8 +8,39 @@ MAX_RELEASE_COMMITS_FETCH_DEPTH=2
 MAX_COMMITS_LISTING_PER_MODULE=15
 MAX_REV_LIST_DEPTH=200
 
+JS_DELIVR_URL="https://cdn.jsdelivr.net/gh/devicons/devicon@master/icons"
+
 declare -A tribeGithbIds=( [exo-swf]=NA )
 declare -A githubScore=( [exo-swf]=0 )
+declare -A fileExtensionsMapping=( [java]=java [gtmpl]=groovy [groovy]=groovy [vue]=vuejs [js]=nodejs [css]=css3 [less]=less [sh]=bash)
+
+getJSDELIVRURL() {
+  lang=${1:-}
+  [ -z "${lang}" ] && return
+  echo "${JS_DELIVR_URL}/${lang}/${lang}-plain-wordmark.svg" 
+}
+
+getCommitProgrammingLanguages() {
+  commitID=${1:-HEAD}
+  fileExtensions=$(git diff-tree --no-commit-id --name-only -r $commitID | xargs -L 1  basename | grep '.' | cut -d '.' -f2 | uniq | xargs)
+  [ -z "${fileExtensions}" ] && return
+  languages=""
+  for fileExt in ${fileExtensions}; do 
+    [ -z "${languages}" ] && languages=${fileExtensionsMapping[$fileExt]:-} || languages="${languages} ${fileExtensionsMapping[$fileExt]:-}"
+  done
+  echo ${languages}
+}
+
+getCommitLangURLs() {
+  langs=$(getCommitProgrammingLanguages $1)
+  languagesURLs=""
+  for lang in $langs; do
+    langURL=$(getJSDELIVRURL $lang) 
+    langHTML="<img src=\"${langURL}\" title=\"${lang^}\" style=\"height:20px;\">"
+    [ -z "${languagesURLs}" ] && languagesURLs="$langHTML" || languagesURLs="${languagesURLs} $langHTML"
+  done
+  echo $languagesURLs
+}
 
 isSameCommit() {
   [ "$(git rev-parse $1)" = "$(git rev-parse $2)" ]
@@ -216,11 +247,12 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         if isCommitVerified $commitId $org/$item; then 
           verificationCheck="<span title=\"Verified commit\">✅</span>"
         fi
+        commitsLangURLs=$(getCommitLangURLs $commitId)
         if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then 
           sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Source commit\">🍒</a> $transormedMessage <b>$authorLink</b> $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Source commit\">🍒</a> $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         else
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b> $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
         fi
         echo "$commitLink $message *** $author -- $authorTribeID"
         echo "	($fomattedCommitId) $message --- $author" >> $changelogfile
