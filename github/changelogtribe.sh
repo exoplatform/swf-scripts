@@ -12,7 +12,7 @@ JS_DELIVR_URL="https://cdn.jsdelivr.net/gh/devicons/devicon@master/icons"
 
 declare -A tribeGithbIds=( [exo-swf]=NA )
 declare -A githubScore=( [exo-swf]=0 )
-declare -A fileExtensionsMapping=( [java]=java [gtmpl]=groovy [groovy]=groovy [vue]=vuejs [js]=nodejs [css]=css3 [less]=less [sh]=bash)
+declare -A fileExtensionsMapping=( [java]=java [jsp]=java [gtmpl]=groovy [groovy]=groovy [vue]=vuejs [js]=javascript [css]=css3 [less]=less [sh]=bash)
 
 getJSDELIVRURL() {
   lang=${1:-}
