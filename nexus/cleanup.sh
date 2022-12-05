@@ -58,6 +58,7 @@ ONLYOFFICE=2.4.0
 SAML2_ADDON=3.4.0
 WEB_CONFERENCING=2.4.0
 JITSI=1.3.0
+JITSI_CALL=1.3.0
 AUTOMATIC_TRANSLATION=1.1.0
 DOCUMENTS=1.1.0
 PROCESSES=1.1.0
@@ -159,6 +160,8 @@ for release in ${releases_to_be_dropped[@]}; do
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/web-conferencing -type d -name $WEB_CONFERENCING-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "jitsi:$JITSI-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/jitsi -type d -name $JITSI-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
+    echo "jitsi-call:$JITSI_CALL-$rel_suffix"
+    find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/jitsi-call -type d -name $JITSI_CALL-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "analytics:$ANALYTICS-$rel_suffix"
     find $BASE_PATH_HOSTED/exo-addons-releases/org/exoplatform/addons/analytics -type d -name $ANALYTICS-$rel_suffix -exec rm -rvf {} \; 2>/dev/null || true
     echo "multifactor-authentication:$MULTIFACTOR_AUTHENTICATION-$rel_suffix"
