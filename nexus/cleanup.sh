@@ -158,6 +158,7 @@ for release in ${releases_to_be_dropped[@]}; do
     do_delete_artifact_version "saml2-addon" $SAML2_ADDON $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/sso/saml2-addon-*
     do_delete_artifact_version "web-conferencing" $WEB_CONFERENCING $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/web-conferencing
     do_delete_artifact_version "jitsi" $JITSI $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/jitsi
+    do_delete_artifact_version "jitsi-call" $JITSI_CALL $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/jitsi-call
     do_delete_artifact_version "multifactor-authentication" $MULTIFACTOR_AUTHENTICATION $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/multifactor-authentication
     do_delete_artifact_version "automatic-translation" $AUTOMATIC_TRANSLATION $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/automatic-translation
     do_delete_artifact_version "documents" $DOCUMENTS $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/documents
