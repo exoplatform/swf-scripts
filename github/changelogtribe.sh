@@ -17,7 +17,7 @@ declare -A fileExtensionsMapping=( [java]=java [gtmpl]=groovy [groovy]=groovy [v
 getJSDELIVRURL() {
   lang=${1:-}
   [ -z "${lang}" ] && return
-  echo "${JS_DELIVR_URL}/${lang}/${lang}-plain-wordmark.svg" 
+  [ "${lang}" = "less" ] && echo "${JS_DELIVR_URL}/${lang}/${lang}-plain-wordmark.svg" || echo "${JS_DELIVR_URL}/${lang}/${lang}-plain.svg" 
 }
 
 getCommitProgrammingLanguages() {
@@ -36,7 +36,7 @@ getCommitLangURLs() {
   languagesURLs=""
   for lang in $langs; do
     langURL=$(getJSDELIVRURL $lang) 
-    langHTML="<img src=\"${langURL}\" title=\"${lang^}\" style=\"height:20px;\">"
+    langHTML="<img src=\"${langURL}\" title=\"${lang^}\" style=\"height:20px; margin-bottom: -10px;\">"
     [ -z "${languagesURLs}" ] && languagesURLs="$langHTML" || languagesURLs="${languagesURLs} $langHTML"
   done
   echo $languagesURLs
