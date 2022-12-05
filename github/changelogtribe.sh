@@ -36,7 +36,7 @@ getCommitLangURLs() {
   languagesURLs=""
   for lang in $langs; do
     langURL=$(getJSDELIVRURL $lang) 
-    langHTML="<img src=\"${langURL}\" title=\"${lang^}\" style=\"height:20px; margin-bottom: -10px;\">"
+    langHTML="<img src=\"${langURL}\" title=\"${lang^}\" style=\"height:20px; vertical-align: middle;\">"
     [ -z "${languagesURLs}" ] && languagesURLs="$langHTML" || languagesURLs="${languagesURLs} $langHTML"
   done
   echo $languagesURLs
