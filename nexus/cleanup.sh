@@ -34,6 +34,7 @@ do_delete_artifact_version() {
         rm -rvf $dirname
         rm -rvf $attributesPath
     done
+    chown 200:200 -R $storage_dir/$NEXUS_TRASH_FOLDER/$NEXUS_ATTRIBUTES_FOLDER/
 }
 
 NB_RELEASES_TO_KEEP=0 # Nothing in month
