@@ -173,7 +173,7 @@ for release in ${releases_to_be_dropped[@]}; do
     do_delete_artifact_version "jcr" $JCR $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/jcr
     do_delete_artifact_version "ecms" $ECMS $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/ecms
     # eXo Packaging (exo-private-releases)
-    do_delete_artifact_version "platform-private-distributions" $PLATFORM_PRIVATE_DISTRIBUTIONS $rel_suffix $BASE_PATH_HOSTED/exo-private-releases/com/exoplatform/platform/distributions
+    do_delete_artifact_version "platform-private-distributions" $PLATFORM_PRIVATE_DISTRIBUTIONS $rel_suffix $BASE_PATH_HOSTED/exo-private-releases com/exoplatform/platform/distributions
     # eXo CWI (cp-cwi-releases)
     do_delete_artifact_version "community-website" $COMMUNITY_WEBSITE $rel_suffix $BASE_PATH_HOSTED/cp-cwi-releases org/exoplatform/community
     ((counter++))
