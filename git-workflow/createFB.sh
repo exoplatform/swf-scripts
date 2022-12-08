@@ -2,9 +2,9 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=security-fix
-ISSUE=TASK-58581
-ORIGIN_BRANCH=develop-exo # develop-meed or develop 
+BRANCH=devx
+ISSUE=TASK-60582
+ORIGIN_BRANCH=develop # develop-meed or develop 
 DEFAULT_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.4.x-SNAPSHOT
@@ -311,54 +311,54 @@ function createFB() {
 pushd ${SWF_FB_REPOS}
 
 #Meeds Projects
-createFB gatein-wci
-createFB kernel
-createFB core
-createFB ws
-createFB gatein-pc
-createFB gatein-sso
-createFB gatein-portal
-createFB maven-depmgt-pom
-createFB platform-ui
-createFB commons
-createFB social
-createFB addons-manager
-createFB app-center
-createFB gamification
-createFB kudos
-createFB perk-store
-createFB wallet
-createFB meeds
-createFB push-notifications
-createFB notes
-createFB analytics
-createFB task
-createFB poll
-createFB gamification-github
+# createFB gatein-wci
+# createFB kernel
+# createFB core
+# createFB ws
+# createFB gatein-pc
+# createFB gatein-sso
+# createFB gatein-portal
+# createFB maven-depmgt-pom
+# createFB platform-ui
+# createFB commons
+# createFB social
+# createFB addons-manager
+# createFB app-center
+# createFB gamification
+# createFB kudos
+# createFB perk-store
+# createFB wallet
+# createFB meeds
+# createFB push-notifications
+# createFB notes
+# createFB analytics
+# createFB task
+# createFB poll
+# createFB gamification-github
 
 # Explatform projects
-createFB ecms
-createFB jcr
-createFB agenda
-createFB jitsi
-createFB jitsi-call
-createFB chat-application
-createFB multifactor-authentication
-createFB digital-workplace
-createFB layout-management
-createFB news
-createFB onlyoffice
-createFB saml2-addon
-createFB web-conferencing
-createFB data-upgrade
-createFB platform-private-distributions
-createFB automatic-translation
-createFB processes
-createFB documents
-createFB mail-integration
-createFB anti-bruteforce
-createFB anti-malware
-createFB dlp
+# createFB ecms
+# createFB jcr
+# createFB agenda
+# createFB jitsi
+# createFB jitsi-call
+# createFB chat-application
+# createFB multifactor-authentication
+# createFB digital-workplace
+# createFB layout-management
+# createFB news
+# createFB onlyoffice
+# createFB saml2-addon
+# createFB web-conferencing
+# createFB data-upgrade
+# createFB platform-private-distributions
+# createFB automatic-translation
+# createFB processes
+# createFB documents
+# createFB mail-integration
+# createFB anti-bruteforce
+# createFB anti-malware
+# createFB dlp
 createFB agenda-connectors
 popd
 

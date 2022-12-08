@@ -39,11 +39,20 @@ while IFS= read -r line; do
     if [ -z "${BASE_BRANCH:-}" ]; then 
       if [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]] && [[ ! $item =~ ^deeds ]]; then 
         baseBranch=develop-exo
+    echo "============================================================="
+    echo -e " rebase done in develop-exo"
+    echo "============================================================="
       else 
         baseBranch=develop
+    echo "======================******==========================="
+    echo -e " rebase done in First develop"
+    echo "======================****================================"
       fi
-    elif [[ $item =~ ^deeds ]]; then 
+    elif [ "${org,,}" = "exoplatform" ] && [[ ! $item =~ ecms ]] || [[ $item =~ ^deeds ]]; then 
       baseBranch=develop
+    echo "************************************************************"
+    echo -e " rebase done in Second develop"
+    echo "***********************************************"
     else
       baseBranch="${BASE_BRANCH}"
     fi
