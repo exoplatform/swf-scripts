@@ -78,7 +78,7 @@ DEEDS_TENANT=1.0.0-meed
 DEEDS_TENANT_PROVISIONING=1.0.0-meed
 #####
 # Rest API Nexus repositories list
-NEXUS_REPOSITORIES_LIST="exo-addons-releases exo-releases meeds-releases"
+NEXUS_REPOSITORIES_LIST="exo-addons-releases exo-releases meeds-releases meeds-private-releases"
 
 # Fetch releases 
 releases=($(cat "$BASE_PATH_HOSTED/exo-releases/org/exoplatform/maven-depmgt-pom/maven-metadata.xml" | grep -oP $MAVEN_DEPMGT_POM-${CURRENT_YEAR}${CURRENT_MONTH}[0-9][0-9] | sort --version-sort | uniq | xargs))
