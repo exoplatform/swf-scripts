@@ -1,0 +1,82 @@
+name: Build Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      REGISTRY:
+        description: Docker registery (Default dockerhub)
+        default: 'docker.io'
+        required: false
+        type: string
+      IMAGE_NAME:
+        description: Docker Image name
+        required: true
+        type: string
+      IMAGE_TAG:
+        description: Docker Image tag (Keep it blank to auto detect tag)
+        default: ''
+        required: false
+        type: string
+      PUSH_IMAGE:
+        type: boolean
+        description: Push or not the docker image
+    secrets:
+      DOCKER_USERNAME:
+        required: true
+      DOCKER_PASSWORD:
+        required: true
+
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the Container registry
+        if: ${{ inputs.REGISTRY == "ghcr.io" }}
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Log in to Docker Registery
+        if: ${{ inputs.REGISTRY != "ghcr.io" }}
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}    
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: metadocker
+        uses: docker/metadata-action@v4
+        if: ${{ inputs.IMAGE_TAG == "" }}
+        with:
+          images: ${{ inputs.REGISTRY }}/${{ inputs.IMAGE_NAME }}
+          flavor: |
+            latest=false
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        if: ${{ inputs.IMAGE_TAG == "" }}
+        with:
+          context: .
+          push: ${{ inputs.PUSH_IMAGE }}
+          tags: ${{ steps.metadocker.outputs.tags }}
+          labels: ${{ steps.metadocker.outputs.labels }}
+
+      - name: Build and push Docker image to registery
+        uses: docker/build-push-action@v3
+        if: ${{ inputs.IMAGE_TAG != "" }}
+        with:
+          context: .
+          push: ${{ inputs.PUSH_IMAGE }}
+          tags: ${{ inputs.REGISTRY }}/${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG }}
+          labels: ${{ steps.metadocker.outputs.labels }}
