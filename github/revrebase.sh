@@ -30,11 +30,11 @@ counter=0
 echo "Done. Performing action..."
 ret=0
 while IFS= read -r line; do
-    ((counter++))  
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
+    counter=$((counter+1))
     echo "================================================================================================="
     echo -e " Module (${counter}/${modules_length}): \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a"
     echo "================================================================================================="
@@ -47,7 +47,7 @@ while IFS= read -r line; do
     # Rebase local develop branch on target dist develop as preparation for FF merge (linear history)
     if ! git rebase origin/$DIST_BRANCH develop &>/dev/null; then
       git rebase --abort &>/dev/null
-      git checkout $DIST_BRANCH 
+      git checkout $DIST_BRANCH -f
       git merge origin/develop --no-commit -X ours
       git commit -m "Merge develop into $DIST_BRANCH"
       if [ -z "$(git diff -w origin/$DIST_BRANCH)" ]; then 
