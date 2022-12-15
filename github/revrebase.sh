@@ -26,10 +26,11 @@ curl -H "Authorization: token ${GIT_TOKEN}" \
     -L "https://api.github.com/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/platform/seed_jobs_ci.groovy" --output ${seedfilefiltred}
 cat ${seedfilefiltred} | grep "${DIST_BRANCH}" | grep "project:" > ${seedfileraw}
 modules_length=$(wc -l ${seedfileraw} | awk '{ print $1 }')
-counter=1
+counter=0
 echo "Done. Performing action..."
 ret=0
 while IFS= read -r line; do
+    ((counter++))  
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
@@ -87,7 +88,6 @@ while IFS= read -r line; do
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin HEAD:${DIST_BRANCH} | grep -v remote ||:
     fi
-    ((counter++))  
     popd &>/dev/null
 done < ${seedfileraw}
 echo "Cleaning up temorary files..."
