@@ -63,7 +63,7 @@ jobs:
           flavor: |
             latest=false
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image to registery
         uses: docker/build-push-action@v3
         if: ${{ inputs.IMAGE_TAG == "" }}
         with:
