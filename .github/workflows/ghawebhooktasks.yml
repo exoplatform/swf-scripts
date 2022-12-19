@@ -51,7 +51,7 @@ jobs:
               exit 1
             ;;
           esac 
-          doCurl() {
+          doGetCurl() {
             curl -A "eXo Webhook Tasks/1.0" -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET $*
           }
           SERVER_URL="https://$(echo $SERVER_TASK_REST_PREFIXE_URL | awk -F/ '{print $3}')"
