@@ -51,6 +51,9 @@ jobs:
               exit 1
             ;;
           esac 
+          doCurl() {
+            curl -A "eXo Webhook Tasks/1.0" -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET $*
+          }
           SERVER_URL="https://$(echo $SERVER_TASK_REST_PREFIXE_URL | awk -F/ '{print $3}')"
           TASKS_IDS="$(echo ${message:-}| grep -ioP ${regexFilter} | grep -oP [0-9]+ | xargs)"
           if [ -z "${TASKS_IDS}" ]; then
@@ -61,7 +64,7 @@ jobs:
           link="PR <a href=\"https://github.com/${repo_name}/pull/${pull_number}\">${repo_name}#${pull_number}</a>"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             if [ "${{ github.event.action }}" = "review_requested" ]; then
-              serverUser=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${requested_reviewer}" || echo "")
+              serverUser=$(doGetCurl "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${requested_reviewer}" || echo "")
               if [ ! -z "${serverUser}" ]; then
                 echo "Requested reviewer is: ${serverUser}."
                 msg="💭 $link requested a review from @${serverUser} "
@@ -73,8 +76,8 @@ jobs:
               mergedCommitlink="<a href=\"https://github.com/${repo_name}/commit/${{ github.event.pull_request.merge_commit_sha }}\">merged</a>"
               base_branch_link="<a href=\"https://github.com/${repo_name}/tree/${base_branch_name}\">${base_branch_name}</a>"
               mergerGithubUser="${{ github.event.pull_request.merged_by.login }}"
-              mergerServerUser=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${mergerGithubUser}" || echo "")
-              mergerServerProfile=$(curl -s -f -L -u "${SERVER_USERNAME}:${SERVER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/users/${mergerServerUser}" 2>/dev/null || echo "")
+              mergerServerUser=$(doGetCurl "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${mergerGithubUser}" || echo "")
+              mergerServerProfile=$(doGetCurl "${SERVER_URL}/rest/private/v1/social/users/${mergerServerUser}" 2>/dev/null || echo "")
               mergerServerFullName="$(echo ${mergerServerProfile} | jq .fullname | tr -d '\"' || echo "")"
               mergerServerLink="<a target=\"_self\" rel=\"noopener\" href=\"/portal/${portalSite}/profile/${mergerServerUser}\" class=\"user-suggester\">${mergerServerFullName}</a>"
               if [ -z "${mergerServerFullName:-}" ]; then 
@@ -82,17 +85,23 @@ jobs:
               else
                 msg="🌟 $link has been ${mergedCommitlink} into ${base_branch_link} by ${mergerServerLink}."
               fi
+            elif [ "${{ github.event.action }}" = "closed" ]; then
+              msg="🍂 $link has been ${{ github.event.action }}."
+            elif [ "${{ github.event.action }}" = "opened" ]; then
+              msg="🌱 $link has been created."
+            elif [ "${{ github.event.action }}" = "reopened" ]; then
+              msg="🍃 $link has been ${{ github.event.action }}."
             else
               msg="ℹ️ $link has been ${{ github.event.action }}."
             fi
           elif [ "${{ github.event_name }}" = "pull_request_review" ] && [ "${{ github.event.action }}" = "submitted" ]; then
             mentionCreator=""
             commentMentionFilterRegex='( |^)@[a-zA-Z0-9]+-?[a-zA-Z0-9]+( |$)'
-            response=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${creator}" || echo "")
+            response=$(doGetCurl "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${creator}" || echo "")
             [ -z "${response}" ] || mentionCreator=" FYI @${response} "
             reviewerGithubUser="${{ github.event.review.user.login }}"
-            reviewerServerUser=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${reviewerGithubUser}" || echo "")
-            reviewerServerProfile=$(curl -s -f -L -u "${SERVER_USERNAME}:${SERVER_PASSWORD}" "${SERVER_URL}/rest/private/v1/social/users/${reviewerServerUser}" 2>/dev/null || echo "")
+            reviewerServerUser=$(doGetCurl "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${reviewerGithubUser}" || echo "")
+            reviewerServerProfile=$(doGetCurl "${SERVER_URL}/rest/private/v1/social/users/${reviewerServerUser}" 2>/dev/null || echo "")
             reviewerServerFullName="$(echo ${reviewerServerProfile} | jq .fullname | tr -d '\"' || echo "")"
             reviewerServerLink="<a target=\"_self\" rel=\"noopener\" href=\"/portal/${portalSite}/profile/${reviewerServerUser}\" class=\"user-suggester\">${reviewerServerFullName}</a>"
             reviewEventLink="${{ github.event.review.html_url }}"
@@ -115,7 +124,7 @@ jobs:
               mentionedGithubUsers=$(echo "${{ github.event.review.body }}" | grep -oP "$commentMentionFilterRegex" | tr -d '@' | xargs)
               mentionedServerUsers=""
               for mentionedGithubUser in ${mentionedGithubUsers}; do 
-                response=$(curl -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${mentionedGithubUser}" || echo "")
+                response=$(doGetCurl "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${mentionedGithubUser}" || echo "")
                 [ -z "${response}" ] && continue
                 [ -z "${mentionedServerUsers}" ] && mentionedServerUsers="@${response}" || mentionedServerUsers="${mentionedServerUsers} and @${response}"
               done
