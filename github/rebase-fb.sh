@@ -47,6 +47,7 @@ while IFS= read -r line; do
     else
       baseBranch="${BASE_BRANCH}"
     fi
+    [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
     if ! git rebase origin/${baseBranch} feature/${FB_NAME} >/dev/null; then
