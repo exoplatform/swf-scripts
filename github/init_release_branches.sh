@@ -23,17 +23,12 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     name=$(_jq '.name')
     git_organization=$(_jq '.git_organization')
     version=$(_jq '.release.version')
-    relBranch=$(_jq '.release.branch')
     [ -z "${name}" ] && continue
     [ -z "${git_organization}" ] && continue
     [ "${name}" = "community-website" ] && continue
     [ "${name}" = "platform-qa-tribe" ] && continue
     # Module to be not released -> Skipped
     [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
-    if [ ! "${TARGET_BRANCH}" = "${relBranch}" ]; then
-      echo "Error! Invalid release catalog! Mismatch branch name on release catalog: ${relBranch}, Expected: ${TARGET_BRANCH}"
-      exit 1
-    fi
     git clone git@github.com:${git_organization}/$name
     pushd $name &>/dev/null
     module_version=$(echo $version | sed "s/\${release-version}/${RELEASE_SUFFIX}/g")
