@@ -31,9 +31,6 @@ while IFS= read -r line; do
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
-    echo "================================================================================================="
-    echo -e " Module (${counter}/${modules_length}): \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a"
-    echo "================================================================================================="
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
     if [ -z "${BASE_BRANCH:-}" ]; then 
@@ -48,6 +45,12 @@ while IFS= read -r line; do
       baseBranch="${BASE_BRANCH}"
     fi
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
+    upstream=$(git log --pretty=format:"%H" origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
+    downstream=$(git log --pretty=format:"%H" origin/feature/${FB_NAME}..origin/${baseBranch} | wc -l)
+    [ "$downstream" -gt "1" ] && downStreamMsg="\033[1;31m${downstream}\033[0m" || downStreamMsg="\033[1;34m${upstream}\033[0m" # if downstream > 1 color red else color blue
+    echo "================================================================================================="
+    echo -e " Module (${counter}/${modules_length}): \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a -- Base Branch: ${baseBranch} -- Diff: ^ \033[1;34m${upstream}\033[0m, v ${downStreamMsg}"
+    echo "================================================================================================="
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
     if ! git rebase origin/${baseBranch} feature/${FB_NAME} >/dev/null; then
