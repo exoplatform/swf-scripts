@@ -47,7 +47,7 @@ while IFS= read -r line; do
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
     upstream=$(git log --pretty=format:"%H" origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
     downstream=$(git log --pretty=format:"%H" origin/feature/${FB_NAME}..origin/${baseBranch} | wc -l)
-    [ "$downstream" -gt "1" ] && downStreamMsg="\033[1;31m${downstream}\033[0m" || downStreamMsg="\033[1;34m${upstream}\033[0m" # if downstream > 1 color red else color blue
+    [ "$downstream" -gt "1" ] && downStreamMsg="\033[1;31m${downstream}\033[0m" || downStreamMsg="\033[1;34m${downstream}\033[0m" # if downstream > 1 color red else color blue
     echo "================================================================================================="
     echo -e " Module (${counter}/${modules_length}): \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a -- Base Branch: ${baseBranch} -- Diff: ^ \033[1;34m${upstream}\033[0m, v ${downStreamMsg}"
     echo "================================================================================================="
