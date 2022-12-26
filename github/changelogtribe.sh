@@ -32,7 +32,7 @@ getCommitProgrammingLanguages() {
 }
 
 getCommitLangURLs() {
-  langs=$(getCommitProgrammingLanguages $1 | xargs -n1 | uniq | xargs)
+  langs=$(getCommitProgrammingLanguages $1 | xargs -n1 | sort -u | xargs)
   languagesURLs=""
   for lang in $langs; do
     langURL=$(getJSDELIVRURL $lang) 
