@@ -45,7 +45,7 @@ while IFS= read -r line; do
       baseBranch="${BASE_BRANCH}"
     fi
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
-    upstream=$(git log --online origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
+    upstream=$(git log --oneline origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
     downstream=$(git log --oneline origin/feature/${FB_NAME}..origin/${baseBranch} | wc -l)
     [ "$downstream" -gt "0" ] && downStreamMsg="\033[1;31m${downstream}\033[0m" || downStreamMsg="\033[1;34m${downstream}\033[0m" # if downstream > 1 color red else color blue
     echo "================================================================================================="
