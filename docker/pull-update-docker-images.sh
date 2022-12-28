@@ -38,6 +38,7 @@ echo "OK"
 print_info "Docker images gethering has finished:\n  Count: $(wc -w <<< $FULL_IMAGE_LIST)\n"
 # Starting pull imagees
 for image in ${FULL_IMAGE_LIST}; do
+    [[ $image =~ '([0-9]{8,})|(M|CP|RC[0-9]{2})' ]] && continue
     print_info "Pulling \"$image\" image..."
     sudo docker pull $image &>/dev/null
     echo "OK"
