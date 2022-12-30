@@ -140,7 +140,7 @@ jobs:
           echo "***"
           for TASK_ID in ${TASKS_IDS}; do
             echo "Commenting to Task #${TASK_ID}..."
-            curl -so /dev/null -w '%{http_code}' -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XPOST --data-raw "<p>${msg}</p>" "${SERVER_TASK_REST_PREFIXE_URL}/comments/${TASK_ID}"
+            curl -so /dev/null -w '%{http_code}' --retry 3 --retry-max-time 60 -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XPOST --data-raw "<p>${msg}</p>" "${SERVER_TASK_REST_PREFIXE_URL}/comments/${TASK_ID}"
           done
         env:
           SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
