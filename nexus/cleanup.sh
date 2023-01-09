@@ -158,7 +158,8 @@ for release in ${releases_to_be_dropped[@]}; do
     do_delete_artifact_version "layout-management" $LAYOUT_MANAGEMENT $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/layout-management
     do_delete_artifact_version "news" $NEWS $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/news
     do_delete_artifact_version "onlyoffice" $ONLYOFFICE $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/onlyoffice
-    do_delete_artifact_version "saml2-addon" $SAML2_ADDON $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/sso/saml2-addon-*
+    do_delete_artifact_version "saml2-addon" $SAML2_ADDON $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/sso/saml2-addon-packaging
+    do_delete_artifact_version "saml2-addon" $SAML2_ADDON $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/sso/saml2-addon-parent
     do_delete_artifact_version "web-conferencing" $WEB_CONFERENCING $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/web-conferencing
     do_delete_artifact_version "jitsi" $JITSI $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/addons/jitsi
     do_delete_artifact_version "jitsi-call" $JITSI_CALL $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/jitsi-call
