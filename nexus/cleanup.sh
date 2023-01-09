@@ -38,7 +38,7 @@ do_delete_artifact_version() {
 }
 
 NB_RELEASES_TO_KEEP=0 # Nothing in month
-CURRENT_MONTH="11"
+CURRENT_MONTH="12"
 CURRENT_YEAR=2022
 BASE_PATH=/srv/nexus/storage
 BASE_PATH_HOSTED=$BASE_PATH/hosted
@@ -97,7 +97,9 @@ CLOUD_DRIVE_CONNECTORS=1.0.0
 PLATFORM_PRIVATE_DISTRIBUTIONS=6.4.0
 ###### CWI
 COMMUNITY_WEBSITE=6.4.0
-#####
+##### Platform QA Tribe
+PLATFORM_QA_TRIBE=1.0.0
+
 # Rest API Nexus repositories list
 NEXUS_REPOSITORIES_LIST="exo-addons-releases exo-private-releases exo-releases cp-cwi-releases meeds-releases"
 
@@ -177,6 +179,8 @@ for release in ${releases_to_be_dropped[@]}; do
     do_delete_artifact_version "platform-private-distributions" $PLATFORM_PRIVATE_DISTRIBUTIONS $rel_suffix $BASE_PATH_HOSTED/exo-private-releases com/exoplatform/platform/distributions
     # eXo CWI (cp-cwi-releases)
     do_delete_artifact_version "community-website" $COMMUNITY_WEBSITE $rel_suffix $BASE_PATH_HOSTED/cp-cwi-releases org/exoplatform/community
+    # Platform QA Tribe (exo-private-releases)
+    do_delete_artifact_version "platform-qa-tribe" $PLATFORM_QA_TRIBE $rel_suffix $BASE_PATH_HOSTED/exo-private-releases org/exoplatform/platform/qa
     ((counter++))
 done
 
