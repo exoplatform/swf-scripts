@@ -77,6 +77,6 @@ while IFS=']' read -r line; do
     fi
     ((counter++))  
     popd &>/dev/null
-done <<< $fblist
+done <<< "$fblist"
 echo "================================================================================================="
 success "Rebase done!"
