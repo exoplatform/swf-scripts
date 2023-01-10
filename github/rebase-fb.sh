@@ -19,20 +19,16 @@ info "Parsing FB ${FB_NAME} Seed Job Configuration..."
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 current_date=$(date '+%s')
 echo "Parsing FB repositories from catalog..."
-curl -H "Authorization: token ${GIT_TOKEN}" \
-    -H 'Accept: application/vnd.github.v3.raw' \
-    -L "https://api.github.com/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" --output fblist.txt
-cat fblist.txt | grep "project:" > fblistfiltred.txt
-modules_length=$(wc -l fblistfiltred.txt | awk '{ print $1 }')
+fblist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" | grep "project:")
+modules_length=$(echo $fblist | grep -o 'project:' | wc -w)
+echo "Modules count: ${modules_length}"
 counter=1
 echo "Done. Performing action..."
-while IFS= read -r line; do
+while IFS=']' read -r line; do
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
-    git clone git@github.com:${org}/${item}.git &>/dev/null
-    pushd $item &>/dev/null
     if [ -z "${BASE_BRANCH:-}" ]; then 
       if [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]] && [[ ! $item =~ ^deeds ]]; then 
         baseBranch=develop-exo
@@ -45,6 +41,15 @@ while IFS= read -r line; do
       baseBranch="${BASE_BRANCH}"
     fi
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
+    echo "Checking divergence status between ${baseBranch} and feature/${FB_NAME} on repository: ${org}/${item}..."
+    status=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} | jq .status | xargs -r echo)
+    if [ "${status:-}" != "diverged" ]; then
+      info "Not diverged -> Skipped!"
+      continue
+    fi
+    info "Divergence detected! Starting rebase..."
+    git clone git@github.com:${org}/${item}.git &>/dev/null
+    pushd $item &>/dev/null
     upstream=$(git log --oneline origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
     downstream=$(git log --oneline origin/feature/${FB_NAME}..origin/${baseBranch} | wc -l)
     [ "$downstream" -gt "0" ] && downStreamMsg="\033[1;31m${downstream}\033[0m" || downStreamMsg="\033[1;34m${downstream}\033[0m" # if downstream > 1 color red else color blue
@@ -77,6 +82,6 @@ while IFS= read -r line; do
     fi
     ((counter++))  
     popd &>/dev/null
-done < fblistfiltred.txt
+done <<< "$fblist"
 echo "================================================================================================="
 success "Rebase done!"
