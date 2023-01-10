@@ -40,10 +40,8 @@ while IFS= read -r line; do
       baseBranch="${BASE_BRANCH}"
     fi
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
-    which gh &>/dev/null; then
-      status=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} | jq .status | xargs -r echo)
-      [ "${status:-}" != "diverged" ] && continue
-    fi
+    status=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} | jq .status | xargs -r echo)
+    [ "${status:-}" != "diverged" ] && continue
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
     upstream=$(git log --oneline origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
