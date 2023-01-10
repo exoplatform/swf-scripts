@@ -22,9 +22,10 @@ echo "Parsing FB repositories from catalog..."
 fblist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" | grep "project:")
 modules_length=$(echo $fblist | grep -o 'project:' | wc -w)
 echo "Modules count: ${modules_length}"
-counter=1
+counter=0
 echo "Done. Performing action..."
 while IFS=']' read -r line; do
+    counter=$((counter+1))  
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
@@ -80,7 +81,6 @@ while IFS=']' read -r line; do
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
     fi
-    ((counter++))  
     popd &>/dev/null
 done <<< "$fblist"
 echo "================================================================================================="
