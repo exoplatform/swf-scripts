@@ -242,11 +242,11 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         done
         for githubIssue in $githubIssues; do 
           githubIssueID=$(echo $githubIssue | sed 's|Meeds-io/meeds#||gi')
-          transormedMessage=$(echo $transormedMessage | sed "s|$githubIssue|<a href=\"http://meeds-issuetracker.exoplatform.org/$githubIssueID\">$githubIssue</a>|g")
+          transormedMessage=$(echo $transormedMessage | sed "s|$githubIssue|<a href=\"https://github.com/Meeds-io/meeds/issues/$githubIssueID\">$githubIssue</a>|g")
         done
         for githubMIPSIssue in $githubMIPSIssues; do 
           githubMIPSIssueID=$(echo $githubMIPSIssue | sed 's|Meeds-io/MIPs#||gi')
-          transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"http://mips-issuetracker.exoplatform.org/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
+          transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"https://github.com/Meeds-io/MIPs/issues/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
         done
         sourceCommitID=$(findSourceCommit $commitId)
         verificationCheck=""
