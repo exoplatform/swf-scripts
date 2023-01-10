@@ -47,7 +47,7 @@ while IFS=']' read -r line; do
       info "Not diverged -> Skipped!"
       continue
     fi
-    info "Divergence detected! Stating rebase..."
+    info "Divergence detected! Starting rebase..."
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
     upstream=$(git log --oneline origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
