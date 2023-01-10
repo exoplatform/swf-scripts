@@ -19,10 +19,8 @@ info "Parsing FB ${FB_NAME} Seed Job Configuration..."
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 current_date=$(date '+%s')
 echo "Parsing FB repositories from catalog..."
-gh api -H 'Accept: application/vnd.github.v3.raw' \
-    "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" --output fblist.txt
-cat fblist.txt | grep "project:" > fblistfiltred.txt
-modules_length=$(wc -l fblistfiltred.txt | awk '{ print $1 }')
+fblist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" | grep "project:")
+modules_length=$(echo $fblist | awk '{ print $1 }')
 counter=1
 echo "Done. Performing action..."
 while IFS= read -r line; do
@@ -80,6 +78,6 @@ while IFS= read -r line; do
     fi
     ((counter++))  
     popd &>/dev/null
-done < fblistfiltred.txt
+done < $fblist
 echo "================================================================================================="
 success "Rebase done!"
