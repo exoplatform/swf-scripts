@@ -21,7 +21,7 @@ current_date=$(date '+%s')
 echo "Parsing FB repositories from catalog..."
 fblist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" | grep "project:")
 modules_length=$(echo $fblist | grep -o 'project:' | wc -w)
-echo "Modules List: ${modules_length}"
+echo "Modules count: ${modules_length}"
 counter=1
 echo "Done. Performing action..."
 while IFS=']' read -r line; do
