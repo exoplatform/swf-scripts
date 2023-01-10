@@ -65,8 +65,6 @@ while IFS= read -r line; do
       echo "  git rebase origin/$DIST_BRANCH"
       echo ">>Fix conflicts and continue rebasing by using command: "
       echo "  git rebase --continue"
-      echo ">>Reset committer name and email: "
-      echo "  git filter-branch -f --commit-filter 'export GIT_COMMITTER_NAME=\"\$GIT_AUTHOR_NAME\"; export GIT_COMMITTER_EMAIL=\"\$GIT_AUTHOR_EMAIL\"; git commit-tree \"\$@\"' -- origin/$DIST_BRANCH..HEAD"
       echo ">>Push to remote repository"
       echo "  git push origin HEAD"
       echo ">>Create Pull Request to $DIST_BRANCH (or push directly for admins)"
@@ -82,8 +80,6 @@ while IFS= read -r line; do
       continue
     fi
     if [ ! -z "$(git diff origin/${DIST_BRANCH} 2>/dev/null)" ]; then
-      info "Reseting commits authors..."
-      git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/$DIST_BRANCH..HEAD
       info "Changes to be pushed:"
       echo -e "\033[1;32m****\033[0m"
       git log origin/${DIST_BRANCH}..HEAD --oneline --pretty=format:"(%C(yellow)%h%Creset) %s" 

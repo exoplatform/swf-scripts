@@ -63,8 +63,6 @@ while IFS= read -r line; do
     fi
     git log --oneline --cherry origin/${baseBranch}..HEAD
     if [ ! -z "$(git diff origin/feature/${FB_NAME} 2>/dev/null)" ]; then
-      info "Reseting commits authors..."
-      git filter-branch --commit-filter 'export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"; export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"; git commit-tree "$@"' -- origin/${baseBranch}..HEAD
       info "Changes before the rebase:"
       echo -e "\033[1;32m****\033[0m"
       git log HEAD..origin/feature/${FB_NAME} --oneline --pretty=format:"(%C(yellow)%h%Creset) %s"
