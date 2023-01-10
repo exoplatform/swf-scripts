@@ -43,8 +43,8 @@ while IFS= read -r line; do
       baseBranch="${BASE_BRANCH}"
     fi
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
-    if [ ! -z "${GH_TOKEN:-}" ] && which gh &>/dev/null; then
-      status=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} | jq .status | xargs -r echo)
+    which gh &>/dev/null; then
+      status=$(GH_TOKEN=${GIT_TOKEN} gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} | jq .status | xargs -r echo)
       [ "${status:-}" != "diverged" ] && continue
     fi
     git clone git@github.com:${org}/${item}.git &>/dev/null
