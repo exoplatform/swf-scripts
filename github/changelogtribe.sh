@@ -17,7 +17,13 @@ declare -A fileExtensionsMapping=( [java]=java [jsp]=java [gtmpl]=groovy [groovy
 getJSDELIVRURL() {
   lang=${1:-}
   [ -z "${lang}" ] && return
-  [ "${lang}" = "less" ] && echo "${JS_DELIVR_URL}/${lang}/${lang}-plain-wordmark.svg" || echo "${JS_DELIVR_URL}/${lang}/${lang}-plain.svg" 
+  if [ "${lang}" = "less" ]; then
+    echo "${JS_DELIVR_URL}/${lang}/${lang}-plain-wordmark.svg" 
+  elif [ "${lang}" = "selenium" ] || [ "${lang}" = "vuejs" ]; then
+    echo "${JS_DELIVR_URL}/${lang}/${lang}-original.svg" 
+  else
+    echo "${JS_DELIVR_URL}/${lang}/${lang}-plain.svg" 
+  fi
 }
 
 getCommitProgrammingLanguages() {
