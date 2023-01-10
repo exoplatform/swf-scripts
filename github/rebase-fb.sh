@@ -31,8 +31,6 @@ while IFS= read -r line; do
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
-    git clone git@github.com:${org}/${item}.git &>/dev/null
-    pushd $item &>/dev/null
     if [ -z "${BASE_BRANCH:-}" ]; then 
       if [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]] && [[ ! $item =~ ^deeds ]]; then 
         baseBranch=develop-exo
@@ -45,6 +43,12 @@ while IFS= read -r line; do
       baseBranch="${BASE_BRANCH}"
     fi
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
+    if [ ! -z "${GH_TOKEN:-}" ] && which gh &>/dev/null; then
+      status=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} | jq .status | xargs -r echo)
+      [ "${status:-}" != "diverged" ] && continue
+    fi
+    git clone git@github.com:${org}/${item}.git &>/dev/null
+    pushd $item &>/dev/null
     upstream=$(git log --oneline origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
     downstream=$(git log --oneline origin/feature/${FB_NAME}..origin/${baseBranch} | wc -l)
     [ "$downstream" -gt "0" ] && downStreamMsg="\033[1;31m${downstream}\033[0m" || downStreamMsg="\033[1;34m${downstream}\033[0m" # if downstream > 1 color red else color blue
