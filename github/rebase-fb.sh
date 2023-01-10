@@ -41,8 +41,13 @@ while IFS=']' read -r line; do
       baseBranch="${BASE_BRANCH}"
     fi
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
+    echo "Checking divergence status between ${baseBranch} and feature/${FB_NAME} on repository: ${org}/${item}..."
     status=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} | jq .status | xargs -r echo)
-    [ "${status:-}" != "diverged" ] && continue
+    if [ "${status:-}" != "diverged" ]; then
+      info "Not diverged -> Skipped!"
+      continue
+    fi
+    info "Divergence detected! Stating rebase..."
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
     upstream=$(git log --oneline origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
