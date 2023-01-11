@@ -19,7 +19,7 @@ getJSDELIVRURL() {
   [ -z "${lang}" ] && return
   if [ "${lang}" = "less" ]; then
     echo "${JS_DELIVR_URL}/${lang}/${lang}-plain-wordmark.svg" 
-  elif [ "${lang}" = "selenium" ] || [ "${lang}" = "vuejs" ]; then
+  elif [ "${lang}" = "selenium" ] || [ "${lang}" = "vuejs" ] || [ "${lang}" = "java" ]; then
     echo "${JS_DELIVR_URL}/${lang}/${lang}-original.svg" 
   else
     echo "${JS_DELIVR_URL}/${lang}/${lang}-plain.svg" 
