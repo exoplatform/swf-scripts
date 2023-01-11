@@ -70,35 +70,35 @@ findSourceCommit() {
     echo "$MATCHING_COMMIT_SHA"
   }
 
-getCommitAuthorFromGithub() {
+getCommitMetadataFromGithub() {
   local _id="$1"
   local _repo="$2"
-  echo $(curl --fail -XGET -H "Authorization: token ${GIT_TOKEN}" \
-    -H 'Accept: application/vnd.github.luke-cage-preview+json' \
-    -L "https://api.github.com/repos/${_repo}/commits/${_id}" 2>/dev/null | jq .author.login | tr -d '"' 2>/dev/null || echo "")
+  gh api -H 'Accept: application/vnd.github.luke-cage-preview+json' "/repos/${_repo}/commits/${_id}" 2>/dev/null
+}
+
+getCommitAuthorFromMetadata() {
+  local _id="$1"
+  local _repo="$2"
+  echo $(echo "$1" | jq .author.login | xargs -r echo)
 }
 
 isCommitVerified() {
-  local _id="$1"
-  local _repo="$2"
-  local status=$(curl --fail -XGET -H "Authorization: token ${GIT_TOKEN}" \
-    -H 'Accept: application/vnd.github.luke-cage-preview+json' \
-    -L "https://api.github.com/repos/${_repo}/commits/${_id}" 2>/dev/null | jq .commit.verification.verified | tr -d '"' 2>/dev/null || echo "false")
+  local status=$(echo "$1" | jq .commit.verification.verified | xargs -r echo || echo "false")
   [ "${status}" = "true" ]
 }
 
-getUserFullNameFromGithub() {
+getUserMetadataFromGithub() {
   local _id="$1"
-  echo $(curl --fail -XGET \
-    -H 'Accept: application/vnd.github.luke-cage-preview+json' \
-    -L "https://api.github.com/users/${_id}" 2>/dev/null | jq .name | tr -d '"' 2>/dev/null || echo "")
+  gh api -H 'Accept: application/vnd.github.luke-cage-preview+json' "/users/${_id}" 2>/dev/null
 }
 
-getUserAvatarURLFromGithub() {
+getUserFullNameFromMetadata() {
+  echo $(echo "$1" | jq .name | xargs -r echo)
+}
+
+getUserAvatarURLFromMetadata() {
   local _id="$1"
-  echo $(curl --fail -XGET \
-    -H 'Accept: application/vnd.github.luke-cage-preview+json' \
-    -L "https://api.github.com/users/${_id}" 2>/dev/null | jq .avatar_url | tr -d '"' 2>/dev/null || echo "")
+  echo $(echo "$1" | jq .avatar_url | xargs -r echo)
 }
 
 getTribeAuthorFromGithb() {
@@ -135,9 +135,7 @@ getWinner() {
   echo $winner  
 }
 
-modules=$(curl -H "Authorization: token ${GIT_TOKEN}" \
-    -H 'Accept: application/vnd.github.v3.raw' \
-    -L "https://api.github.com/repos/exoplatform/swf-release-manager-catalog/contents/exo-platform/continuous-release-template-exo.json")
+modules=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-release-manager-catalog/contents/exo-platform/continuous-release-template-exo.json")
 
 body=""
 plf_range=""
@@ -206,7 +204,8 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         author=$(git show --format="%an" -s $commitId | xargs)
         userStat=$(git show --numstat --pretty="%H" $commitId | awk 'NF==3 {score+=$1+$2} END {printf("+%d\n", score)}')
         git config diff.renames 0
-        _githubusername=$(getCommitAuthorFromGithub $commitId $org/$item)
+        commitMetadata=$(getCommitMetadataFromGithub $commitId $org/$item)
+        _githubusername=$(getCommitAuthorFromMetadata "${commitMetadata}")
         authorLink="${author}"
         if [ ! -z "${_githubusername}" ]; then 
            if checkElementExists ${_githubusername}; then 
@@ -248,7 +247,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
         done
         sourceCommitID=$(findSourceCommit $commitId)
         verificationCheck=""
-        if isCommitVerified $commitId $org/$item; then 
+        if isCommitVerified "${commitMetadata}"; then 
           verificationCheck="<span title=\"Verified commit\">✅</span>"
         fi
         commitsLangURLs=$(getCommitLangURLs $commitId)
@@ -282,9 +281,10 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
   for githubUser in ${!tribeGithbIds[@]}; do 
     [ "${githubUser}" = "exo-swf" ] && continue
     [ -z "${githubScore[${tribeGithbIds[$githubUser]:-}]:-}" ] && continue
-    githubFullName=$(getUserFullNameFromGithub $githubUser)
+    githubUserMetadata=$(getUserMetadataFromGithub $githubUser)
+    githubFullName=$(getUserFullNameFromMetadata"${githubUserMetadata}")
     [ "${githubFullName,,}" = "null" ] && githubFullName=$githubUser
-    githubAvatarURL=$(getUserAvatarURLFromGithub $githubUser)
+    githubAvatarURL=$(getUserAvatarURLFromMetadata "${githubUserMetadata}")
     githubURL="https://github.com/${githubUser}"
     score=$((${githubScore[${tribeGithbIds[$githubUser]}]}))
     contrib=$(echo "<ol style=\"display: inline-block;text-align: center;list-style-type: none;\"><a href=\"${githubURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" style=\"height:30px;border-radius: 50%;\"></a><br/><span>${score} pts</span></ol>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
