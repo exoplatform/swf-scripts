@@ -77,8 +77,6 @@ getCommitMetadataFromGithub() {
 }
 
 getCommitAuthorFromMetadata() {
-  local _id="$1"
-  local _repo="$2"
   echo $(echo "$1" | jq .author.login | xargs -r echo)
 }
 
