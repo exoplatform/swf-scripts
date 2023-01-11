@@ -280,7 +280,7 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
     [ "${githubUser}" = "exo-swf" ] && continue
     [ -z "${githubScore[${tribeGithbIds[$githubUser]:-}]:-}" ] && continue
     githubUserMetadata=$(getUserMetadataFromGithub $githubUser)
-    githubFullName=$(getUserFullNameFromMetadata"${githubUserMetadata}")
+    githubFullName=$(getUserFullNameFromMetadata "${githubUserMetadata}")
     [ "${githubFullName,,}" = "null" ] && githubFullName=$githubUser
     githubAvatarURL=$(getUserAvatarURLFromMetadata "${githubUserMetadata}")
     githubURL="https://github.com/${githubUser}"
