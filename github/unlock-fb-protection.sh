@@ -6,10 +6,11 @@
 # Determines if a value exists in an array.
 ###
 function hasArrayValue() {
-    local needle="$1"
-    shift 1
+    local org="$1"
+    local item="$2"
+    shift 2
     local haystack="$@"
-    printf '%s\n' "${haystack[@]}" | grep -q "${needle}"
+    echo "${haystack[@]}" | tr " " "\n" | grep -qP "^${org}/${item}\$"
 }
 
 echo "Parsing FB ${FB_NAME} Seed Job Configuration..."
@@ -44,7 +45,7 @@ while IFS=']' read -r line; do
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]" | xargs)
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
-    hasArrayValue "${org}/$item" ${MODULES} && counter=$((counter + 1)) || continue
+    hasArrayValue ${org} $item ${MODULES} && counter=$((counter + 1)) || continue
 done <<<"$fblist"
 if [ "${counter}" -ne "${MODULES_LENGTH}" ]; then
     echo "Error Checks failed! Abort"
