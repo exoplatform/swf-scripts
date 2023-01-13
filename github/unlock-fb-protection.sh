@@ -9,7 +9,7 @@ function hasArrayValue() {
     local needle="$1"
     shift 1
     local haystack="$@"
-    printf '%s\n' "${haystack[@]}" | grep -x -q "${needle}"
+    printf '%s\n' "${haystack[@]}" | grep -q "${needle}"
 }
 
 echo "Parsing FB ${FB_NAME} Seed Job Configuration..."
