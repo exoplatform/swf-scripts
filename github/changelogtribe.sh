@@ -54,6 +54,9 @@ isSameCommit() {
 
 findSourceCommit() {
   local ref="develop"
+  if ! git show-ref --quiet refs/heads/$ref; then 
+    ref=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+  fi
   local TARGET_COMMIT_PATCHID=$(
     git show --patch-with-raw "$1" |
 	  git patch-id |
