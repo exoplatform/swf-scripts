@@ -9,7 +9,7 @@ function hasArrayValue() {
     local needle="$1"
     shift 1
     local haystack="$@"
-    [[ ${haystack} =~ "${needle}" ]]
+    printf '%s\n' "${haystack[@]}" | grep -x -q "${needle}"
 }
 
 echo "Parsing FB ${FB_NAME} Seed Job Configuration..."
@@ -44,7 +44,7 @@ while IFS=']' read -r line; do
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]" | xargs)
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
-    hasArrayValue $item ${MODULES} && counter=$((counter + 1)) || continue
+    hasArrayValue "${org}/$item" ${MODULES} && counter=$((counter + 1)) || continue
 done <<<"$fblist"
 if [ "${counter}" -ne "${MODULES_LENGTH}" ]; then
     echo "Error Checks failed! Abort"
