@@ -175,6 +175,7 @@ for release in ${releases_to_be_dropped[@]}; do
     do_delete_artifact_version "anti-bruteforce" $ANTI_BRUTEFORCE $rel_suffix $BASE_PATH_HOSTED/exo-addons-releases org/exoplatform/anti-bruteforce
     # eXo Addons (exo-releases)
     do_delete_artifact_version "jcr" $JCR $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/jcr
+    do_delete_artifact_version "jcr" $JCR $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/exo-jcr-services
     do_delete_artifact_version "ecms" $ECMS $rel_suffix $BASE_PATH_HOSTED/exo-releases org/exoplatform/ecms
     # eXo Packaging (exo-private-releases)
     do_delete_artifact_version "platform-private-distributions" $PLATFORM_PRIVATE_DISTRIBUTIONS $rel_suffix $BASE_PATH_HOSTED/exo-private-releases com/exoplatform/platform/distributions
