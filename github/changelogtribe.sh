@@ -2,36 +2,52 @@
 # Args:
 # Generate changelog of CI/CD as Tribe Space Activity
 
-
 # 2 max commit after released dev commit (generated commits swf release)
 MAX_RELEASE_COMMITS_FETCH_DEPTH=2
 MAX_COMMITS_LISTING_PER_MODULE=15
 MAX_REV_LIST_DEPTH=200
 
+githubMeedsIssues=""
+
 JS_DELIVR_URL="https://cdn.jsdelivr.net/gh/devicons/devicon@master/icons"
 
 declare -A tribeGithbIds=( [exo-swf]=NA )
 declare -A githubScore=( [exo-swf]=0 )
-declare -A fileExtensionsMapping=( [java]=java [jsp]=java [gtmpl]=groovy [groovy]=groovy [vue]=vuejs [js]=javascript [css]=css3 [less]=less [sh]=bash [feature]=selenium)
+declare -A fileExtensionsMapping=([java]=java [jsp]=java [gtmpl]=groovy [groovy]=groovy [vue]=vuejs [js]=javascript [css]=css3 [less]=less [sh]=bash [feature]=selenium)
+
+function hasArrayValue() {
+  local item="$1"
+  shift 1
+  local haystack="$@"
+  echo "${haystack[@]}" | tr " " "\n" | grep -qP "^${item}\$"
+}
+
+function addGithubIssue() {
+  local item=$1
+  shift 1
+  local tmpArray="$@"
+  hasArrayValue $item ${tmpArray[@]} || tmpArray="${tmpArray} $item"
+  echo ${tmpArray} | awk 'BEGIN{RS=" ";} {print $1}' | sort | uniq
+}
 
 getJSDELIVRURL() {
   lang=${1:-}
   [ -z "${lang}" ] && return
   if [ "${lang}" = "less" ]; then
-    echo "${JS_DELIVR_URL}/${lang}/${lang}-plain-wordmark.svg" 
+    echo "${JS_DELIVR_URL}/${lang}/${lang}-plain-wordmark.svg"
   elif [ "${lang}" = "selenium" ] || [ "${lang}" = "vuejs" ] || [ "${lang}" = "java" ]; then
-    echo "${JS_DELIVR_URL}/${lang}/${lang}-original.svg" 
+    echo "${JS_DELIVR_URL}/${lang}/${lang}-original.svg"
   else
-    echo "${JS_DELIVR_URL}/${lang}/${lang}-plain.svg" 
+    echo "${JS_DELIVR_URL}/${lang}/${lang}-plain.svg"
   fi
 }
 
 getCommitProgrammingLanguages() {
   commitID=${1:-HEAD}
-  fileExtensions=$(git diff-tree --no-commit-id --name-only -r $commitID | xargs -L 1  basename | grep '.' | cut -d '.' -f2 | uniq | xargs)
+  fileExtensions=$(git diff-tree --no-commit-id --name-only -r $commitID | xargs -L 1 basename | grep '.' | cut -d '.' -f2 | uniq | xargs)
   [ -z "${fileExtensions}" ] && return
   languages=""
-  for fileExt in ${fileExtensions}; do 
+  for fileExt in ${fileExtensions}; do
     [ -z "${languages}" ] && languages=${fileExtensionsMapping[$fileExt]:-} || languages="${languages} ${fileExtensionsMapping[$fileExt]:-}"
   done
   echo ${languages}
@@ -41,7 +57,7 @@ getCommitLangURLs() {
   langs=$(getCommitProgrammingLanguages $1 | xargs -n1 | sort -u | xargs)
   languagesURLs=""
   for lang in $langs; do
-    langURL=$(getJSDELIVRURL $lang) 
+    langURL=$(getJSDELIVRURL $lang)
     langHTML="<img src=\"${langURL}\" title=\"${lang^}\" style=\"height:20px; vertical-align: middle;\">"
     [ -z "${languagesURLs}" ] && languagesURLs="$langHTML" || languagesURLs="${languagesURLs} $langHTML"
   done
@@ -54,24 +70,24 @@ isSameCommit() {
 
 findSourceCommit() {
   local ref="develop"
-  if ! git show-ref --quiet refs/heads/$ref; then 
+  if ! git show-ref --quiet refs/heads/$ref; then
     ref=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
   fi
   local TARGET_COMMIT_PATCHID=$(
     git show --patch-with-raw "$1" |
-	  git patch-id |
-	  cut -d' ' -f1
+      git patch-id |
+      cut -d' ' -f1
   )
 
   local MATCHING_COMMIT_SHA=""
-  for c in $(git rev-list origin/$ref -n ${MAX_REV_LIST_DEPTH} ); do
-	  if [[ $(git show --patch-with-raw "$c" | git patch-id | cut -d' ' -f1) == "${TARGET_COMMIT_PATCHID}" ]]; then 
-      MATCHING_COMMIT_SHA=$c 
-	    break; 
-	  fi
+  for c in $(git rev-list origin/$ref -n ${MAX_REV_LIST_DEPTH}); do
+    if [[ $(git show --patch-with-raw "$c" | git patch-id | cut -d' ' -f1) == "${TARGET_COMMIT_PATCHID}" ]]; then
+      MATCHING_COMMIT_SHA=$c
+      break
+    fi
   done
-    echo "$MATCHING_COMMIT_SHA"
-  }
+  echo "$MATCHING_COMMIT_SHA"
+}
 
 getCommitMetadataFromGithub() {
   local _id="$1"
@@ -91,6 +107,28 @@ isCommitVerified() {
 getUserMetadataFromGithub() {
   local _id="$1"
   gh api -H 'Accept: application/vnd.github.luke-cage-preview+json' "/users/${_id}" 2>/dev/null
+}
+
+getIssueMetadataFromGithub() {
+  local _repo="$1"
+  local _id="$2"
+  gh api -H 'Accept: application/vnd.github.luke-cage-preview+json' "/repos/${_repo}/issues/${_id}" 2>/dev/null
+}
+
+getIssueURLFromMetadata() {
+  echo $(echo "$1" | jq .html_url | xargs -r echo)
+}
+
+getIssueTitleFromMetadata() {
+  echo $(echo "$1" | jq .title | xargs -r echo)
+}
+
+getIssueStateFromMetadata() {
+  echo $(echo "$1" | jq .state | xargs -r echo)
+}
+
+getIssueStateReasonFromMetadata() {
+  echo $(echo "$1" | jq .state_reason | xargs -r echo)
 }
 
 getUserFullNameFromMetadata() {
@@ -133,7 +171,7 @@ getWinner() {
     item=${githubScore[$key]}
     ((item > max)) && max=$item && winner=$key
   done
-  echo $winner  
+  echo $winner
 }
 
 modules=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-release-manager-catalog/contents/exo-platform/continuous-release-template-exo.json")
@@ -146,140 +184,170 @@ git clone git@github.com:exoplatform/platform-private-distributions &>/dev/null
 pushd platform-private-distributions &>/dev/null
 tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -oP [0-9]{8}$ | tail -1)
 before_tag_name_suffix=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -oP [0-9]{8}$ | tail -2 | head -1)
-plfVersion=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${tag_name_suffix}$ )
+plfVersion=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${tag_name_suffix}$)
 popd &>/dev/null
 rm -rf platform-private-distributions &>/dev/null
 changelogfile="/tmp/CHANGE_LOG.txt"
-echo "=== Changelog generated $(date)" > $changelogfile
-echo "platform version: ${plfVersion}" >> $changelogfile
-echo "===" >> $changelogfile
-echo "" >> $changelogfile
+echo "=== Changelog generated $(date)" >$changelogfile
+echo "platform version: ${plfVersion}" >>$changelogfile
+echo "===" >>$changelogfile
+echo "" >>$changelogfile
 for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
-    _jq() {
-        echo ${module} | base64 --decode | jq -r ${1}
-    }
-    item=$(_jq '.name')
-    org=$(_jq '.git_organization')
-    version=$(_jq '.release.version')
-    [ -z "${item}" ] && continue
-    [ -z "${org}" ] && continue
-    [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
-    git clone git@github.com:${org}/$item &>/dev/null
-    pushd $item &>/dev/null
-    git fetch --tags --prune &>/dev/null
-    set +e
-    if [ ${org,,} != "meeds-io" ]; then
-      tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${tag_name_suffix}$ )
-      before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${before_tag_name_suffix}$)
-    else 
-      tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep 'exo' | grep -P .*-${tag_name_suffix}$ )
-      before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep 'exo' | grep -P .*-${before_tag_name_suffix}$)
-    fi
-    if [ -z "$tag_name" ] || [ -z "$before_tag_name" ]; then
-      popd &>/dev/null
-      continue
-    fi
-    echo "*** $item $before_tag_name -> $tag_name"
-    commitDepth=$(git log --grep '\[exo-release\]' $tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$tag_name --oneline | wc -l)
-    beforeCommitDepth=$(git log --grep '\[exo-release\]' $before_tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$before_tag_name --oneline | wc -l)
-    commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth --first-parent -n ${MAX_COMMITS_LISTING_PER_MODULE} | xargs)
-    commitstats=$(git log --no-merges --numstat --pretty="%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth --first-parent -n ${MAX_COMMITS_LISTING_PER_MODULE} | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}')
-    subbody=""
-    modulelink="https://github.com/$org/$item"
-    [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
-    [ -z "$commitIds" ] || echo "*** $item $before_tag_name -> $tag_name" >> $changelogfile
-    for commitId in $commitIds; do
-        unset authorTribeID
-        unset authorProfile
-        unset authorFullName
-        message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs -0)
-        echo $message | grep -q "Prepare Release" && continue
-        echo $message | grep -q "continuous-release-template" && continue
-        echo $message | grep -q "exo-release" && continue
-        echo $message | grep -q "parent-pom" && continue
-        echo $message | grep -q "eXo Tasks notifications" && continue
-        echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
-        echo $message | grep -q "SWF:" && continue
-        #echo $message | grep -q "Merge Translation" && continue
-        git config diff.renames 0
-        author=$(git show --format="%an" -s $commitId | xargs)
-        userStat=$(git show --numstat --pretty="%H" $commitId | awk 'NF==3 {score+=$1+$2} END {printf("+%d\n", score)}')
-        git config diff.renames 0
-        commitMetadata=$(getCommitMetadataFromGithub $commitId $org/$item)
-        _githubusername=$(getCommitAuthorFromMetadata "${commitMetadata}")
-        authorLink="${author}"
-        if [ ! -z "${_githubusername}" ]; then 
-           if checkElementExists ${_githubusername}; then 
-              authorTribeID="$(getElementfromIds ${_githubusername})"
-           else 
-              authorTribeID="$(getTribeAuthorFromGithb ${_githubusername})"
-              setElementtoIds ${_githubusername} $authorTribeID
-           fi
-           authorProfile=$(getTribeProfile $authorTribeID)
-           if [ ! -z "${authorProfile}" ]; then 
-             authorFullName="$(echo ${authorProfile} | jq .fullname | tr -d '\"' || echo "")"
-             [ -z "${authorFullName}" ] || authorLink=$(echo "<a target=\"_self\" rel=\"noopener\" href=\"https://community.exoplatform.com/portal/dw/profile/${authorTribeID}\" class=\"user-suggester\">${authorFullName}</a>")
-             [ -z "${authorFullName}" ] || setStat $authorTribeID $userStat
-           fi
-        fi
-        commitLink="$modulelink/commit/$(git rev-parse $commitId)"
-        fomattedCommitId=$(echo $commitId | head -c 7)
-        buildersTasks=$(echo  $message | grep -oPi '(BUILDER|MEED)(S)?-[0-9]+' | sort -u | xargs)
-        eXoTasks=$(echo  $message | grep -oPi '(TASK|MAINT|EXO)-[0-9]+' | sort -u | xargs)
-        githubIssues=$(echo  $message | grep -oPi 'Meeds-io/meeds#[0-9]+' | sort -u | xargs)
-        githubMIPSIssues=$(echo  $message | grep -oPi 'Meeds-io/MIPs#[0-9]+' | sort -u | xargs)
-        transormedMessage="$message"
-        transormedMessage=$(echo $transormedMessage | sed -e "s|feat:|<span title=\"Feature\">✨</span>|gi" -e "s|fix:|<span title=\"Fix\">🐛</span>|gi" -e "s|Merge Translations|<span title=\"i18n\">🏁</span> Merge Translations|g")
-        for buildersTask in $buildersTasks; do 
-          buildersTaskID=$(echo $buildersTask | sed -E 's/(BUILDER|MEED)(S)?-//gi')
-          transormedMessage=$(echo $transormedMessage | sed "s|$buildersTask|<a href=\"https://builders.meeds.io/portal/meeds/tasks/taskDetail/$buildersTaskID\">$buildersTask</a>|g")
-        done
-        for eXoTask in $eXoTasks; do 
-          eXoTaskID=$(echo $eXoTask | sed -E 's/(TASK|MAINT|EXO)-//gi')
-          transormedMessage=$(echo $transormedMessage | sed "s|$eXoTask|<a href=\"https://community.exoplatform.com/portal/dw/tasks/taskDetail/$eXoTaskID\">$eXoTask</a>|g")
-        done
-        for githubIssue in $githubIssues; do 
-          githubIssueID=$(echo $githubIssue | sed 's|Meeds-io/meeds#||gi')
-          transormedMessage=$(echo $transormedMessage | sed "s|$githubIssue|<a href=\"https://github.com/Meeds-io/meeds/issues/$githubIssueID\">$githubIssue</a>|g")
-        done
-        for githubMIPSIssue in $githubMIPSIssues; do 
-          githubMIPSIssueID=$(echo $githubMIPSIssue | sed 's|Meeds-io/MIPs#||gi')
-          transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"https://github.com/Meeds-io/MIPs/issues/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
-        done
-        sourceCommitID=$(findSourceCommit $commitId)
-        verificationCheck=""
-        if isCommitVerified "${commitMetadata}"; then 
-          verificationCheck="<span title=\"Verified commit\">✅</span>"
-        fi
-        commitsLangURLs=$(getCommitLangURLs $commitId)
-        if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then 
-          sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Source commit\">🍒</a> $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
-        else
-          elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
-        fi
-        echo "$commitLink $message *** $author -- $authorTribeID"
-        echo "	($fomattedCommitId) $message --- $author" >> $changelogfile
-        subbody="$subbody$elt"
-    done
-    beforeTagCommitID=$(git rev-parse --short $before_tag_name~2)
-    tagCommitID=$(git rev-parse --short $tag_name~2)
-    fullchangeloglink=$(echo "<a href=\"https://github.com/${org}/${item}/compare/${beforeTagCommitID}...${tagCommitID}\">$before_tag_name..$tag_name</a>" | gawk '{ gsub(/"/,"\\\"") } 1')
-    [ -z "$subbody" ] || body="$body<li><b>$item</b> ${fullchangeloglink} (${commitstats}):\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
-    set -e
+  _jq() {
+    echo ${module} | base64 --decode | jq -r ${1}
+  }
+  item=$(_jq '.name')
+  org=$(_jq '.git_organization')
+  version=$(_jq '.release.version')
+  [ -z "${item}" ] && continue
+  [ -z "${org}" ] && continue
+  [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
+  git clone git@github.com:${org}/$item &>/dev/null
+  pushd $item &>/dev/null
+  git fetch --tags --prune &>/dev/null
+  set +e
+  if [ ${org,,} != "meeds-io" ]; then
+    tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${tag_name_suffix}$)
+    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep -Pv '(exo|meed)' | grep -P .*-${before_tag_name_suffix}$)
+  else
+    tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep 'exo' | grep -P .*-${tag_name_suffix}$)
+    before_tag_name=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's|refs/tags/||g' | grep 'exo' | grep -P .*-${before_tag_name_suffix}$)
+  fi
+  if [ -z "$tag_name" ] || [ -z "$before_tag_name" ]; then
     popd &>/dev/null
+    continue
+  fi
+  echo "*** $item $before_tag_name -> $tag_name"
+  commitDepth=$(git log --grep '\[exo-release\]' $tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$tag_name --oneline | wc -l)
+  beforeCommitDepth=$(git log --grep '\[exo-release\]' $before_tag_name~$MAX_RELEASE_COMMITS_FETCH_DEPTH..$before_tag_name --oneline | wc -l)
+  commitIds=$(git log --no-merges --pretty=format:"%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth --first-parent -n ${MAX_COMMITS_LISTING_PER_MODULE} | xargs)
+  commitstats=$(git log --no-merges --numstat --pretty="%H" $before_tag_name~$beforeCommitDepth...$tag_name~$commitDepth --first-parent -n ${MAX_COMMITS_LISTING_PER_MODULE} | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}')
+  subbody=""
+  modulelink="https://github.com/$org/$item"
+  [ $item == "platform-private-distributions" ] && plf_range="of $before_tag_name -> $tag_name"
+  [ -z "$commitIds" ] || echo "*** $item $before_tag_name -> $tag_name" >>$changelogfile
+  for commitId in $commitIds; do
+    unset authorTribeID
+    unset authorProfile
+    unset authorFullName
+    message=$(git show --pretty=format:%s -s $commitId | sed -E 's/\(#[0-9]+\)//g' | xargs -0)
+    echo $message | grep -q "Prepare Release" && continue
+    echo $message | grep -q "continuous-release-template" && continue
+    echo $message | grep -q "exo-release" && continue
+    echo $message | grep -q "parent-pom" && continue
+    echo $message | grep -q "eXo Tasks notifications" && continue
+    echo $message | grep -q "Specify base branch when merging PR for eXo Tasks notifications" && continue
+    echo $message | grep -q "SWF:" && continue
+    #echo $message | grep -q "Merge Translation" && continue
+    git config diff.renames 0
+    author=$(git show --format="%an" -s $commitId | xargs)
+    userStat=$(git show --numstat --pretty="%H" $commitId | awk 'NF==3 {score+=$1+$2} END {printf("+%d\n", score)}')
+    git config diff.renames 0
+    commitMetadata=$(getCommitMetadataFromGithub $commitId $org/$item)
+    _githubusername=$(getCommitAuthorFromMetadata "${commitMetadata}")
+    authorLink="${author}"
+    if [ ! -z "${_githubusername}" ]; then
+      if checkElementExists ${_githubusername}; then
+        authorTribeID="$(getElementfromIds ${_githubusername})"
+      else
+        authorTribeID="$(getTribeAuthorFromGithb ${_githubusername})"
+        setElementtoIds ${_githubusername} $authorTribeID
+      fi
+      authorProfile=$(getTribeProfile $authorTribeID)
+      if [ ! -z "${authorProfile}" ]; then
+        authorFullName="$(echo ${authorProfile} | jq .fullname | tr -d '\"' || echo "")"
+        [ -z "${authorFullName}" ] || authorLink=$(echo "<a target=\"_self\" rel=\"noopener\" href=\"https://community.exoplatform.com/portal/dw/profile/${authorTribeID}\" class=\"user-suggester\">${authorFullName}</a>")
+        [ -z "${authorFullName}" ] || setStat $authorTribeID $userStat
+      fi
+    fi
+    commitLink="$modulelink/commit/$(git rev-parse $commitId)"
+    fomattedCommitId=$(echo $commitId | head -c 7)
+    buildersTasks=$(echo $message | grep -oPi '(BUILDER|MEED)(S)?-[0-9]+' | sort -u | xargs)
+    eXoTasks=$(echo $message | grep -oPi '(TASK|MAINT|EXO)-[0-9]+' | sort -u | xargs)
+    githubIssues=$(echo $message | grep -oPi 'Meeds-io/meeds#[0-9]+' | sort -u | xargs)
+    githubMIPSIssues=$(echo $message | grep -oPi 'Meeds-io/M[IP]{2}s#[0-9]+' | sort -u | xargs)
+    transormedMessage="$message"
+    transormedMessage=$(echo $transormedMessage | sed -e "s|feat:|<span title=\"Feature\">✨</span>|gi" -e "s|fix:|<span title=\"Fix\">🐛</span>|gi" -e "s|Merge Translations|<span title=\"i18n\">🏁</span> Merge Translations|g")
+    for buildersTask in $buildersTasks; do
+      buildersTaskID=$(echo $buildersTask | sed -E 's/(BUILDER|MEED)(S)?-//gi')
+      transormedMessage=$(echo $transormedMessage | sed "s|$buildersTask|<a href=\"https://builders.meeds.io/portal/meeds/tasks/taskDetail/$buildersTaskID\">$buildersTask</a>|g")
+    done
+    for eXoTask in $eXoTasks; do
+      eXoTaskID=$(echo $eXoTask | sed -E 's/(TASK|MAINT|EXO)-//gi')
+      transormedMessage=$(echo $transormedMessage | sed "s|$eXoTask|<a href=\"https://community.exoplatform.com/portal/dw/tasks/taskDetail/$eXoTaskID\">$eXoTask</a>|g")
+    done
+    for githubIssue in $githubIssues; do
+      githubIssueID=$(echo $githubIssue | sed 's|Meeds-io/meeds#||gi')
+      transormedMessage=$(echo $transormedMessage | sed "s|$githubIssue|<a href=\"https://github.com/Meeds-io/meeds/issues/$githubIssueID\">$githubIssue</a>|g")
+      githubMeedsIssues=$(addGithubIssue "meeds-${githubIssueID}" ${githubMeedsIssues})
+    done
+    for githubMIPSIssue in $githubMIPSIssues; do
+      githubMIPSIssueID=$(echo $githubMIPSIssue | sed -e 's|Meeds-io/MIPs#||gi' -e 's|Meeds-io/MPIs#||gi')
+      transormedMessage=$(echo $transormedMessage | sed "s|$githubMIPSIssue|<a href=\"https://github.com/Meeds-io/MIPs/issues/$githubMIPSIssueID\">$githubMIPSIssue</a>|g")
+      githubMeedsIssues=$(addGithubIssue "mips-${githubMIPSIssueID}" ${githubMeedsIssues})
+    done
+    sourceCommitID=$(findSourceCommit $commitId)
+    verificationCheck=""
+    if isCommitVerified "${commitMetadata}"; then
+      verificationCheck="<span title=\"Verified commit\">✅</span>"
+    fi
+    commitsLangURLs=$(getCommitLangURLs $commitId)
+    if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then
+      sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
+      elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Source commit\">🍒</a> $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+    else
+      elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+    fi
+    echo "$commitLink $message *** $author -- $authorTribeID"
+    echo "	($fomattedCommitId) $message --- $author" >>$changelogfile
+    subbody="$subbody$elt"
+  done
+  beforeTagCommitID=$(git rev-parse --short $before_tag_name~2)
+  tagCommitID=$(git rev-parse --short $tag_name~2)
+  fullchangeloglink=$(echo "<a href=\"https://github.com/${org}/${item}/compare/${beforeTagCommitID}...${tagCommitID}\">$before_tag_name..$tag_name</a>" | gawk '{ gsub(/"/,"\\\"") } 1')
+  [ -z "$subbody" ] || body="$body<li><b>$item</b> ${fullchangeloglink} (${commitstats}):\n\t<ul>\n\t$subbody</ul>\n\t</li>\n\t"
+  set -e
+  popd &>/dev/null
 done
-[ -z "$(echo $body | xargs)" ] && echo "-- No changelog for this release." >> $changelogfile
-echo "" >> $changelogfile
-echo "===" >> $changelogfile
+[ -z "$(echo $body | xargs)" ] && echo "-- No changelog for this release." >>$changelogfile
+echo "" >>$changelogfile
+echo "===" >>$changelogfile
 bodyStatus="$body"
-[ -z "$(echo $body | xargs)" ] && body="<p>The changelog $plf_range is empty now, but awesome things are coming... stay tuned :)</p>" || body="<ul>\n\t$body</ul>"
+[ -z "$(echo $body | xargs)" ] && body="<p>The changelog $plf_range is empty now, but awesome things are coming... stay tuned :)</p>" || body="<p>Release changes:</p>\n\n<ul>\n\t$body</ul>"
 dep_status=$(echo "Deployment status: \n\t\n\t<a href=\"$grafana_dashboard\">Grafana Dashboard</a>.\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
 #yearnotif=$(echo "<br/><br/>This is the <b>latest changelog</b> of $(date +%Y)! See you next year! 🎊 🎊 🥳 🥳\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+if [ ! -z "${githubMeedsIssues}" ]; then
+  listitemsCount=0
+  githubIssuesblock="<p>Github Issues:</p>\n\n<ul>\n\n"
+  githubIssueItems=""
+  for githubMeedsIssue in ${githubMeedsIssues}; do
+    [[ ${githubMeedsIssue} =~ ^mips ]] && issueRepo="Meeds-io/Mips" || issueRepo="Meeds-io/meeds" 
+    githubMeedsIssueNumber=$(echo $githubMeedsIssue | grep -oP '[0-9]+$')
+    githubIssueMetadata=$(getIssueMetadataFromGithub $issueRepo $githubMeedsIssueNumber)
+    githubIssueLink=$(getIssueURLFromMetadata "${githubIssueMetadata}")
+    githubIssueLinkText=$(echo ${githubMeedsIssue^} | sed -e 's/-/#/g' -e 's/mips/MIPs/gi')
+    githubIssueTitle=$(getIssueTitleFromMetadata "${githubIssueMetadata}")
+    githubIssueState=$(getIssueStateFromMetadata "${githubIssueMetadata}")
+    stateEmoji="<span title=\"Open\">🔓</span>"
+    if [ ${githubIssueState} = "closed" ]; then
+      stateReason=$(getIssueStateReasonFromMetadata "${githubIssueMetadata}")
+      if [ "${stateReason}" = "completed" ]; then 
+        stateEmoji="<span title=\"Completed\">✅</span>"
+      else 
+        stateEmoji="<span title=\"Closed\">🔒</span>"
+      fi
+    fi
+    elt=$(echo "<li><b><a href=\"$githubIssueLink\">${githubIssueLinkText}</a>:</b> $githubIssueTitle ${stateEmoji}</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+    listitemsCount=$((listitemsCount + 1))
+    githubIssueItems="${githubIssueItems}\n${elt}"
+  done
+  githubIssuesblock="${githubIssuesblock}${githubIssueItems}</ul>"
+  [ "$listitemsCount" -gt "0" ] && body="$body$githubIssuesblock"
+fi
 if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
   listitemsCount=0
   contributors="<p>Github Contributors:</p>\n\n"
-  for githubUser in ${!tribeGithbIds[@]}; do 
+  for githubUser in ${!tribeGithbIds[@]}; do
     [ "${githubUser}" = "exo-swf" ] && continue
     [ -z "${githubScore[${tribeGithbIds[$githubUser]:-}]:-}" ] && continue
     githubUserMetadata=$(getUserMetadataFromGithub $githubUser)
@@ -290,7 +358,7 @@ if [ ! -z "$(echo $bodyStatus | xargs)" ]; then
     score=$((${githubScore[${tribeGithbIds[$githubUser]}]}))
     contrib=$(echo "<ol style=\"display: inline-block;text-align: center;list-style-type: none;\"><a href=\"${githubURL}\"><img src=\"${githubAvatarURL}\" title=\"${githubFullName}\" style=\"height:30px;border-radius: 50%;\"></a><br/><span>${score} pts</span></ol>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
     contributors=${contributors}${contrib}
-    listitemsCount=$((listitemsCount+1))
+    listitemsCount=$((listitemsCount + 1))
   done
   [ "$listitemsCount" -gt "0" ] && body="$body$contributors<br/>"
 fi
@@ -316,10 +384,10 @@ for SPACE_ID in ${SPACES_IDS/,/ }; do
   activityIds="${activityId} ${activityIds}"
 done
 winner=$(getWinner)
-if [ ! -z "${activityId}" ] && [ ! -z "${winner}" ]; then 
+if [ ! -z "${activityId}" ] && [ ! -z "${winner}" ]; then
   congratulationsMsg="Congratulations, you are the winner of ${plfVersion}'s changelog! Keep it up !🎖🎖🎖"
   winnerScore=$((${githubScore[$winner]}))
-  if [ "${winnerScore:-0}" -gt "999" ]; then 
+  if [ "${winnerScore:-0}" -gt "999" ]; then
     congratulationsMsg="Warmest congratulations on your achievement! Wishing you even more success in the future! 🏆🥇"
   fi
   echo "Generating Kudos on activity #${activityId}... Winner is ${winner}."
