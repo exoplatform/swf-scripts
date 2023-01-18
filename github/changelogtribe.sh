@@ -9,11 +9,10 @@ MAX_REV_LIST_DEPTH=200
 
 githubMeedsIssues=""
 
-JS_DELIVR_URL="https://cdn.jsdelivr.net/gh/devicons/devicon@master/icons"
-
 declare -A tribeGithbIds=( [exo-swf]=NA )
 declare -A githubScore=( [exo-swf]=0 )
 declare -A fileExtensionsMapping=([java]=java [jsp]=java [gtmpl]=groovy [groovy]=groovy [vue]=vuejs [js]=javascript [css]=css3 [less]=less [sh]=bash [feature]=selenium)
+declare -A fontAwesomeMapping=([java]=java [vuejs]=vuejs [javascript]=js [css3]=css3 [less]=less [bash]=terminal [selenium]=vial)
 
 function hasArrayValue() {
   local item="$1"
@@ -28,18 +27,6 @@ function addGithubIssue() {
   local tmpArray="$@"
   hasArrayValue $item ${tmpArray[@]} || tmpArray="${tmpArray} $item"
   echo ${tmpArray} | awk 'BEGIN{RS=" ";} {print $1}' | sort | uniq
-}
-
-getJSDELIVRURL() {
-  lang=${1:-}
-  [ -z "${lang}" ] && return
-  if [ "${lang}" = "less" ]; then
-    echo "${JS_DELIVR_URL}/${lang}/${lang}-plain-wordmark.svg"
-  elif [ "${lang}" = "selenium" ] || [ "${lang}" = "vuejs" ] || [ "${lang}" = "java" ]; then
-    echo "${JS_DELIVR_URL}/${lang}/${lang}-original.svg"
-  else
-    echo "${JS_DELIVR_URL}/${lang}/${lang}-plain.svg"
-  fi
 }
 
 getCommitProgrammingLanguages() {
@@ -57,8 +44,8 @@ getCommitLangURLs() {
   langs=$(getCommitProgrammingLanguages $1 | xargs -n1 | sort -u | xargs)
   languagesURLs=""
   for lang in $langs; do
-    langURL=$(getJSDELIVRURL $lang)
-    langHTML="<img src=\"${langURL}\" title=\"${lang^}\" style=\"height:20px; vertical-align: middle;\">"
+    fontawesomeItem=${fontAwesomeMapping[$lang]} 
+    langHTML="<i aria-hidden=\"true\" class=\"v-icon notranslate fab fa-${fontawesomeItem} theme--light\" style=\"font-size: 16px;\" title=\"${lang^}\"></i>"
     [ -z "${languagesURLs}" ] && languagesURLs="$langHTML" || languagesURLs="${languagesURLs} $langHTML"
   done
   echo $languagesURLs
@@ -102,6 +89,16 @@ getCommitAuthorFromMetadata() {
 isCommitVerified() {
   local status=$(echo "$1" | jq .commit.verification.verified | xargs -r echo || echo "false")
   [ "${status}" = "true" ]
+}
+
+isCommitVerifiedByGithub() {
+  echo "$1" | jq .commit.verification.payload | grep -q 'committer GitHub <noreply@github.com>'
+}
+
+isCommitSignedByexoswf() {
+  local authorEmail=$(echo "$1" | jq .commit.author.email | xargs -r echo )
+  local committerEmail=$(echo "$1" | jq .commit.committer.email | xargs -r echo )
+  echo "$1" | jq .commit.verification.payload | grep -q '<exo-swf@exoplatform.com>' && [ "${authorEmail}" != "${committerEmail}" ]
 }
 
 getUserMetadataFromGithub() {
@@ -267,7 +264,10 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     githubIssues=$(echo $message | grep -oPi 'Meeds-io/meeds#[0-9]+' | sort -u | xargs)
     githubMIPSIssues=$(echo $message | grep -oPi 'Meeds-io/M[IP]{2}s#[0-9]+' | sort -u | xargs)
     transormedMessage="$message"
-    transormedMessage=$(echo $transormedMessage | sed -e "s|feat:|<span title=\"Feature\">✨</span>|gi" -e "s|fix:|<span title=\"Fix\">🐛</span>|gi" -e "s|Merge Translations|<span title=\"i18n\">🏁</span> Merge Translations|g")
+    featureHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fas fa-rocket theme--light\" style=\"font-size: 16px;\" title=\"Feature\"></i>"
+    bugHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fas fa-bug theme--light\" style=\"font-size: 16px;\" title=\"Bug\"></i>"
+    i18nHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fas fa-flag theme--light\" style=\"font-size: 16px;\" title=\"i18n\"></i>"
+    transormedMessage=$(echo $transormedMessage | sed -e "s|feat:|${featureHtml}|gi" -e "s|fix:|${bugHtml}|gi" -e "s|Merge Translations|${i18nHtml} Merge Translations|g")
     for buildersTask in $buildersTasks; do
       buildersTaskID=$(echo $buildersTask | sed -E 's/(BUILDER|MEED)(S)?-//gi')
       transormedMessage=$(echo $transormedMessage | sed "s|$buildersTask|<a href=\"https://builders.meeds.io/portal/meeds/tasks/taskDetail/$buildersTaskID\">$buildersTask</a>|g")
@@ -289,12 +289,19 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     sourceCommitID=$(findSourceCommit $commitId)
     verificationCheck=""
     if isCommitVerified "${commitMetadata}"; then
-      verificationCheck="<span title=\"Verified commit\">✅</span>"
+      if isCommitVerifiedByGithub "${commitMetadata}"; then
+        verificationCheck="<i aria-hidden=\"true\" class=\"v-icon notranslate far fa-check-circle theme--light\" style=\"font-size: 16px;\" title=\"Verified commit (Signed by Github)\"></i>"
+      elif isCommitSignedByexoswf "${commitMetadata}"; then
+        verificationCheck="<i aria-hidden=\"true\" class=\"v-icon notranslate far fa-check-circle theme--light\" style=\"font-size: 16px;\" title=\"Verified commit (Signed by exo-swf)\"></i>"
+      else
+        verificationCheck="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-check-circle theme--light\" style=\"font-size: 16px;\" title=\"Verified commit (Self Signed)\"></i>"
+      fi
     fi
     commitsLangURLs=$(getCommitLangURLs $commitId)
     if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then
       sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
-      elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Source commit\">🍒</a> $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+      cherrypickHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fab fa-sourcetree theme--light\" style=\"font-size: 16px;\"></i>"
+      elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Source commit\">${cherrypickHtml}</a> $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
     else
       elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
     fi
@@ -328,13 +335,13 @@ if [ ! -z "${githubMeedsIssues}" ]; then
     githubIssueLinkText=$(echo ${githubMeedsIssue^} | sed -e 's/-/#/g' -e 's/mips/MIPs/gi')
     githubIssueTitle=$(getIssueTitleFromMetadata "${githubIssueMetadata}")
     githubIssueState=$(getIssueStateFromMetadata "${githubIssueMetadata}")
-    stateEmoji="<span title=\"Open\">🔓</span>"
+    stateEmoji="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-door-open theme--light\" style=\"font-size: 16px;\" title=\"Open\"></i>"
     if [ ${githubIssueState} = "closed" ]; then
       stateReason=$(getIssueStateReasonFromMetadata "${githubIssueMetadata}")
       if [ "${stateReason}" = "completed" ]; then 
-        stateEmoji="<span title=\"Completed\">✅</span>"
+        stateEmoji="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-check theme--light\" style=\"font-size: 16px;\" title=\"Completed\"></i>"
       else 
-        stateEmoji="<span title=\"Closed\">🔒</span>"
+        stateEmoji="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-door-closed theme--light\" style=\"font-size: 16px;\" title=\"Closed\"></i>"
       fi
     fi
     elt=$(echo "<li><b><a href=\"$githubIssueLink\">${githubIssueLinkText}</a>:</b> $githubIssueTitle ${stateEmoji}</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
