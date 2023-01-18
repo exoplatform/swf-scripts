@@ -26,13 +26,17 @@ env:
   pull_number: ${{ github.event.pull_request.number }}
   requested_reviewer: ${{ github.event.requested_reviewer.login }}
   creator: ${{ github.event.pull_request.user.login }}
-  repo_name: ${{ github.event.repository.full_name }}
+  full_repo_name: ${{ github.event.repository.full_name }}
+  repo_name: ${{ github.event.repository.name }}
   base_branch_name: ${{ github.event.pull_request.base.ref }}
+  GH_TOKEN: ${{ github.token }}
 jobs:
   check_tasks:
     name: Check for tasks identifiers
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: PLF Tasks Webhook
         run: |
           case ${{ inputs.TARGET_SERVER }} in
@@ -54,6 +58,9 @@ jobs:
           doGetCurl() {
             curl -A "eXo Webhook Tasks/1.0" -s -f -L -u ${SERVER_USERNAME}:${SERVER_PASSWORD} -XGET $*
           }
+          isMavenRepo() {
+            [ -f pom.xml ] && grep -q developerConnection pom.xml
+          }
           if [[ ! ${base_branch_name} =~ ^(master|develop(-exo|-meed)?|feature\/[A-Za-z-]+[0-9]?|stable\/[0-9]+(\.[0-9]+)*\.x)$ ]]; then
             echo "Branch ${base_branch_name} is not supported for Task notification. Abort"
             exit 0
@@ -69,7 +76,7 @@ jobs:
             exit 0
           fi
           echo "OK Task(s) found! Starting notifications..."
-          link="PR <a href=\"https://github.com/${repo_name}/pull/${pull_number}\">${repo_name}#${pull_number}</a>"
+          link="PR <a href=\"https://github.com/${full_repo_name}/pull/${pull_number}\">${full_repo_name}#${pull_number}</a>"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             if [ "${{ github.event.action }}" = "review_requested" ]; then
               serverUser=$(doGetCurl "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${requested_reviewer}" || echo "")
@@ -81,8 +88,8 @@ jobs:
                 exit 0
               fi
             elif [ "${{ github.event.pull_request.merged }}" = "true" ]; then
-              mergedCommitlink="<a href=\"https://github.com/${repo_name}/commit/${{ github.event.pull_request.merge_commit_sha }}\">merged</a>"
-              base_branch_link="<a href=\"https://github.com/${repo_name}/tree/${base_branch_name}\">${base_branch_name}</a>"
+              mergedCommitlink="<a href=\"https://github.com/${full_repo_name}/commit/${{ github.event.pull_request.merge_commit_sha }}\">merged</a>"
+              base_branch_link="<a href=\"https://github.com/${full_repo_name}/tree/${base_branch_name}\">${base_branch_name}</a>"
               mergerGithubUser="${{ github.event.pull_request.merged_by.login }}"
               mergerServerUser=$(doGetCurl "${SERVER_GAMGH_CONNECTOR_REST_URL}/users/${mergerGithubUser}" || echo "")
               mergerServerProfile=$(doGetCurl "${SERVER_URL}/rest/private/v1/social/users/${mergerServerUser}" 2>/dev/null || echo "")
@@ -96,7 +103,13 @@ jobs:
             elif [ "${{ github.event.action }}" = "closed" ]; then
               msg="🍂 $link has been ${{ github.event.action }}."
             elif [ "${{ github.event.action }}" = "opened" ]; then
-              msg="🌱 $link has been created."
+              jenkinsBuildstatusHyperlink=""
+              if isMavenRepo; then 
+                jenkinsBuildstatus="https://ci.exoplatform.org/buildStatus/icon?job=PR/${repo_name}-pr-${pull_number}-ci"
+                jenkinsBuildstatuslink="https://ci.exoplatform.org/view/PR/job/PR/job/${repo_name}-pr-${pull_number}-ci"
+                jenkinsBuildstatusHyperlink=" <a href=\"${jenkinsBuildstatuslink}\"><img src=\"${jenkinsBuildstatus}\" title=\"Build Status\"></a>"
+              fi
+              msg="🌱 $link has been created.${jenkinsBuildstatusHyperlink}"
             elif [ "${{ github.event.action }}" = "reopened" ]; then
               msg="🍃 $link has been ${{ github.event.action }}."
             else
