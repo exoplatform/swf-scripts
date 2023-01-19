@@ -134,7 +134,7 @@ getUserFullNameFromMetadata() {
 
 getUserAvatarURLFromMetadata() {
   local _id="$1"
-  echo $(echo "$1" | jq .avatar_url | xargs -r echo)
+  echo $(echo "$1" | jq .avatar_url | xargs -r echo)'&s=30'
 }
 
 getTribeAuthorFromGithb() {
