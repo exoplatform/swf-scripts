@@ -45,7 +45,7 @@ getCommitLangURLs() {
   languagesURLs=""
   for lang in $langs; do
     fontawesomeItem=${fontAwesomeMapping[$lang]} 
-    langHTML="<i aria-hidden=\"true\" class=\"v-icon notranslate fab fa-${fontawesomeItem} theme--light\" style=\"font-size: 16px;\" title=\"${lang^}\"></i>"
+    langHTML="<i aria-hidden=\"true\" class=\"v-icon notranslate fab fa-${fontawesomeItem} theme--light\" style=\"font-size: 14px;\" title=\"${lang^}\"></i>"
     [ -z "${languagesURLs}" ] && languagesURLs="$langHTML" || languagesURLs="${languagesURLs} $langHTML"
   done
   echo $languagesURLs
@@ -264,9 +264,9 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     githubIssues=$(echo $message | grep -oPi 'Meeds-io/meeds#[0-9]+' | sort -u | xargs)
     githubMIPSIssues=$(echo $message | grep -oPi 'Meeds-io/M[IP]{2}s#[0-9]+' | sort -u | xargs)
     transormedMessage="$message"
-    featureHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fas fa-rocket theme--light\" style=\"font-size: 16px;\" title=\"Feature\"></i>"
-    bugHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fas fa-bug theme--light\" style=\"font-size: 16px;\" title=\"Bug\"></i>"
-    i18nHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fas fa-flag theme--light\" style=\"font-size: 16px;\" title=\"i18n\"></i>"
+    featureHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-seedling theme--light\" style=\"font-size: 14px;\" title=\"Feature\"></i>"
+    bugHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-bug theme--light\" style=\"font-size: 14px;\" title=\"Bug\"></i>"
+    i18nHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate far fa-flag theme--light\" style=\"font-size: 14px;\" title=\"i18n\"></i>"
     transormedMessage=$(echo $transormedMessage | sed -e "s|feat:|${featureHtml}|gi" -e "s|fix:|${bugHtml}|gi" -e "s|Merge Translations|${i18nHtml} Merge Translations|g")
     for buildersTask in $buildersTasks; do
       buildersTaskID=$(echo $buildersTask | sed -E 's/(BUILDER|MEED)(S)?-//gi')
@@ -290,18 +290,18 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     verificationCheck=""
     if isCommitVerified "${commitMetadata}"; then
       if isCommitVerifiedByGithub "${commitMetadata}"; then
-        verificationCheck="<i aria-hidden=\"true\" class=\"v-icon notranslate far fa-check-circle theme--light\" style=\"font-size: 16px;\" title=\"Verified commit (Signed by Github)\"></i>"
+        verificationCheck="<i aria-hidden=\"true\" class=\"v-icon notranslate far fa-check-circle theme--light\" style=\"font-size: 14px;\" title=\"Verified commit (Signed by Github)\"></i>"
       elif isCommitSignedByexoswf "${commitMetadata}"; then
-        verificationCheck="<i aria-hidden=\"true\" class=\"v-icon notranslate far fa-check-circle theme--light\" style=\"font-size: 16px;\" title=\"Verified commit (Signed by exo-swf)\"></i>"
+        verificationCheck="<i aria-hidden=\"true\" class=\"v-icon notranslate far fa-check-circle theme--light\" style=\"font-size: 14px;\" title=\"Verified commit (Signed by exo-swf)\"></i>"
       else
-        verificationCheck="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-check-circle theme--light\" style=\"font-size: 16px;\" title=\"Verified commit (Self Signed)\"></i>"
+        verificationCheck="<i aria-hidden=\"true\" class=\"v-icon notranslate fas fa-check-circle theme--light\" style=\"font-size: 14px;\" title=\"Verified commit (Self Signed)\"></i>"
       fi
     fi
     commitsLangURLs=$(getCommitLangURLs $commitId)
     if [ ! -z "${sourceCommitID}" ] && ! isSameCommit $sourceCommitID $commitId; then
       sourceCommitLink="$modulelink/commit/$(git rev-parse $sourceCommitID)"
-      cherrypickHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate fab fa-sourcetree theme--light\" style=\"font-size: 16px;\"></i>"
-      elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>)<a href=\"$sourceCommitLink\" title=\"Source commit\">${cherrypickHtml}</a> $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
+      cherrypickHtml="<i aria-hidden=\"true\" class=\"v-icon notranslate far fa-clone theme--light\" style=\"font-size: 14px;\"></i>"
+      elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) <a href=\"$sourceCommitLink\" title=\"Source commit\">${cherrypickHtml}</a> $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
     else
       elt=$(echo "<li>(<a href=\"$commitLink\">$fomattedCommitId</a>) $transormedMessage <b>$authorLink</b> $commitsLangURLs $verificationCheck</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
     fi
@@ -335,13 +335,13 @@ if [ ! -z "${githubMeedsIssues}" ]; then
     githubIssueLinkText=$(echo ${githubMeedsIssue^} | sed -e 's/-/#/g' -e 's/mips/MIPs/gi')
     githubIssueTitle=$(getIssueTitleFromMetadata "${githubIssueMetadata}")
     githubIssueState=$(getIssueStateFromMetadata "${githubIssueMetadata}")
-    stateEmoji="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-door-open theme--light\" style=\"font-size: 16px;\" title=\"Open\"></i>"
+    stateEmoji="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-door-open theme--light\" style=\"font-size: 14px;\" title=\"Open\"></i>"
     if [ ${githubIssueState} = "closed" ]; then
       stateReason=$(getIssueStateReasonFromMetadata "${githubIssueMetadata}")
       if [ "${stateReason}" = "completed" ]; then 
-        stateEmoji="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-check theme--light\" style=\"font-size: 16px;\" title=\"Completed\"></i>"
+        stateEmoji="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-check theme--light\" style=\"font-size: 14px;\" title=\"Completed\"></i>"
       else 
-        stateEmoji="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-door-closed theme--light\" style=\"font-size: 16px;\" title=\"Closed\"></i>"
+        stateEmoji="<i aria-hidden=\"true\" class=\"v-icon notranslate fa fa-door-closed theme--light\" style=\"font-size: 14px;\" title=\"Closed\"></i>"
       fi
     fi
     elt=$(echo "<li><b><a href=\"$githubIssueLink\">${githubIssueLinkText}</a>:</b> $githubIssueTitle ${stateEmoji}</li>\n\t" | gawk '{ gsub(/"/,"\\\"") } 1')
