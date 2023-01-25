@@ -44,6 +44,7 @@ getCommitLangURLs() {
   langs=$(getCommitProgrammingLanguages $1 | xargs -n1 | sort -u | xargs)
   languagesURLs=""
   for lang in $langs; do
+    [ -z "${fontAwesomeMapping[$lang]:-}" ] && continue
     fontawesomeItem=${fontAwesomeMapping[$lang]} 
     langHTML="<i aria-hidden=\"true\" class=\"v-icon notranslate fab fa-${fontawesomeItem} theme--light\" style=\"font-size: 14px;\" title=\"${lang^}\"></i>"
     [ -z "${languagesURLs}" ] && languagesURLs="$langHTML" || languagesURLs="${languagesURLs} $langHTML"
