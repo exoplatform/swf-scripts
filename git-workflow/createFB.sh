@@ -72,6 +72,12 @@ ADDON_ONLYOFFICE_TARGET_VERSION=2.5.x-$BRANCH-SNAPSHOT
 # Add-on eXo saml2	
 ADDON_SAML2_ORIGIN_VERSION=3.5.x-SNAPSHOT
 ADDON_SAML2_TARGET_VERSION=3.5.x-$BRANCH-SNAPSHOT
+# Add-on eXo social	
+ADDON_SOCIAL_ORIGIN_VERSION=6.5.x-SNAPSHOT
+ADDON_SOCIAL_TARGET_VERSION=6.5.x-$BRANCH-SNAPSHOT
+# Add-on eXo platform-ui	
+ADDON_PLATFORM-UI_ORIGIN_VERSION=6.5.x-SNAPSHOT
+ADDON_PLATFORM-UI_TARGET_VERSION=6.5.x-$BRANCH-SNAPSHOT
 # Add-on eXo Web Conferencing
 ADDON_WEB_CONFERENCING_ORIGIN_VERSION=2.5.x-SNAPSHOT
 ADDON_WEB_CONFERENCING_TARGET_VERSION=2.5.x-$BRANCH-SNAPSHOT
@@ -189,6 +195,8 @@ function replaceProjectVersion() {
 	perk-store) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PERK_STORE_ORIGIN_VERSION</version>" "<version>$ADDON_PERK_STORE_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	push-notifications) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</version>" "<version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	saml2-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_SAML2_ORIGIN_VERSION</version>" "<version>$ADDON_SAML2_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+	platform-ui-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_PLATFORM-UI_ORIGIN_VERSION</version>" "<version>$ADDON_PLATFORM-UI_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
+    social-addon) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_SOCIAL_ORIGIN_VERSION</version>" "<version>$ADDON_SOCIAL_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	task) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_TASK_ORIGIN_VERSION</version>" "<version>$ADDON_TASK_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	wallet) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WALLET_ORIGIN_VERSION</version>" "<version>$ADDON_WALLET_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	web-conferencing) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</version>" "<version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -254,6 +262,8 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.perk-store.version>$ADDON_PERK_STORE_ORIGIN_VERSION</addon.exo.perk-store.version>" "<addon.exo.perk-store.version>$ADDON_PERK_STORE_TARGET_VERSION</addon.exo.perk-store.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_ORIGIN_VERSION</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>$ADDON_PUSH_NOTIFICATIONS_TARGET_VERSION</addon.exo.push-notifications.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.saml2-addon.version>$ADDON_SAML2_ORIGIN_VERSION</addon.exo.saml2-addon.version>" "<addon.exo.saml2-addon.version>$ADDON_SAML2_TARGET_VERSION</addon.exo.saml2-addon.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.social-addon.version>$ADDON_SOCIAL_ORIGIN_VERSION</addon.exo.social-addon.version>" "<addon.exo.social-addon.version>$ADDON_SOCIAL_TARGET_VERSION</addon.exo.social-addon.version>" "pom.xml -not -wholename \"*/target/*\""
+    $SCRIPTDIR/../replaceInFile.sh "<addon.exo.platform-ui-addon.version>$ADDON_PLATFORM-UI_ORIGIN_VERSION</addon.exo.platform-ui-addon.version>" "<addon.exo.platform-ui-addon.version>$ADDON_PLATFORM-UI_TARGET_VERSION</addon.exo.platform-ui-addon.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ADDON_TASK_ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$ADDON_TASK_TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.wallet.version>$ADDON_WALLET_ORIGIN_VERSION</addon.exo.wallet.version>" "<addon.exo.wallet.version>$ADDON_WALLET_TARGET_VERSION</addon.exo.wallet.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_ORIGIN_VERSION</addon.exo.web-conferencing.version>" "<addon.exo.web-conferencing.version>$ADDON_WEB_CONFERENCING_TARGET_VERSION</addon.exo.web-conferencing.version>" "pom.xml -not -wholename \"*/target/*\""
