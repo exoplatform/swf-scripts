@@ -13,6 +13,10 @@ on:
         required: true
       SERVER_PASSWORD:
         required: true
+      SERVER_TASK_REST_PREFIXE_URL:
+        required: false
+      SERVER_GAMGH_CONNECTOR_REST_URL:
+        required: false
 permissions:
   pull-requests: write
         
