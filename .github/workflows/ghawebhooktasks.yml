@@ -53,7 +53,7 @@ jobs:
           SERVER_DEFAULT_SITENAME: ${{ steps.fetch.outputs.portalSite }}
           SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-          TASKS_REGEX_FILTER: ${{ steps.fetch.outputs.regexFilter }}
+          TASKS_REGEX_FILTER: "${{ steps.fetch.outputs.regexFilter }}"
           
   assign-author:
     name: Assign Pull Request Author
