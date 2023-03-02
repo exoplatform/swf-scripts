@@ -30,7 +30,7 @@ fi
 echo "OK PR is merged."
 echo "Checking PR merge commit"
 PR_MERGE_COMMIT=$(getJsonItem merge_commit_sha)
-echo "OK PR merge status is ${PR_MERGE_COMMIT}"
+echo "OK PR merge commit is ${PR_MERGE_COMMIT}"
 PR_TITLE=$(getJsonItem title)
 PR_BODY=$(getJsonItem body)
 PR_OWNER=$(getJsonItem user.login)
@@ -38,8 +38,9 @@ PR_REPO=$(getJsonItem head.repo.name)
 git clone $PR_CLONE_URL &>/dev/null
 pushd ${PR_REPO}
 git checkout ${TARGET_BASE_BRANCH} &>/dev/null
-git checkout -b backport_$(date +%s)
-if !git cherry-pick -x ${PR_MERGE_COMMIT}; then 
+BRANCH_NAME=backport_$(date +%s)
+git checkout -b ${BRANCH_NAME}
+if ! git cherry-pick -x ${PR_MERGE_COMMIT}; then 
     git cherry-pick --abort &>/dev/null || true
     echo "Cherry-pick failed! Performing patch method..."
     PR_PATCH_URL=$(getJsonItem patch_url)
@@ -60,4 +61,4 @@ git push origin HEAD
 if [ ${REVIEWERS:-} = "_OWNER_" ]; then 
     REVIEWERS=$PR_OWNER
 fi
-gh pr create --repo $PR_CLONE_URL --title "${PR_TITLE}" --body "${PR_BODY}" --reviewers "${REVIEWERS}" --assignee "${PR_OWNER}" --base "${TARGET_BASE_BRANCH}" --branch HEAD
+gh pr create --repo $PR_CLONE_URL -f --reviewer "${REVIEWERS}" --assignee "${PR_OWNER}" --base "${TARGET_BASE_BRANCH}" --head ${BRANCH_NAME}
