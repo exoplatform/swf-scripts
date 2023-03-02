@@ -5,7 +5,9 @@ getJsonItem() {
     echo $PR_JSON | jq ".$1" | xargs -r echo 
 }
 
-if [ -z "${PR_URL:-}" ]; then 
+# Sanitize PR URL
+PR_URL=$(${PR_URL:-} | grep -oP 'https://github.com/[a-zA-Z0-9-_]+/[a-zA-Z0-9-_]+/pull/[0-9]+')
+if [ -z "${PR_URL:-}"]; then 
   echo "Error: Please provide a valid PR URL!"
   exit 1
 fi
@@ -62,3 +64,6 @@ if [ ${REVIEWERS:-} = "_OWNER_" ]; then
     REVIEWERS=$PR_OWNER
 fi
 gh pr create --repo $PR_CLONE_URL -f --reviewer "${REVIEWERS}" --assignee "${PR_OWNER}" --base "${TARGET_BASE_BRANCH}" --head ${BRANCH_NAME}
+if [ "${AUTO_MERGE:-DEFAULT}" != "DEFAULT" ]; then 
+  gh pr merge --auto --${AUTO_MERGE} --repo $PR_CLONE_URL
+fi
