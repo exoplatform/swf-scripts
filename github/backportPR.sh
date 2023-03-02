@@ -63,6 +63,9 @@ git push origin HEAD
 if [ ${REVIEWERS:-} = "_OWNER_" ]; then 
     REVIEWERS=$PR_OWNER
 fi
+if [ ! -z ${GH_ACTOR_TOKEN:-} ]; then
+  export GH_TOKEN=${GH_ACTOR_TOKEN}
+fi
 gh pr create --repo $PR_CLONE_URL -f --reviewer "${REVIEWERS}" --assignee "${PR_OWNER}" --base "${TARGET_BASE_BRANCH}" --head ${BRANCH_NAME}
 if [ "${AUTO_MERGE:-DEFAULT}" != "DEFAULT" ]; then 
   gh pr merge --auto --${AUTO_MERGE} --repo $PR_CLONE_URL
