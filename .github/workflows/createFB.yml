@@ -3,30 +3,12 @@ name: Create Git Feature Branches for PLF projects
 on:
   workflow_dispatch:
     inputs:
-      # BRANCH:
-      #   type: text
-      #   description: the branch name you want to add it
-      # ISSUE:
-      #   type: text
-      #   description: the task id like task-1234
       ORIGIN_BRANCH: 
         type: text
         description: like develop-meed or develop or develop-exo 
-      # DEFAULT_BRANCH: 
-      #   type: text
-      #   description: the default branche you want to base on like develop or develop-exo
       TARGET_BRANCH:
         type: text
         description: the feature branche you want to add it like feature/$BRANCH
-      # ORIGIN_VERSION:
-      #   type: text
-      #   description: the plf version like the current version is 6.5.x-SNAPSHOT
-      # TARGET_VERSION:
-      #   type: text
-      #   description: the target plf version
-      # MEEDS_DISTRIB:
-      #   type: text
-      #   description: add the meeds version like "-exo" or '-meed' or ''
 concurrency:
   group: once-per-time
 
