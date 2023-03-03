@@ -1,0 +1,64 @@
+name: Create Git Feature Branches for PLF projects 
+
+on:
+  workflow_dispatch:
+    inputs:
+      # BRANCH:
+      #   type: text
+      #   description: the branch name you want to add it
+      # ISSUE:
+      #   type: text
+      #   description: the task id like task-1234
+      ORIGIN_BRANCH: 
+        type: text
+        description: like develop-meed or develop or develop-exo 
+      # DEFAULT_BRANCH: 
+      #   type: text
+      #   description: the default branche you want to base on like develop or develop-exo
+      TARGET_BRANCH:
+        type: text
+        description: the feature branche you want to add it like feature/$BRANCH
+      # ORIGIN_VERSION:
+      #   type: text
+      #   description: the plf version like the current version is 6.5.x-SNAPSHOT
+      # TARGET_VERSION:
+      #   type: text
+      #   description: the target plf version
+      # MEEDS_DISTRIB:
+      #   type: text
+      #   description: add the meeds version like "-exo" or '-meed' or ''
+concurrency:
+  group: once-per-time
+
+jobs:
+  create_fb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+       - name: Checkout
+         uses: actions/checkout@v3
+         with: 
+           ref: fbs
+           token: ${{ secrets.SWF_TOKEN }}
+       - name: install ssh
+         uses: shimataro/ssh-key-action@v2
+         with:
+           key: ${{ secrets.SSH_KEY }}
+           known_hosts: ${{ secrets.KNOWN_HOSTS }}.
+          #  config: |
+          #    Host ${{ secrets.HOST }}
+          #    HostName ${{ secrets.HOST }}
+          #    User ${{ secrets.USERNAME }}
+      #  - name: default meeds branch
+       - name: run createFB script
+         run: |
+            chmod +x ./git-workflow/createFB.sh
+            ./git-workflow/createFB.sh
+         shell: bash
+       
+      #  -   run: |
+      #          git clone https://github.com/mpdude/test-1.git test-1-http
+      #          git clone git@github.com:mpdude/test-1.git test-1-git
+      #          git clone ssh://git@github.com/mpdude/test-1.git test-1-git-ssh
+      #          git clone https://github.com/mpdude/test-2.git test-2-http
+      #          git clone git@github.com:mpdude/test-2.git test-2-git
