@@ -9,8 +9,8 @@ on:
       TARGET_BRANCH:
         type: text
         description: the feature branche you want to add it like feature/$BRANCH
-concurrency:
-  group: once-per-time
+# concurrency:
+#   group: once-per-time
 
 jobs:
   create_fb:
