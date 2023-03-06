@@ -2,7 +2,7 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=devx
+BRANCH=test
 ISSUE=TASK-62301
 ORIGIN_BRANCH=develop # develop-meed or develop 
 DEFAULT_BRANCH=develop
@@ -135,10 +135,64 @@ function repoInit() {
 	printf "\e[1;33m########################################\e[m\n"
 	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
 	printf "\e[1;33m########################################\e[m\n"
-	pushd ${repo_name}
+	# pushd ${repo_name}
 }
 
 function repoCleanup() {
+	echo "========================================="
+    echo "cloning Meeds projects"
+	echo "========================================="
+	git clone git@github.com:Meeds-io/gatein-wci.git ../../repo-Meeds/wci
+    git clone git@github.com:Meeds-io/kernel.git ../../repo-Meeds/kernel
+    git clone git@github.com:Meeds-io/core.git ../../repo-Meeds/core
+    git clone git@github.com:Meeds-io/ws.git ../../repo-Meeds/ws
+    git clone git@github.com:Meeds-io/gatein-sso.git ../../repo-Meeds/gatein-sso
+    git clone git@github.com:Meeds-io/gatein-portal.git ../../repo-Meeds/gatein-portal
+    git clone git@github.com:Meeds-io/maven-depmgt-pom.git ../../repo-Meeds/maven-depmgt-pom
+    git clone git@github.com:Meeds-io/platform-ui.git ../../repo-Meeds/platform-ui
+	git clone git@github.com:Meeds-io/commons.git ../../repo-Meeds/commons
+    git clone git@github.com:Meeds-io/social.git ../../repo-Meeds/social
+    git clone git@github.com:Meeds-io/addons-manager.git ../../repo-Meeds/addons-manager
+    git clone git@github.com:Meeds-io/app-center.git ../../repo-Meeds/app-center
+    git clone git@github.com:Meeds-io/gamification.git ../../repo-Meeds/gamification
+    git clone git@github.com:Meeds-io/kudos.git ../../repo-Meeds/kudos
+    git clone git@github.com:Meeds-io/perk-store.git ../../repo-Meeds/perk-store
+    git clone git@github.com:Meeds-io/wallet.git ../../repo-Meeds/wallet
+    git clone git@github.com:Meeds-io/meeds.git ../../repo-Meeds/meeds
+    git clone git@github.com:Meeds-io/push-notifications.git ../../repo-Meeds/push-notifications
+    git clone git@github.com:Meeds-io/notes.git ../../repo-Meeds/notes
+    git clone git@github.com:Meeds-io/analytics.git ../../repo-Meeds/analytics
+    git clone git@github.com:Meeds-io/task.git ../../repo-Meeds/task
+    git clone git@github.com:Meeds-io/poll.git ../../repo-Meeds/poll
+    git clone git@github.com:Meeds-io/gamification-github.git ../../repo-Meeds/gamification-github
+
+	echo "========================================="
+    echo "cloning eXo projects"
+	echo "========================================="
+    git clone git@github.com:exoplatform/ecms.git ../../repo-eXo/ecms
+    git clone git@github.com:exoplatform/jcr.git ../../repo-eXo/jcr
+    git clone git@github.com:exoplatform/agenda.git ../../repo-eXo/agenda
+    git clone git@github.com:exoplatform/jitsi.git ../../repo-eXo/jitsi
+    git clone git@github.com:exoplatform/jitsi-call.git ../../repo-eXo/jitsi-call
+    git clone git@github.com:exoplatform/chat-application.git ../../repo-eXo/chat-application
+    git clone git@github.com:exoplatform/multifactor-authentication.git ../../repo-eXo/multifactor-authentication
+    git clone git@github.com:exoplatform/digital-workplace.git ../../repo-eXo/digital-workplace
+    git clone git@github.com:exoplatform/layout-management.git ../../repo-eXo/layout-management
+    git clone git@github.com:exoplatform/news.git ../../repo-eXo/news
+    git clone git@github.com:exoplatform/onlyoffice.git ../../repo-eXo/onlyoffice
+    git clone git@github.com:exoplatform/saml2-addon.git ../../repo-eXo/saml2-addon
+    git clone git@github.com:exoplatform/web-conferencing.git ../../repo-eXo/web-conferencing
+    git clone git@github.com:exoplatform/data-upgrade.git ../../repo-eXo/data-upgrade
+    git clone git@github.com:exoplatform/platform-private-distributions.git ../../repo-eXo/platform-private-distributions
+    git clone git@github.com:exoplatform/automatic-translation.git ../../repo-eXo/automatic-translation
+    git clone git@github.com:exoplatform/processes.git ../../repo-eXo/processes
+    git clone git@github.com:exoplatform/documents.git ../../repo-eXo/documents
+    git clone git@github.com:exoplatform/mail-integration.git ../../repo-eXo/mail-integration
+    git clone git@github.com:exoplatform/anti-bruteforce.git ../../repo-eXo/anti-bruteforce
+    git clone git@github.com:exoplatform/anti-malware.git ../../repo-eXo/anti-malware
+    git clone git@github.com:exoplatform/dlp.git ../../repo-eXo/dlp
+    git clone git@github.com:exoplatform/agenda-connectors.git ../../repo-eXo/agenda-connectors
+
 	local repo_name=$1
 	# git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
 	printf "\e[1;33m# %s\e[m\n" "Cleaning of ${repo_name} repository ..."
@@ -312,54 +366,54 @@ pushd ${SWF_FB_REPOS}
 
 #Meeds Projects
 createFB gatein-wci
-createFB kernel
-createFB core
-createFB ws
-createFB gatein-pc
-createFB gatein-sso
-createFB gatein-portal
-createFB maven-depmgt-pom
-createFB platform-ui
-createFB commons
-createFB social
-createFB addons-manager
-createFB app-center
-createFB gamification
-createFB kudos
-createFB perk-store
-createFB wallet
-createFB meeds
-createFB push-notifications
-createFB notes
-createFB analytics
-createFB task
-createFB poll
-createFB gamification-github
+# createFB kernel
+# createFB core
+# createFB ws
+# createFB gatein-pc
+# createFB gatein-sso
+# createFB gatein-portal
+# createFB maven-depmgt-pom
+# createFB platform-ui
+# createFB commons
+# createFB social
+# createFB addons-manager
+# createFB app-center
+# createFB gamification
+# createFB kudos
+# createFB perk-store
+# createFB wallet
+# createFB meeds
+# createFB push-notifications
+# createFB notes
+# createFB analytics
+# createFB task
+# createFB poll
+# createFB gamification-github
 
-# Explatform projects
-createFB ecms
-createFB jcr
-createFB agenda
-createFB jitsi
-createFB jitsi-call
-createFB chat-application
-createFB multifactor-authentication
-createFB digital-workplace
-createFB layout-management
-createFB news
-createFB onlyoffice
-createFB saml2-addon
-createFB web-conferencing
-createFB data-upgrade
-createFB platform-private-distributions
-createFB automatic-translation
-createFB processes
-createFB documents
-createFB mail-integration
-createFB anti-bruteforce
-createFB anti-malware
-createFB dlp
-createFB agenda-connectors
+# # Explatform projects
+# createFB ecms
+# createFB jcr
+# createFB agenda
+# createFB jitsi
+# createFB jitsi-call
+# createFB chat-application
+# createFB multifactor-authentication
+# createFB digital-workplace
+# createFB layout-management
+# createFB news
+# createFB onlyoffice
+# createFB saml2-addon
+# createFB web-conferencing
+# createFB data-upgrade
+# createFB platform-private-distributions
+# createFB automatic-translation
+# createFB processes
+# createFB documents
+# createFB mail-integration
+# createFB anti-bruteforce
+# createFB anti-malware
+# createFB dlp
+# createFB agenda-connectors
 popd
 
 echo

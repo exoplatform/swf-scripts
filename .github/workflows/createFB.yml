@@ -17,30 +17,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with: 
-          ref: master
-          token: ${{ secrets.SWF_TOKEN }}
-      - name: install ssh
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}.
+       - name: Checkout
+         uses: actions/checkout@v3
+         with: 
+           ref: master
+           token: ${{ secrets.SWF_TOKEN }}
+       - name: install ssh
+         uses: shimataro/ssh-key-action@v2
+         with:
+           key: ${{ secrets.SSH_KEY }}
+           known_hosts: ${{ secrets.KNOWN_HOSTS }}.
           #  config: |
           #    Host ${{ secrets.HOST }}
           #    HostName ${{ secrets.HOST }}
           #    User ${{ secrets.USERNAME }}
       #  - name: default meeds branch
-      - name: run createFB script
-        run: |
-           chmod +x ./git-workflow/createFB.sh
-           ./git-workflow/createFB.sh
-        shell: bash
-       
-      #  -   run: |
-      #          git clone https://github.com/mpdude/test-1.git test-1-http
-      #          git clone git@github.com:mpdude/test-1.git test-1-git
-      #          git clone ssh://git@github.com/mpdude/test-1.git test-1-git-ssh
-      #          git clone https://github.com/mpdude/test-2.git test-2-http
-      #          git clone git@github.com:mpdude/test-2.git test-2-git
+       - name: run createFB script
+         run: |
+            chmod +x ../../git-workflow/createFB.sh
+            ./git-workflow/createFB.sh
+         shell: bash
