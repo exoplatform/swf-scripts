@@ -24,9 +24,9 @@ jobs:
         with:
           ref: develop
           repository: Meeds-io/maven-depmgt-pom
-      - name: Run mvn verify
+      - name: Run mvn go-offline
         run: mvn -B dependency:go-offline --fail-never -Dmaven.artifact.threads=300
       - name: Archiving m2 local repository
         run: cd ~/.m2 && tar --zstd -cvf m2.tar.zst repository && md5sum m2.tar.zst > m2.tar.zst.md5
       - name: Upload to storage
-        run: curl -T m2.tar.zst ${{ secrets.MVN_STORAGE_URL }} && curl -T m2.tar.zst.md5 ${{ secrets.MVN_STORAGE_URL }}
+        run: cd ~/.m2 && curl -T m2.tar.zst ${{ secrets.MVN_STORAGE_URL }} && curl -T m2.tar.zst.md5 ${{ secrets.MVN_STORAGE_URL }}
