@@ -19,20 +19,13 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Checkout repository social
+      - name: Checkout repository maven-depmgt-pom
         uses: actions/checkout@v3
         with:
           ref: develop
-          repository: Meeds-io/social
+          repository: Meeds-io/maven-depmgt-pom
       - name: Run mvn verify
-        run: mvn -B clean verify --fail-never -Dmaven.artifact.threads=30 -DskipTests
-      - name: Checkout repository meeds
-        uses: actions/checkout@v3
-        with:
-          ref: develop
-          repository: Meeds-io/meeds
-      - name: Run mvn verify
-        run: mvn -B clean verify --fail-never -Dmaven.artifact.threads=30 -DskipTests
+        run: mvn -B dependency:go-offline --fail-never -Dmaven.artifact.threads=300
       - name: Archiving m2 local repository
         run: cd ~/.m2 && tar --zstd -cvf m2.tar.zst repository && md5sum m2.tar.zst > m2.tar.zst.md5
       - name: Upload to storage
