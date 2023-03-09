@@ -25,42 +25,42 @@ jobs:
           ref: develop
           repository: Meeds-io/maven-depmgt-pom
       - name: Run mvn go-offline on maven-depmgt-pom
-        run: mvn -B dependency:go-offline --fail-never -Dmaven.artifact.threads=300
+        run: mvn -B dependency:resolve-plugins dependency:go-offline --fail-never -Dmaven.artifact.threads=300
       - name: Checkout repository social
         uses: actions/checkout@v3
         with:
           ref: develop
           repository: Meeds-io/social
       - name: Run mvn go-offline on social
-        run: mvn -B dependency:go-offline --fail-never -Dmaven.artifact.threads=300
+        run: mvn -B dependency:resolve-plugins dependency:go-offline --fail-never -Dmaven.artifact.threads=300
       - name: Checkout repository meeds
         uses: actions/checkout@v3
         with:
           ref: develop
           repository: Meeds-io/meeds
       - name: Run mvn go-offline on meeds
-        run: mvn -B dependency:go-offline --fail-never -Dmaven.artifact.threads=300
+        run: mvn -B dependency:resolve-plugins dependency:go-offline --fail-never -Dmaven.artifact.threads=300
       - name: Checkout repository jcr
         uses: actions/checkout@v3
         with:
           ref: develop
           repository: exoplatform/jcr
       - name: Run mvn go-offline on jcr
-        run: mvn -B dependency:go-offline --fail-never -Dmaven.artifact.threads=300
+        run: mvn -B dependency:resolve-plugins dependency:go-offline --fail-never -Dmaven.artifact.threads=300
       - name: Checkout repository chat-application
         uses: actions/checkout@v3
         with:
           ref: develop
           repository: exoplatform/chat-application
       - name: Run mvn go-offline on chat-application
-        run: mvn -B dependency:go-offline --fail-never -Dmaven.artifact.threads=300
+        run: mvn -B dependency:resolve-plugins dependency:go-offline --fail-never -Dmaven.artifact.threads=300
       - name: Checkout repository platform-public-distributions
         uses: actions/checkout@v3
         with:
           ref: develop
           repository: exoplatform/platform-public-distributions
       - name: Run mvn go-offline on platform-public-distributions
-        run: mvn -B dependency:go-offline --fail-never -Dmaven.artifact.threads=300
+        run: mvn -B dependency:resolve-plugins dependency:go-offline --fail-never -Dmaven.artifact.threads=300
       - name: Archiving m2 local repository
         run: cd ~/.m2 ; rm -rf repository/com/exoplatform; rm -rf repository/org/exoplatform; tar --zstd -cvf m2.tar.zst repository && md5sum m2.tar.zst > m2.tar.zst.md5
       - name: Upload to storage
