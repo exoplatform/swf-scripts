@@ -12,5 +12,5 @@ CURRENT_YEAR=$(date -d "$currentmonth-15 last month" '+%Y') # Previous year if m
 CICD_SUFFIX=${CURRENT_YEAR}${CURRENT_MONTH}
 
 echo "Cleaning up release with suffix containing: ${CICD_SUFFIX}..."
-find ${RELEASES_DIR} -name "*-${CICD_SUFFIX}*" -type d -exec rm -rvf \;
+find ${RELEASES_DIR} -name "*-${CICD_SUFFIX}*" -type d | xargs -r rm -rvf
 echo "Cleanup done."
