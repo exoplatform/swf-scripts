@@ -6,9 +6,9 @@ on:
       ORIGIN_BRANCH: 
         type: text
         description: like develop-meed or develop or develop-exo 
-      TARGET_BRANCH:
+      BRANCH:
         type: text
-        description: the feature branche you want to add it like feature/$BRANCH
+        description: the feature branche you want to add it like mips devx ...
 # concurrency:
 #   group: once-per-time
 
@@ -17,23 +17,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-       - name: Checkout
-         uses: actions/checkout@v3
-         with: 
-           ref: master
-           token: ${{ secrets.SWF_TOKEN }}
-       - name: install ssh
-         uses: shimataro/ssh-key-action@v2
-         with:
-           key: ${{ secrets.SSH_KEY }}
-           known_hosts: ${{ secrets.KNOWN_HOSTS }}.
+      #  - name: Checkout
+      #    uses: actions/checkout@v3
+      #    with: 
+      #      ref: work
+      #      token: ${{ secrets.SWF_TOKEN }}
+      #  - name: install ssh
+      #    uses: shimataro/ssh-key-action@v2
+      #    with:
+      #      key: ${{ secrets.SSH_KEY }}
+      #      known_hosts: ${{ secrets.KNOWN_HOSTS }}.
           #  config: |
           #    Host ${{ secrets.HOST }}
           #    HostName ${{ secrets.HOST }}
           #    User ${{ secrets.USERNAME }}
       #  - name: default meeds branch
        - name: run createFB script
+         env:
+          ORIGIN_BRANCH: ${{ github.event.inputs.ORIGIN_BRANCH }}
+          BRANCH: ${{ github.event.inputs.BRANCH }}
          run: |
-            chmod +x ../../git-workflow/createFB.sh
-            ./git-workflow/createFB.sh
+            cd git-workflow
+            chmod +x ../git-workflow/createFB.sh $BRANCH $ORIGIN_BRANCH 
+            ../git-workflow/createFB.sh
          shell: bash

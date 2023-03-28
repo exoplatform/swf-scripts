@@ -2,9 +2,9 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=test
+BRANCH=$1
 ISSUE=TASK-62301
-ORIGIN_BRANCH=develop # develop-meed or develop 
+ORIGIN_BRANCH=$2 # develop-meed or develop 
 DEFAULT_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.5.x-SNAPSHOT
