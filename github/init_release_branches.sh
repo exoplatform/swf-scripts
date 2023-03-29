@@ -32,7 +32,11 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     git clone git@github.com:${git_organization}/$name
     pushd $name &>/dev/null
     module_version=$(echo $version | sed "s/\${release-version}/${RELEASE_SUFFIX}/g")
-    milestone_version=$(echo $version | sed "s/\${release-version}/${MILESTONE_SUFFIX}/g")
+    if [ ! -z "${MILESTONE_SUFFIX:-}" ]; then 
+        milestone_version=$(echo $version | sed "s/\${release-version}/${MILESTONE_SUFFIX}/g")
+    else 
+        milestone_version=$(echo $version | sed "s/-\${release-version}//g")
+    fi
     git checkout -b ${TARGET_BRANCH} ${module_version}
     commitsSWFCount="$(git log --grep '\[exo-release\]' HEAD~2..HEAD --oneline | wc -l)" # HEAD~2..HEAD: Max two commits checks to expand if needed
     # Revert SWF Release commits
