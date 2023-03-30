@@ -24,6 +24,11 @@ export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 current_date=$(date '+%s')
 action "Parsing FB repositories from catalog..."
 fblist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" | grep "project:")
+if ${COMPANY_MODULES_ENABLED:-false}; then 
+  cmpfblist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/company/seed_jobs_ci.groovy" | grep "feature/${FB_NAME}" | grep "project:")
+  fblist=$(echo -e "${fblist}\n${cmpfblist}")
+fi
+
 modules_length=$(echo $fblist | grep -o 'project:' | wc -w)
 info "Modules count: ${modules_length}"
 counter=0
