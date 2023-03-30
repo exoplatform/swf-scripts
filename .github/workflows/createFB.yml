@@ -35,6 +35,6 @@ jobs:
             cd git-workflow
             ls 
             echo "ORIGIN_BRANCH=$ORIGIN_BRANCH, BRANCH=$BRANCH"
-            chmod +x ../git-workflow/createFB.sh $BRANCH $ORIGIN_BRANCH 
-            ../git-workflow/createFB.sh
+            chmod +x createFB.sh $BRANCH $ORIGIN_BRANCH 
+            .createFB.sh
          shell: bash
