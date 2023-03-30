@@ -20,7 +20,7 @@ jobs:
        - name: Checkout
          uses: actions/checkout@v3
          with: 
-           ref: work
+           ref: master
            token: ${{ secrets.SWF_TOKEN }}
        - name: install ssh
          uses: shimataro/ssh-key-action@v2
