@@ -2,9 +2,9 @@
 
 # Create Git Feature Branches for PLF projects
 
-BRANCH=devx
+BRANCH=$1
 ISSUE=TASK-62301
-ORIGIN_BRANCH=develop # develop-meed or develop 
+ORIGIN_BRANCH=$2 # develop-meed or develop 
 DEFAULT_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.5.x-SNAPSHOT
@@ -135,10 +135,249 @@ function repoInit() {
 	printf "\e[1;33m########################################\e[m\n"
 	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
 	printf "\e[1;33m########################################\e[m\n"
-	pushd ${repo_name}
+	# pushd ${repo_name}
 }
 
 function repoCleanup() {
+	echo "========================================="
+    echo "cloning Meeds projects"
+	echo "========================================="
+	if [ ! -d "../../repo-Meeds/wci" ]; then
+	git clone git@github.com:Meeds-io/gatein-wci.git ../../repo-Meeds/wci
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/kernel" ]; then
+    git clone git@github.com:Meeds-io/kernel.git ../../repo-Meeds/kernel
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/core" ]; then
+    git clone git@github.com:Meeds-io/core.git ../../repo-Meeds/core
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/ws" ]; then
+    git clone git@github.com:Meeds-io/ws.git ../../repo-Meeds/ws
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/gatein-sso" ]; then
+    git clone git@github.com:Meeds-io/gatein-sso.git ../../repo-Meeds/gatein-sso
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/gatein-portal" ]; then
+    git clone git@github.com:Meeds-io/gatein-portal.git ../../repo-Meeds/gatein-portal
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/maven-depmgt-pom" ]; then
+    git clone git@github.com:Meeds-io/maven-depmgt-pom.git ../../repo-Meeds/maven-depmgt-pom
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/platform-ui" ]; then
+    git clone git@github.com:Meeds-io/platform-ui.git ../../repo-Meeds/platform-ui
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/commons" ]; then
+	git clone git@github.com:Meeds-io/commons.git ../../repo-Meeds/commons
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/social" ]; then
+    git clone git@github.com:Meeds-io/social.git ../../repo-Meeds/social
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/addons-manager" ]; then
+    git clone git@github.com:Meeds-io/addons-manager.git ../../repo-Meeds/addons-manager
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/app-center" ]; then
+    git clone git@github.com:Meeds-io/app-center.git ../../repo-Meeds/app-center
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/gamification" ]; then
+    git clone git@github.com:Meeds-io/gamification.git ../../repo-Meeds/gamification
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/kudos" ]; then
+    git clone git@github.com:Meeds-io/kudos.git ../../repo-Meeds/kudos
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/perk-store" ]; then
+    git clone git@github.com:Meeds-io/perk-store.git ../../repo-Meeds/perk-store
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/wallet" ]; then
+    git clone git@github.com:Meeds-io/wallet.git ../../repo-Meeds/wallet
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/meeds" ]; then
+    git clone git@github.com:Meeds-io/meeds.git ../../repo-Meeds/meeds
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/push-notifications" ]; then
+    git clone git@github.com:Meeds-io/push-notifications.git ../../repo-Meeds/push-notifications
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/notes" ]; then
+    git clone git@github.com:Meeds-io/notes.git ../../repo-Meeds/notes
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/analytics" ]; then
+    git clone git@github.com:Meeds-io/analytics.git ../../repo-Meeds/analytics
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/task" ]; then
+    git clone git@github.com:Meeds-io/task.git ../../repo-Meeds/task
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/poll" ]; then
+    git clone git@github.com:Meeds-io/poll.git ../../repo-Meeds/poll
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-Meeds/gamification-github" ]; then
+    git clone git@github.com:Meeds-io/gamification-github.git ../../repo-Meeds/gamification-github
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+
+	echo "========================================="
+    echo "cloning eXo projects"
+	echo "========================================="
+
+	if [ ! -d "../../repo-eXo/ecms" ]; then
+    git clone git@github.com:exoplatform/ecms.git ../../repo-eXo/ecms
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/jcr" ]; then
+    git clone git@github.com:exoplatform/jcr.git ../../repo-eXo/jcr
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/agenda" ]; then
+    git clone git@github.com:exoplatform/agenda.git ../../repo-eXo/agenda
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/jitsi" ]; then
+    git clone git@github.com:exoplatform/jitsi.git ../../repo-eXo/jitsi
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/jitsi-call" ]; then
+    git clone git@github.com:exoplatform/jitsi-call.git ../../repo-eXo/jitsi-call
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/chat-application" ]; then
+    git clone git@github.com:exoplatform/chat-application.git ../../repo-eXo/chat-application
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/multifactor-authentication" ]; then
+    git clone git@github.com:exoplatform/multifactor-authentication.git ../../repo-eXo/multifactor-authentication
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/digital-workplace" ]; then
+    git clone git@github.com:exoplatform/digital-workplace.git ../../repo-eXo/digital-workplace
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/layout-management" ]; then
+    git clone git@github.com:exoplatform/layout-management.git ../../repo-eXo/layout-management
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/news" ]; then
+    git clone git@github.com:exoplatform/news.git ../../repo-eXo/news
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/onlyoffice" ]; then
+    git clone git@github.com:exoplatform/onlyoffice.git ../../repo-eXo/onlyoffice
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/saml2-addon" ]; then
+    git clone git@github.com:exoplatform/saml2-addon.git ../../repo-eXo/saml2-addon
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/web-conferencing" ]; then
+    git clone git@github.com:exoplatform/web-conferencing.git ../../repo-eXo/web-conferencing
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/data-upgrade" ]; then
+    git clone git@github.com:exoplatform/data-upgrade.git ../../repo-eXo/data-upgrade
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/platform-private-distributions" ]; then
+    git clone git@github.com:exoplatform/platform-private-distributions.git ../../repo-eXo/platform-private-distributions
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/automatic-translation" ]; then
+    git clone git@github.com:exoplatform/automatic-translation.git ../../repo-eXo/automatic-translation
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/processes" ]; then
+    git clone git@github.com:exoplatform/processes.git ../../repo-eXo/processes
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/documents" ]; then
+    git clone git@github.com:exoplatform/documents.git ../../repo-eXo/documents
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/mail-integration" ]; then
+    git clone git@github.com:exoplatform/mail-integration.git ../../repo-eXo/mail-integration
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/anti-bruteforce" ]; then
+    git clone git@github.com:exoplatform/anti-bruteforce.git ../../repo-eXo/anti-bruteforce
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/anti-malware" ]; then
+    git clone git@github.com:exoplatform/anti-malware.git ../../repo-eXo/anti-malware
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/dlp" ]; then
+    git clone git@github.com:exoplatform/dlp.git ../../repo-eXo/dlp
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+	if [ ! -d "../../repo-eXo/agenda-connectors" ]; then
+    git clone git@github.com:exoplatform/agenda-connectors.git ../../repo-eXo/agenda-connectors
+	else
+        echo "Repo already exists, skipping clone"
+    fi
+
 	local repo_name=$1
 	# git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
 	printf "\e[1;33m# %s\e[m\n" "Cleaning of ${repo_name} repository ..."
@@ -312,54 +551,54 @@ pushd ${SWF_FB_REPOS}
 
 #Meeds Projects
 createFB gatein-wci
-createFB kernel
-createFB core
-createFB ws
-createFB gatein-pc
-createFB gatein-sso
-createFB gatein-portal
-createFB maven-depmgt-pom
-createFB platform-ui
-createFB commons
-createFB social
-createFB addons-manager
-createFB app-center
-createFB gamification
-createFB kudos
-createFB perk-store
-createFB wallet
-createFB meeds
-createFB push-notifications
-createFB notes
-createFB analytics
-createFB task
-createFB poll
-createFB gamification-github
+# createFB kernel
+# createFB core
+# createFB ws
+# createFB gatein-pc
+# createFB gatein-sso
+# createFB gatein-portal
+# createFB maven-depmgt-pom
+# createFB platform-ui
+# createFB commons
+# createFB social
+# createFB addons-manager
+# createFB app-center
+# createFB gamification
+# createFB kudos
+# createFB perk-store
+# createFB wallet
+# createFB meeds
+# createFB push-notifications
+# createFB notes
+# createFB analytics
+# createFB task
+# createFB poll
+# createFB gamification-github
 
-# Explatform projects
-createFB ecms
-createFB jcr
-createFB agenda
-createFB jitsi
-createFB jitsi-call
-createFB chat-application
-createFB multifactor-authentication
-createFB digital-workplace
-createFB layout-management
-createFB news
-createFB onlyoffice
-createFB saml2-addon
-createFB web-conferencing
-createFB data-upgrade
-createFB platform-private-distributions
-createFB automatic-translation
-createFB processes
-createFB documents
-createFB mail-integration
-createFB anti-bruteforce
-createFB anti-malware
-createFB dlp
-createFB agenda-connectors
+# # Explatform projects
+# createFB ecms
+# createFB jcr
+# createFB agenda
+# createFB jitsi
+# createFB jitsi-call
+# createFB chat-application
+# createFB multifactor-authentication
+# createFB digital-workplace
+# createFB layout-management
+# createFB news
+# createFB onlyoffice
+# createFB saml2-addon
+# createFB web-conferencing
+# createFB data-upgrade
+# createFB platform-private-distributions
+# createFB automatic-translation
+# createFB processes
+# createFB documents
+# createFB mail-integration
+# createFB anti-bruteforce
+# createFB anti-malware
+# createFB dlp
+# createFB agenda-connectors
 popd
 
 echo
