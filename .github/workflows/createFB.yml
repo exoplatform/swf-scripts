@@ -33,8 +33,6 @@ jobs:
           BRANCH: ${{ github.event.inputs.BRANCH }}
          run: |
             cd git-workflow
-            ls 
-            echo "ORIGIN_BRANCH=$ORIGIN_BRANCH, BRANCH=$BRANCH"
-            chmod +x createFB.sh $BRANCH $ORIGIN_BRANCH 
-            .createFB.sh
+            chmod +x createFB.sh 
+            ./createFB.sh $BRANCH $ORIGIN_BRANCH 
          shell: bash
