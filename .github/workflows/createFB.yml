@@ -17,21 +17,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      #  - name: Checkout
-      #    uses: actions/checkout@v3
-      #    with: 
-      #      ref: work
-      #      token: ${{ secrets.SWF_TOKEN }}
-      #  - name: install ssh
-      #    uses: shimataro/ssh-key-action@v2
-      #    with:
-      #      key: ${{ secrets.SSH_KEY }}
-      #      known_hosts: ${{ secrets.KNOWN_HOSTS }}.
-          #  config: |
-          #    Host ${{ secrets.HOST }}
-          #    HostName ${{ secrets.HOST }}
-          #    User ${{ secrets.USERNAME }}
-      #  - name: default meeds branch
+       - name: Checkout
+         uses: actions/checkout@v3
+         with: 
+           ref: work
+           token: ${{ secrets.SWF_TOKEN }}
+       - name: install ssh
+         uses: shimataro/ssh-key-action@v2
+         with:
+           key: ${{ secrets.SSH_KEY }}
+           known_hosts: ${{ secrets.KNOWN_HOSTS }}.
        - name: run createFB script
          env:
           ORIGIN_BRANCH: ${{ github.event.inputs.ORIGIN_BRANCH }}
