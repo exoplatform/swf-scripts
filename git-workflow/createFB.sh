@@ -1,9 +1,8 @@
 #!/bin/bash -eu
 
 # Create Git Feature Branches for PLF projects
-echo "BRANCH=$1, ORIGIN_BRANCH=$2"
 BRANCH=$1
-ISSUE=TASK-62301
+ISSUE=$3
 ORIGIN_BRANCH=$2 # develop-meed or develop 
 DEFAULT_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH

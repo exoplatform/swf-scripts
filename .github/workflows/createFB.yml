@@ -6,6 +6,9 @@ on:
       ORIGIN_BRANCH: 
         type: text
         description: like develop-meed or develop or develop-exo 
+      ISSUE: 
+        type: text
+        description: the task id 'task-1234       
       BRANCH:
         type: text
         description: the feature branche you want to add it like mips devx ...
@@ -31,8 +34,9 @@ jobs:
          env:
           ORIGIN_BRANCH: ${{ github.event.inputs.ORIGIN_BRANCH }}
           BRANCH: ${{ github.event.inputs.BRANCH }}
+          ISSUE: ${{ github.event.inputs.ISSUE }}
          run: |
             cd git-workflow
             chmod +x createFB.sh 
-            ./createFB.sh $BRANCH $ORIGIN_BRANCH 
+            ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE
          shell: bash
