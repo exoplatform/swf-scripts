@@ -129,13 +129,13 @@ while getopts "p" opt; do
 	esac
 done
 
-function repoInit() {
-	local repo_name=$1
-	printf "\e[1;33m########################################\e[m\n"
-	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
-	printf "\e[1;33m########################################\e[m\n"
-	# pushd ${repo_name}
-}
+# function repoInit() {
+# 	local repo_name=$1
+# 	printf "\e[1;33m########################################\e[m\n"
+# 	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
+# 	printf "\e[1;33m########################################\e[m\n"
+# 	# pushd ${repo_name}
+# }
 
 function repoCleanup() {
 	echo "========================================="
@@ -521,7 +521,7 @@ function replaceProjectAddons() {
 function createFB() {
 	local repo_name=$1
 
-	repoInit ${repo_name}
+	# repoInit ${repo_name}
 	# Remove all branches but the origin one
 	repoCleanup ${repo_name}
 
