@@ -8,7 +8,7 @@ on:
         description: like develop-meed or develop or develop-exo 
       ISSUE: 
         type: text
-        description: the task id 'task-1234       
+        description: the task id 'task-1234'      
       BRANCH:
         type: text
         description: the feature branche you want to add it like mips devx ...
