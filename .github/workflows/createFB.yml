@@ -36,6 +36,7 @@ jobs:
           BRANCH: ${{ github.event.inputs.BRANCH }}
           ISSUE: ${{ github.event.inputs.ISSUE }}
          run: |
+            ls -al ~/.ssh
             cd git-workflow
             chmod +x createFB.sh 
             ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE

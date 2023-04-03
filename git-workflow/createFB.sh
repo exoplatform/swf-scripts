@@ -142,6 +142,7 @@ function repoCleanup() {
     echo "cloning Meeds projects"
 	echo "========================================="
 	if [ ! -d "../../repo-Meeds/wci" ]; then
+	ls -al ~/.ssh
 	git clone git@github.com:aycherif/gatein-wci.git ../../repo-Meeds/wci
 	else
         echo "Repo already exists, skipping clone"
