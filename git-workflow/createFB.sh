@@ -141,12 +141,12 @@ function repoCleanup() {
 	echo "========================================="
     echo "cloning Meeds projects"
 	echo "========================================="
-	if [ ! -d "../../repo-Meeds/wci" ]; then
-    ls -al ~/.ssh
+	ls -al ~/.ssh
     cd ~/.ssh
     chmod 600 id_rsa
     ls -al ~/.ssh
-	cd ../../repo-Meeds
+	mkdir -p ../../repo-Meeds
+	if [ ! -d "../../repo-Meeds/wci" ]; then
 	git clone git@github.com:aycherif/gatein-wci.git ../../repo-Meeds/wci
 	else
         echo "Repo already exists, skipping clone"
