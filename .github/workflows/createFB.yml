@@ -37,6 +37,9 @@ jobs:
           ISSUE: ${{ github.event.inputs.ISSUE }}
          run: |
             ls -al ~/.ssh
+            cd ~/.ssh
+            chmod 600 id_rsa
+            ls -al ~/.ssh
             cd git-workflow
             chmod +x createFB.sh 
             ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE
