@@ -151,7 +151,7 @@ function repoCleanup() {
 	chmod 600 id_rsa
 	# mkdir -p ../../repo-Meeds
 	if [ ! -d "../../repo-Meeds/wci" ]; then
-	git clone git@github.com:aycherif/gatein-wci.git ../../repo-Meeds/$
+	git clone git@github.com:aycherif/gatein-wci.git ../../repo-Meeds/${repo_name}
 	pwd
 	else
         echo "Repo already exists, skipping clone"
