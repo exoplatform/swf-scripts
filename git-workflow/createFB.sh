@@ -145,6 +145,7 @@ function repoCleanup() {
     cd ~/.ssh
     chmod 600 id_rsa
     ls -al ~/.ssh
+	whoami
 	mkdir -p ../../repo-Meeds
 	if [ ! -d "../../repo-Meeds/wci" ]; then
 	git clone git@github.com:aycherif/gatein-wci.git ../../repo-Meeds/wci
