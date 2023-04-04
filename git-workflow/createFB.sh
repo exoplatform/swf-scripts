@@ -142,17 +142,14 @@ function repoCleanup() {
     echo "cloning Meeds projects"
 	echo "========================================="
 	local repo_name=$1
-	ls -al ~/.ssh
+	# ls -al ~/.ssh
     cd ~/.ssh
     chmod 600 id_rsa
-    ls -al ~/.ssh
-	whoami
-	cd /home/runner/.ssh
-	ls -al
-	chmod 600 id_rsa
-	# mkdir -p ../../repo-Meeds
-	if [ ! -d "../../repo-Meeds/wci" ]; then
-	git clone git@github.com:aycherif/gatein-wci.git ../../repo-Meeds/${repo_name}
+	cd ../
+	pwd
+	mkdir repo-Meeds
+	if [ ! -d "repo-Meeds/${repo_name}" ]; then
+	git clone git@github.com:aycherif/gatein-wci.git repo-Meeds/${repo_name}
 	pwd
 	else
         echo "Repo already exists, skipping clone"
