@@ -152,6 +152,7 @@ function repoCleanup() {
 	# mkdir -p ../../repo-Meeds
 	# if [ ! -d "../../repo-Meeds/wci" ]; then
 	git clone git@github.com:aycherif/gatein-wci.git
+	pwd
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
@@ -397,6 +398,8 @@ function repoCleanup() {
 	# git checkout $ORIGIN_BRANCH
 	# git branch -D $TARGET_BRANCH
 	echo "remote update"
+	pwd
+	cd /home/runner/
 	git remote update --prune
 	echo "reset step"
 	git reset --hard HEAD
