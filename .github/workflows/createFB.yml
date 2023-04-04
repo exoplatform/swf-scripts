@@ -37,7 +37,5 @@ jobs:
           ISSUE: ${{ github.event.inputs.ISSUE }}
          run: |
             cd git-workflow
-            ls -al
-            ls -al
             ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE
          shell: bash
