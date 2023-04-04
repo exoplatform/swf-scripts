@@ -398,6 +398,7 @@ function repoCleanup() {
 	# git checkout $ORIGIN_BRANCH
 	# git branch -D $TARGET_BRANCH
 	echo "remote update"
+	cd repo-Meeds/${repo_name}
 	pwd
 	git remote update --prune
 	echo "reset step"
