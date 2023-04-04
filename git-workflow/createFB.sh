@@ -141,6 +141,7 @@ function repoCleanup() {
 	echo "========================================="
     echo "cloning Meeds projects"
 	echo "========================================="
+	local repo_name=$1
 	ls -al ~/.ssh
     cd ~/.ssh
     chmod 600 id_rsa
