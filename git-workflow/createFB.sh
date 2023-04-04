@@ -396,7 +396,9 @@ function repoCleanup() {
 	printf "\e[1;33m# %s\e[m\n" "Cleaning of ${repo_name} repository ..."
 	# git checkout $ORIGIN_BRANCH
 	# git branch -D $TARGET_BRANCH
+	echo "remote update"
 	git remote update --prune
+	echo "reset step"
 	git reset --hard HEAD
 	[ ! -z "{ORIGIN_BRANCH:-}" ] && git checkout $ORIGIN_BRANCH || git checkout $DEFAULT_BRANCH
 	git reset --hard HEAD
