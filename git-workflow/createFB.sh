@@ -129,13 +129,13 @@ while getopts "p" opt; do
 	esac
 done
 
-# function repoInit() {
-# 	local repo_name=$1
-# 	printf "\e[1;33m########################################\e[m\n"
-# 	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
-# 	printf "\e[1;33m########################################\e[m\n"
-# 	# pushd ${repo_name}
-# }
+function repoInit() {
+	local repo_name=$1
+	printf "\e[1;33m########################################\e[m\n"
+	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
+	printf "\e[1;33m########################################\e[m\n"
+	# pushd ${repo_name}
+}
 
 function repoCleanup() {
 	echo "========================================="
@@ -150,12 +150,12 @@ function repoCleanup() {
 	ls -al
 	chmod 600 id_rsa
 	# mkdir -p ../../repo-Meeds
-	# if [ ! -d "../../repo-Meeds/wci" ]; then
-	git clone git@github.com:aycherif/gatein-wci.git
+	if [ ! -d "../../repo-Meeds/wci" ]; then
+	git clone git@github.com:aycherif/gatein-wci.git ../../repo-Meeds/$
 	pwd
-	# else
-    #     echo "Repo already exists, skipping clone"
-    # fi
+	else
+        echo "Repo already exists, skipping clone"
+    fi
 	# if [ ! -d "../../repo-Meeds/wci" ]; then
 	# git clone git@github.com:Meeds-io/gatein-wci.git ../../repo-Meeds/wci
 	# else
@@ -399,7 +399,7 @@ function repoCleanup() {
 	# git branch -D $TARGET_BRANCH
 	echo "remote update"
 	pwd
-	cd /home/runner/
+	cd ../../repo-Meeds/wci
 	git remote update --prune
 	echo "reset step"
 	git reset --hard HEAD
