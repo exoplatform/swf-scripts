@@ -397,7 +397,6 @@ function repoCleanup() {
 	# git branch -D $TARGET_BRANCH
 	echo "remote update"
 	pwd
-	cd ../../repo-Meeds/wci
 	git remote update --prune
 	echo "reset step"
 	git reset --hard HEAD
