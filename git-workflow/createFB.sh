@@ -149,7 +149,9 @@ function repoCleanup() {
 	pwd
 	mkdir repo-Meeds
 	if [ ! -d "repo-Meeds/${repo_name}" ]; then
-	git clone git@github.com:aycherif/gatein-wci.git repo-Meeds/${repo_name}
+	git clone git@github.com:Meeds-io/gatein-wci.git repo-Meeds/${repo_name}
+	ls -al repo-Meeds
+	ls -al repo-Meeds/gatein-wci
 	pwd
 	else
         echo "Repo already exists, skipping clone"
