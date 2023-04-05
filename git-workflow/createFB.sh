@@ -147,127 +147,127 @@ function repoCleanup() {
     chmod 600 id_rsa
 	cd ../
 	pwd
-	mkdir repo-Meeds
-	if [ ! -d "repo-Meeds/${repo_name}" ]; then
-	git clone git@github.com:Meeds-io/gatein-wci.git repo-Meeds/${repo_name}
-	ls -al repo-Meeds
-	ls -al repo-Meeds/gatein-wci
+	mkdir repo-projects
+	if [ ! -d "repo-projects/${repo_name}" ]; then
+	git clone git@github.com:Meeds-io/gatein-wci.git repo-projects/${repo_name}
+	ls -al repo-projects
+	ls -al repo-projects/gatein-wci
 	pwd
 	else
         echo "Repo already exists, skipping clone"
     fi
-	# if [ ! -d "../../repo-Meeds/wci" ]; then
-	# git clone git@github.com:Meeds-io/gatein-wci.git ../../repo-Meeds/wci
+	# if [ ! -d "../../repo-projects/wci" ]; then
+	# git clone git@github.com:Meeds-io/gatein-wci.git ../../repo-projects/wci
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/kernel" ]; then
-    # git clone git@github.com:Meeds-io/kernel.git ../../repo-Meeds/kernel
+	# if [ ! -d "../../repo-projects/kernel" ]; then
+    # git clone git@github.com:Meeds-io/kernel.git ../../repo-projects/kernel
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/core" ]; then
-    # git clone git@github.com:Meeds-io/core.git ../../repo-Meeds/core
+	# if [ ! -d "../../repo-projects/core" ]; then
+    # git clone git@github.com:Meeds-io/core.git ../../repo-projects/core
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/ws" ]; then
-    # git clone git@github.com:Meeds-io/ws.git ../../repo-Meeds/ws
+	# if [ ! -d "../../repo-projects/ws" ]; then
+    # git clone git@github.com:Meeds-io/ws.git ../../repo-projects/ws
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/gatein-sso" ]; then
-    # git clone git@github.com:Meeds-io/gatein-sso.git ../../repo-Meeds/gatein-sso
+	# if [ ! -d "../../repo-projects/gatein-sso" ]; then
+    # git clone git@github.com:Meeds-io/gatein-sso.git ../../repo-projects/gatein-sso
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/gatein-portal" ]; then
-    # git clone git@github.com:Meeds-io/gatein-portal.git ../../repo-Meeds/gatein-portal
+	# if [ ! -d "../../repo-projects/gatein-portal" ]; then
+    # git clone git@github.com:Meeds-io/gatein-portal.git ../../repo-projects/gatein-portal
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/maven-depmgt-pom" ]; then
-    # git clone git@github.com:Meeds-io/maven-depmgt-pom.git ../../repo-Meeds/maven-depmgt-pom
+	# if [ ! -d "../../repo-projects/maven-depmgt-pom" ]; then
+    # git clone git@github.com:Meeds-io/maven-depmgt-pom.git ../../repo-projects/maven-depmgt-pom
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/platform-ui" ]; then
-    # git clone git@github.com:Meeds-io/platform-ui.git ../../repo-Meeds/platform-ui
+	# if [ ! -d "../../repo-projects/platform-ui" ]; then
+    # git clone git@github.com:Meeds-io/platform-ui.git ../../repo-projects/platform-ui
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/commons" ]; then
-	# git clone git@github.com:Meeds-io/commons.git ../../repo-Meeds/commons
+	# if [ ! -d "../../repo-projects/commons" ]; then
+	# git clone git@github.com:Meeds-io/commons.git ../../repo-projects/commons
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/social" ]; then
-    # git clone git@github.com:Meeds-io/social.git ../../repo-Meeds/social
+	# if [ ! -d "../../repo-projects/social" ]; then
+    # git clone git@github.com:Meeds-io/social.git ../../repo-projects/social
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/addons-manager" ]; then
-    # git clone git@github.com:Meeds-io/addons-manager.git ../../repo-Meeds/addons-manager
+	# if [ ! -d "../../repo-projects/addons-manager" ]; then
+    # git clone git@github.com:Meeds-io/addons-manager.git ../../repo-projects/addons-manager
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/app-center" ]; then
-    # git clone git@github.com:Meeds-io/app-center.git ../../repo-Meeds/app-center
+	# if [ ! -d "../../repo-projects/app-center" ]; then
+    # git clone git@github.com:Meeds-io/app-center.git ../../repo-projects/app-center
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/gamification" ]; then
-    # git clone git@github.com:Meeds-io/gamification.git ../../repo-Meeds/gamification
+	# if [ ! -d "../../repo-projects/gamification" ]; then
+    # git clone git@github.com:Meeds-io/gamification.git ../../repo-projects/gamification
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/kudos" ]; then
-    # git clone git@github.com:Meeds-io/kudos.git ../../repo-Meeds/kudos
+	# if [ ! -d "../../repo-projects/kudos" ]; then
+    # git clone git@github.com:Meeds-io/kudos.git ../../repo-projects/kudos
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/perk-store" ]; then
-    # git clone git@github.com:Meeds-io/perk-store.git ../../repo-Meeds/perk-store
+	# if [ ! -d "../../repo-projects/perk-store" ]; then
+    # git clone git@github.com:Meeds-io/perk-store.git ../../repo-projects/perk-store
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/wallet" ]; then
-    # git clone git@github.com:Meeds-io/wallet.git ../../repo-Meeds/wallet
+	# if [ ! -d "../../repo-projects/wallet" ]; then
+    # git clone git@github.com:Meeds-io/wallet.git ../../repo-projects/wallet
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/meeds" ]; then
-    # git clone git@github.com:Meeds-io/meeds.git ../../repo-Meeds/meeds
+	# if [ ! -d "../../repo-projects/meeds" ]; then
+    # git clone git@github.com:Meeds-io/meeds.git ../../repo-projects/meeds
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/push-notifications" ]; then
-    # git clone git@github.com:Meeds-io/push-notifications.git ../../repo-Meeds/push-notifications
+	# if [ ! -d "../../repo-projects/push-notifications" ]; then
+    # git clone git@github.com:Meeds-io/push-notifications.git ../../repo-projects/push-notifications
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/notes" ]; then
-    # git clone git@github.com:Meeds-io/notes.git ../../repo-Meeds/notes
+	# if [ ! -d "../../repo-projects/notes" ]; then
+    # git clone git@github.com:Meeds-io/notes.git ../../repo-projects/notes
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/analytics" ]; then
-    # git clone git@github.com:Meeds-io/analytics.git ../../repo-Meeds/analytics
+	# if [ ! -d "../../repo-projects/analytics" ]; then
+    # git clone git@github.com:Meeds-io/analytics.git ../../repo-projects/analytics
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/task" ]; then
-    # git clone git@github.com:Meeds-io/task.git ../../repo-Meeds/task
+	# if [ ! -d "../../repo-projects/task" ]; then
+    # git clone git@github.com:Meeds-io/task.git ../../repo-projects/task
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/poll" ]; then
-    # git clone git@github.com:Meeds-io/poll.git ../../repo-Meeds/poll
+	# if [ ! -d "../../repo-projects/poll" ]; then
+    # git clone git@github.com:Meeds-io/poll.git ../../repo-projects/poll
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-Meeds/gamification-github" ]; then
-    # git clone git@github.com:Meeds-io/gamification-github.git ../../repo-Meeds/gamification-github
+	# if [ ! -d "../../repo-projects/gamification-github" ]; then
+    # git clone git@github.com:Meeds-io/gamification-github.git ../../repo-projects/gamification-github
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
@@ -276,118 +276,118 @@ function repoCleanup() {
     # echo "cloning eXo projects"
 	# echo "========================================="
 
-	# if [ ! -d "../../repo-eXo/ecms" ]; then
-    # git clone git@github.com:exoplatform/ecms.git ../../repo-eXo/ecms
+	# if [ ! -d "../../repo-projects/ecms" ]; thenrepo-eXo
+    # git clone git@github.com:exoplatform/ecms.git ../../repo-projects/ecms
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/jcr" ]; then
-    # git clone git@github.com:exoplatform/jcr.git ../../repo-eXo/jcr
+	# if [ ! -d "../../repo-projects/jcr" ]; then
+    # git clone git@github.com:exoplatform/jcr.git ../../repo-projects/jcr
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/agenda" ]; then
-    # git clone git@github.com:exoplatform/agenda.git ../../repo-eXo/agenda
+	# if [ ! -d "../../repo-projects/agenda" ]; then
+    # git clone git@github.com:exoplatform/agenda.git ../../repo-projects/agenda
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/jitsi" ]; then
-    # git clone git@github.com:exoplatform/jitsi.git ../../repo-eXo/jitsi
+	# if [ ! -d "../../repo-projects/jitsi" ]; then
+    # git clone git@github.com:exoplatform/jitsi.git ../../repo-projects/jitsi
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/jitsi-call" ]; then
-    # git clone git@github.com:exoplatform/jitsi-call.git ../../repo-eXo/jitsi-call
+	# if [ ! -d "../../repo-projects/jitsi-call" ]; then
+    # git clone git@github.com:exoplatform/jitsi-call.git ../../repo-projects/jitsi-call
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/chat-application" ]; then
-    # git clone git@github.com:exoplatform/chat-application.git ../../repo-eXo/chat-application
+	# if [ ! -d "../../repo-projects/chat-application" ]; then
+    # git clone git@github.com:exoplatform/chat-application.git ../../repo-projects/chat-application
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/multifactor-authentication" ]; then
-    # git clone git@github.com:exoplatform/multifactor-authentication.git ../../repo-eXo/multifactor-authentication
+	# if [ ! -d "../../repo-projects/multifactor-authentication" ]; then
+    # git clone git@github.com:exoplatform/multifactor-authentication.git ../../repo-projects/multifactor-authentication
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/digital-workplace" ]; then
-    # git clone git@github.com:exoplatform/digital-workplace.git ../../repo-eXo/digital-workplace
+	# if [ ! -d "../../repo-projects/digital-workplace" ]; then
+    # git clone git@github.com:exoplatform/digital-workplace.git ../../repo-projects/digital-workplace
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/layout-management" ]; then
-    # git clone git@github.com:exoplatform/layout-management.git ../../repo-eXo/layout-management
+	# if [ ! -d "../../repo-projects/layout-management" ]; then
+    # git clone git@github.com:exoplatform/layout-management.git ../../repo-projects/layout-management
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/news" ]; then
-    # git clone git@github.com:exoplatform/news.git ../../repo-eXo/news
+	# if [ ! -d "../../repo-projects/news" ]; then
+    # git clone git@github.com:exoplatform/news.git ../../repo-projects/news
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/onlyoffice" ]; then
-    # git clone git@github.com:exoplatform/onlyoffice.git ../../repo-eXo/onlyoffice
+	# if [ ! -d "../../repo-projects/onlyoffice" ]; then
+    # git clone git@github.com:exoplatform/onlyoffice.git ../../repo-projects/onlyoffice
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/saml2-addon" ]; then
-    # git clone git@github.com:exoplatform/saml2-addon.git ../../repo-eXo/saml2-addon
+	# if [ ! -d "../../repo-projects/saml2-addon" ]; then
+    # git clone git@github.com:exoplatform/saml2-addon.git ../../repo-projects/saml2-addon
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/web-conferencing" ]; then
-    # git clone git@github.com:exoplatform/web-conferencing.git ../../repo-eXo/web-conferencing
+	# if [ ! -d "../../repo-projects/web-conferencing" ]; then
+    # git clone git@github.com:exoplatform/web-conferencing.git ../../repo-projects/web-conferencing
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/data-upgrade" ]; then
-    # git clone git@github.com:exoplatform/data-upgrade.git ../../repo-eXo/data-upgrade
+	# if [ ! -d "../../repo-projects/data-upgrade" ]; then
+    # git clone git@github.com:exoplatform/data-upgrade.git ../../repo-projects/data-upgrade
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/platform-private-distributions" ]; then
-    # git clone git@github.com:exoplatform/platform-private-distributions.git ../../repo-eXo/platform-private-distributions
+	# if [ ! -d "../../repo-projects/platform-private-distributions" ]; then
+    # git clone git@github.com:exoplatform/platform-private-distributions.git ../../repo-projects/platform-private-distributions
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/automatic-translation" ]; then
-    # git clone git@github.com:exoplatform/automatic-translation.git ../../repo-eXo/automatic-translation
+	# if [ ! -d "../../repo-projects/automatic-translation" ]; then
+    # git clone git@github.com:exoplatform/automatic-translation.git ../../repo-projects/automatic-translation
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/processes" ]; then
-    # git clone git@github.com:exoplatform/processes.git ../../repo-eXo/processes
+	# if [ ! -d "../../repo-projects/processes" ]; then
+    # git clone git@github.com:exoplatform/processes.git ../../repo-projects/processes
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/documents" ]; then
-    # git clone git@github.com:exoplatform/documents.git ../../repo-eXo/documents
+	# if [ ! -d "../../repo-projects/documents" ]; then
+    # git clone git@github.com:exoplatform/documents.git ../../repo-projects/documents
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/mail-integration" ]; then
-    # git clone git@github.com:exoplatform/mail-integration.git ../../repo-eXo/mail-integration
+	# if [ ! -d "../../repo-projects/mail-integration" ]; then
+    # git clone git@github.com:exoplatform/mail-integration.git ../../repo-projects/mail-integration
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/anti-bruteforce" ]; then
-    # git clone git@github.com:exoplatform/anti-bruteforce.git ../../repo-eXo/anti-bruteforce
+	# if [ ! -d "../../repo-projects/anti-bruteforce" ]; then
+    # git clone git@github.com:exoplatform/anti-bruteforce.git ../../repo-projects/anti-bruteforce
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/anti-malware" ]; then
-    # git clone git@github.com:exoplatform/anti-malware.git ../../repo-eXo/anti-malware
+	# if [ ! -d "../../repo-projects/anti-malware" ]; then
+    # git clone git@github.com:exoplatform/anti-malware.git ../../repo-projects/anti-malware
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/dlp" ]; then
-    # git clone git@github.com:exoplatform/dlp.git ../../repo-eXo/dlp
+	# if [ ! -d "../../repo-projects/dlp" ]; then
+    # git clone git@github.com:exoplatform/dlp.git ../../repo-projects/dlp
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
-	# if [ ! -d "../../repo-eXo/agenda-connectors" ]; then
-    # git clone git@github.com:exoplatform/agenda-connectors.git ../../repo-eXo/agenda-connectors
+	# if [ ! -d "../../repo-projects/agenda-connectors" ]; then
+    # git clone git@github.com:exoplatform/agenda-connectors.git ../../repo-projects/agenda-connectors
 	# else
     #     echo "Repo already exists, skipping clone"
     # fi
@@ -398,7 +398,7 @@ function repoCleanup() {
 	# git checkout $ORIGIN_BRANCH
 	# git branch -D $TARGET_BRANCH
 	echo "remote update"
-	cd repo-Meeds/${repo_name}
+	cd repo-projects/${repo_name}
 	pwd
 	git remote update --prune
 	echo "reset step"
