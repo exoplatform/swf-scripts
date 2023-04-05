@@ -46,6 +46,6 @@ jobs:
           ISSUE: ${{ github.event.inputs.ISSUE }}
          run: |
             cd git-workflow
-            ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE
+            ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE -p
          shell: bash
          if: ${{ github.event.inputs.VALIDATE == 'true' }}
