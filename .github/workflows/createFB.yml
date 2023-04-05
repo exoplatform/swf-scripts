@@ -12,6 +12,11 @@ on:
       BRANCH:
         type: text
         description: the feature branche you want to add it like mips devx ...
+      VALIDATE:
+        type: boolean
+        description: 'Whether to validate the changes before pushing to the branch'
+        default: false
+
 # concurrency:
 #   group: once-per-time
 
@@ -43,3 +48,4 @@ jobs:
             cd git-workflow
             ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE
          shell: bash
+         if: ${{ github.event.inputs.VALIDATE == 'true' }}
