@@ -147,7 +147,7 @@ function repoCleanup() {
     chmod 600 id_rsa
 	cd ../
 	pwd
-	mkdir repo-projects
+	# mkdir repo-projects
 	if [ ! -d "repo-projects/${repo_name}" ]; then
 	git clone git@github.com:Meeds-io/gatein-wci.git repo-projects/${repo_name}
 	ls -al repo-projects
