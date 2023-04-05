@@ -30,6 +30,10 @@ jobs:
          with:
            key: ${{ secrets.SSH_KEY }}
            known_hosts: ${{ secrets.KNOWN_HOSTS }}.
+       - name: Set Git user email and name
+         run: |
+           git config --global user.email "aycherif@exoplatform.com"
+           git config --global user.name "aycherif"
        - name: run createFB script
          env:
           ORIGIN_BRANCH: ${{ github.event.inputs.ORIGIN_BRANCH }}
