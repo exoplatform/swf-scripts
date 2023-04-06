@@ -139,14 +139,13 @@ function repoInit() {
 	printf "\e[1;33m########################################\e[m\n"
 	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
 	printf "\e[1;33m########################################\e[m\n"
-	# pushd ${repo_name}
+	# pushd repo-projects/${repo_name}
 }
 
 function repoCleanup() {
 	echo "========================================="
     echo "cloning Meeds projects"
 	echo "========================================="
-	local repo_name=$1
 	# ls -al ~/.ssh
     # cd ~/.ssh
     # chmod 600 id_rsa
@@ -157,8 +156,8 @@ function repoCleanup() {
 	else
         echo "Repo already exists, skipping clone"
     fi
-	if [ ! -d "repo-projects/kernel" ]; then
-    git clone git@github.com:Meeds-io/kernel.git repo-projects/kernel
+	if [ ! -d "repo-projects/${repo_name}" ]; then
+    git clone git@github.com:Meeds-io/kernel.git repo-projects/${repo_name}
 	else
         echo "Repo already exists, skipping clone"
     fi
@@ -397,7 +396,6 @@ function repoCleanup() {
 	pushd repo-projects/${repo_name}
 	pwd
 	git remote update --prune
-	echo "reset step"
 	git reset --hard HEAD
 	[ ! -z "{ORIGIN_BRANCH:-}" ] && git checkout $ORIGIN_BRANCH || git checkout $DEFAULT_BRANCH
 	git reset --hard HEAD
@@ -416,6 +414,7 @@ function repoCleanup() {
 		git checkout -b $TARGET_BRANCH
 		GIT_PUSH_PARAMS="--force"
 	fi
+	popd
 }
 
 function replaceProjectVersion() {
@@ -531,7 +530,7 @@ function replaceProjectAddons() {
 function createFB() {
 	local repo_name=$1
 
-	# repoInit ${repo_name}
+	repoInit ${repo_name}
 	# Remove all branches but the origin one
 	repoCleanup ${repo_name}
 
