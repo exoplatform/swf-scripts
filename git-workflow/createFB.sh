@@ -111,6 +111,10 @@ ADDONS_DLP_TARGET_VERSION=1.1.x-$BRANCH-SNAPSHOT
 ADDONS_AGENDA_CONNECTORS_ORIGIN_VERSION=1.2.x-SNAPSHOT
 ADDONS_AGENDA_CONNECTORS_TARGET_VERSION=1.2.x-$BRANCH-SNAPSHOT
 
+ls
+pushd ~/.ssh
+chmod 600 id_rsa
+popd
 SCRIPTDIR=$(
 	cd $(dirname "$0")
 	pwd
@@ -143,9 +147,9 @@ function repoCleanup() {
 	echo "========================================="
 	local repo_name=$1
 	# ls -al ~/.ssh
-    cd ~/.ssh
-    chmod 600 id_rsa
-	cd ../
+    # cd ~/.ssh
+    # chmod 600 id_rsa
+	# cd ../
 	# mkdir repo-projects
 	if [ ! -d "repo-projects/${repo_name}" ]; then
 	git clone git@github.com:Meeds-io/gatein-wci.git repo-projects/${repo_name}
@@ -389,7 +393,7 @@ function repoCleanup() {
 	# git checkout $ORIGIN_BRANCH
 	# git branch -D $TARGET_BRANCH
 	echo "remote update"
-	cd repo-projects/${repo_name}
+	pushd repo-projects/${repo_name}
 	pwd
 	git remote update --prune
 	echo "reset step"
@@ -561,10 +565,10 @@ pushd ${SWF_FB_REPOS}
 #Meeds Projects
 createFB gatein-wci
 createFB kernel
-createFB core
-createFB ws
-createFB gatein-pc
-createFB gatein-sso
+# createFB core
+# createFB ws
+# createFB gatein-pc
+# createFB gatein-sso
 # createFB gatein-portal
 # createFB maven-depmgt-pom
 # createFB platform-ui
