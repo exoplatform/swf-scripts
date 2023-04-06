@@ -46,6 +46,11 @@ jobs:
           ISSUE: ${{ github.event.inputs.ISSUE }}
          run: |
             cd git-workflow
-            ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE true
+            if [[ ${{inputs.VALIDATE}} == 'false' ]]; then
+              PUSH=false
+            else
+              PUSH=true
+            fi
+            ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE $PUSH
          shell: bash
-         if: ${{ github.event.inputs.VALIDATE == 'true' }}
+        #  if: ${{ github.event.inputs.VALIDATE == 'true' }}
