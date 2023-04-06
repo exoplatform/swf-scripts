@@ -148,15 +148,15 @@ function repoCleanup() {
 	cd ../
 	# mkdir repo-projects
 	if [ ! -d "repo-projects/${repo_name}" ]; then
-	git clone git@github.com:aycherif/gatein-wci.git repo-projects/${repo_name}
+	git clone git@github.com:Meeds-io/gatein-wci.git repo-projects/${repo_name}
 	else
         echo "Repo already exists, skipping clone"
     fi
-	# if [ ! -d "repo-projects/${repo_name}" ]; then
-    # git clone git@github.com:Meeds-io/kernel.git repo-projects/${repo_name}
-	# else
-    #     echo "Repo already exists, skipping clone"
-    # fi
+	if [ ! -d "repo-projects/${repo_name}" ]; then
+    git clone git@github.com:Meeds-io/kernel.git repo-projects/${repo_name}
+	else
+        echo "Repo already exists, skipping clone"
+    fi
 	# if [ ! -d "repo-projectsrepo-projects/${repo_name}" ]; then
     # git clone git@github.com:Meeds-io/core.git repo-projectsrepo-projects/${repo_name}
 	# else
