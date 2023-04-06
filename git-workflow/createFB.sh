@@ -4,6 +4,7 @@
 BRANCH=$1
 ISSUE=$3
 ORIGIN_BRANCH=$2 # develop-meed or develop 
+PUSH=$4
 DEFAULT_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.5.x-SNAPSHOT
@@ -123,15 +124,15 @@ CURRENTDIR=$(pwd)
 
 SWF_FB_REPOS=${SWF_FB_REPOS:-$CURRENTDIR}
 
-PUSH=false
+# PUSH=false
 
-while getopts "p" opt; do
-	case $opt in
-	p)
-		PUSH=true
-		;;
-	esac
-done
+# while getopts "p" opt; do
+# 	case $opt in
+# 	p)
+# 		PUSH=true
+# 		;;
+# 	esac
+# done
 
 function repoInit() {
 	local repo_name=$1
@@ -564,7 +565,7 @@ pushd ${SWF_FB_REPOS}
 
 #Meeds Projects
 createFB gatein-wci
-createFB kernel
+# createFB kernel
 # createFB core
 # createFB ws
 # createFB gatein-pc
