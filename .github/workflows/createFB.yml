@@ -14,7 +14,7 @@ on:
         description: the feature branche you want to add it like mips devx ...
       VALIDATE:
         type: boolean
-        description: 'Whether to validate the changes before pushing to the branch'
+        description: 'CHECK the box to PUSH'
         default: false
 
 jobs:
