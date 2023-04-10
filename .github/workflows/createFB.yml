@@ -17,9 +17,6 @@ on:
         description: 'Whether to validate the changes before pushing to the branch'
         default: false
 
-# concurrency:
-#   group: once-per-time
-
 jobs:
   create_fb:
     runs-on: ubuntu-latest
@@ -35,10 +32,13 @@ jobs:
          with:
            key: ${{ secrets.SSH_KEY }}
            known_hosts: ${{ secrets.KNOWN_HOSTS }}.
-       - name: Set Git user email and name
-         run: |
-           git config --global user.email "aycherif@exoplatform.com"
-           git config --global user.name "aycherif"
+      #  - name: Set Git user email and name
+      #    env:
+      #      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+      #      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+      #    run: |
+      #      git config --global user.email "$GIT_USER_EMAIL"
+      #      git config --global user.name "$GIT_USER_NAME"
        - name: run createFB script
          env:
           ORIGIN_BRANCH: ${{ github.event.inputs.ORIGIN_BRANCH }}
@@ -53,4 +53,3 @@ jobs:
             fi
             ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE $PUSH
          shell: bash
-        #  if: ${{ github.event.inputs.VALIDATE == 'true' }}

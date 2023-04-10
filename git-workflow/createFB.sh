@@ -298,10 +298,6 @@ function createFB() {
 	local repo_name=$1
 	local project=$2
     
-	# idrsaChmod
-	# pushd repo-projects/${repo_name}
-	#repoInit ${repo_name}
-	# Remove all branches but the origin one
 	repoCleanup ${repo_name} ${project}
 
 	replaceProjectVersion ${repo_name}
