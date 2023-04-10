@@ -125,8 +125,9 @@ SCRIPTDIR=$(
 CURRENTDIR=$(pwd)
 
 SWF_FB_REPOS=${SWF_FB_REPOS:-$CURRENTDIR}
-
+echo "==================================="
 echo "SWF_FB_REPOS : ${SWF_FB_REPOS}"
+echo "==================================="
 
 # function repoInit() {
 # 	local repo_name=$1
@@ -161,7 +162,12 @@ function repoCleanup() {
 	printf "\e[1;33m# %s\e[m\n" "Cleaning of ${repo_name} repository ..."
 	# git checkout $ORIGIN_BRANCH
 	# git branch -D $TARGET_BRANCH
+	echo "==================================="
+	echo "==================================="
 	pushd repo-projects/${repo_name}
+	pwd
+	echo "==================================="
+	echo "==================================="
 	git remote update --prune
 	git reset --hard HEAD
 	[ ! -z "{ORIGIN_BRANCH:-}" ] && git checkout $ORIGIN_BRANCH || git checkout $DEFAULT_BRANCH
@@ -181,7 +187,13 @@ function repoCleanup() {
 		git checkout -b $TARGET_BRANCH
 		GIT_PUSH_PARAMS="--force"
 	fi
+	echo "==================================="
+	echo "==================================="
+	pwd
 	popd
+	pwd
+	echo "==================================="
+	echo "==================================="
 }
 
 function replaceProjectVersion() {
@@ -301,7 +313,7 @@ function createFB() {
 	idrsaChmod
 	#repoInit ${repo_name}
 	# Remove all branches but the origin one
-	repoCleanup ( ${repo_name}, ${project} )
+	repoCleanup ${repo_name} ${project}
 
 	replaceProjectVersion ${repo_name}
 	replaceProjectDeps ${repo_name}
@@ -330,7 +342,9 @@ function createFB() {
 }
 
 pushd ${SWF_FB_REPOS}
+echo "==================================="
 echo "SWF_FB_REPOS : ${SWF_FB_REPOS}"
+echo "==================================="
 
 #Meeds Projects
 createFB gatein-wci Meeds-io
