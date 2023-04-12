@@ -6,12 +6,15 @@ on:
       ORIGIN_BRANCH: 
         type: text
         description: like develop-meed or develop or develop-exo 
+        required: true
       ISSUE: 
         type: text
-        description: the task id 'task-1234'      
+        description: the task id 'task-1234' 
+        required: true     
       BRANCH:
         type: text
         description: the feature branche you want to add it like mips devx ...
+        required: true
       VALIDATE:
         type: boolean
         description: 'CHECK the box to PUSH'
@@ -22,20 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-       - name: check inputs
-         run: | 
-          if [[ ! ${{inputs.ORIGIN_BRANCH}} =~ '' ]]; then
-            echo "Error: This field could not be empty"
-            exit 1
-          fi
-          if [[ ! ${{inputs.BRANCH}} =~ '' ]]; then
-            echo "Error: This field could not be empty"
-            exit 1
-          fi 
-          if [[ ! ${{inputs.ISSUE}} =~ '' ]]; then
-            echo "Error: This field could not be empty"
-            exit 1
-          fi  
        - name: Checkout
          uses: actions/checkout@v3
          with: 
