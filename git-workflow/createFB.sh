@@ -315,53 +315,53 @@ echo "==================================="
 #Meeds Projects
 createFB gatein-wci Meeds-io
 createFB kernel Meeds-io
-# createFB core Meeds-io
-# createFB ws Meeds-io
-# createFB gatein-pc Meeds-io
-# createFB gatein-sso Meeds-io
-# createFB gatein-portal Meeds-io
-# createFB maven-depmgt-pom Meeds-io
-# createFB platform-ui Meeds-io
-# createFB commons Meeds-io
-# createFB social Meeds-io
-# createFB addons-manager Meeds-io
-# createFB app-center Meeds-io
-# createFB gamification Meeds-io
-# createFB kudos Meeds-io
-# createFB perk-store Meeds-io
-# createFB wallet Meeds-io
-# createFB meeds Meeds-io
-# createFB push-notifications Meeds-io
-# createFB notes Meeds-io
-# createFB analytics Meeds-io
-# createFB task Meeds-io
-# createFB poll Meeds-io
-# createFB gamification-github Meeds-io
+createFB core Meeds-io
+createFB ws Meeds-io
+createFB gatein-pc Meeds-io
+createFB gatein-sso Meeds-io
+createFB gatein-portal Meeds-io
+createFB maven-depmgt-pom Meeds-io
+createFB platform-ui Meeds-io
+createFB commons Meeds-io
+createFB social Meeds-io
+createFB addons-manager Meeds-io
+createFB app-center Meeds-io
+createFB gamification Meeds-io
+createFB kudos Meeds-io
+createFB perk-store Meeds-io
+createFB wallet Meeds-io
+createFB meeds Meeds-io
+createFB push-notifications Meeds-io
+createFB notes Meeds-io
+createFB analytics Meeds-io
+createFB task Meeds-io
+createFB poll Meeds-io
+createFB gamification-github Meeds-io
 
 # # Explatform projects
-# createFB ecms exoplatform
-# createFB jcr exoplatform
-# createFB agenda exoplatform
-# createFB jitsi exoplatform
-# createFB jitsi-call exoplatform
-# createFB chat-application exoplatform
-# createFB multifactor-authentication exoplatform
-# createFB digital-workplace exoplatform
-# createFB layout-management exoplatform
-# createFB news exoplatform
-# createFB onlyoffice exoplatform
-# createFB saml2-addon exoplatform
-# createFB web-conferencing exoplatform
-# createFB data-upgrade exoplatform
-# createFB platform-private-distributions exoplatform
-# createFB automatic-translation exoplatform
-# createFB processes exoplatform
-# createFB documents exoplatform
-# createFB mail-integration exoplatform
-# createFB anti-bruteforce exoplatform
-# createFB anti-malware exoplatform
-# createFB dlp exoplatform
-# createFB agenda-connectors exoplatform
+createFB ecms exoplatform
+createFB jcr exoplatform
+createFB agenda exoplatform
+createFB jitsi exoplatform
+createFB jitsi-call exoplatform
+createFB chat-application exoplatform
+createFB multifactor-authentication exoplatform
+createFB digital-workplace exoplatform
+createFB layout-management exoplatform
+createFB news exoplatform
+createFB onlyoffice exoplatform
+createFB saml2-addon exoplatform
+createFB web-conferencing exoplatform
+createFB data-upgrade exoplatform
+createFB platform-private-distributions exoplatform
+createFB automatic-translation exoplatform
+createFB processes exoplatform
+createFB documents exoplatform
+createFB mail-integration exoplatform
+createFB anti-bruteforce exoplatform
+createFB anti-malware exoplatform
+createFB dlp exoplatform
+createFB agenda-connectors exoplatform
 popd
 
 echo
