@@ -1,10 +1,10 @@
 #!/bin/bash -eu
 
 # Create Git Feature Branches for PLF projects
-
-BRANCH=devx
-ISSUE=TASK-62301
-ORIGIN_BRANCH=develop # develop-meed or develop 
+BRANCH=$1
+ISSUE=$3
+ORIGIN_BRANCH=$2 # develop-meed or develop 
+PUSH=$4
 DEFAULT_BRANCH=develop
 TARGET_BRANCH=feature/$BRANCH
 ORIGIN_VERSION=6.5.x-SNAPSHOT
@@ -119,31 +119,31 @@ SCRIPTDIR=$(
 CURRENTDIR=$(pwd)
 
 SWF_FB_REPOS=${SWF_FB_REPOS:-$CURRENTDIR}
+echo "==================================="
+echo "SWF_FB_REPOS : ${SWF_FB_REPOS}"
+echo "==================================="
 
-PUSH=false
-
-while getopts "p" opt; do
-	case $opt in
-	p)
-		PUSH=true
-		;;
-	esac
-done
-
-function repoInit() {
-	local repo_name=$1
-	printf "\e[1;33m########################################\e[m\n"
-	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
-	printf "\e[1;33m########################################\e[m\n"
-	pushd ${repo_name}
-}
+# function repoInit() {
+# 	local repo_name=$1
+# 	printf "\e[1;33m########################################\e[m\n"
+# 	printf "\e[1;33m# Repository: %s\e[m\n" "${repo_name}"
+# 	printf "\e[1;33m########################################\e[m\n"
+# 	#pushd repo-projects/${repo_name}
+# }
 
 function repoCleanup() {
 	local repo_name=$1
+	local organization=$2
+	if [ ! -d "repo-projects/${repo_name}" ]; then
+    		git clone git@github.com:${organization}/${repo_name}.git repo-projects/${repo_name}
+	else
+    		echo "Repo ${repo_name} already exists, skipping clone"
+        fi
 	# git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
 	printf "\e[1;33m# %s\e[m\n" "Cleaning of ${repo_name} repository ..."
 	# git checkout $ORIGIN_BRANCH
 	# git branch -D $TARGET_BRANCH
+	cd repo-projects/${repo_name}
 	git remote update --prune
 	git reset --hard HEAD
 	[ ! -z "{ORIGIN_BRANCH:-}" ] && git checkout $ORIGIN_BRANCH || git checkout $DEFAULT_BRANCH
@@ -169,7 +169,7 @@ function replaceProjectVersion() {
 	local repo_name=$1
 	printf "\e[1;33m# %s\e[m\n" "Modifying versions in the project POMs ($repo_name) ..."
 	set -e
-	case $repo_name in
+	case $repo_name in	
 	addons-manager) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_MANAGER_ORIGIN_VERSION</version>" "<version>$ADDONS_MANAGER_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	agenda) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_AGENDA_ORIGIN_VERSION</version>" "<version>$ADDONS_AGENDA_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
 	analytics) $SCRIPTDIR/../replaceInFile.sh "<version>$ADDONS_ANALYTICS_ORIGIN_VERSION</version>" "<version>$ADDONS_ANALYTICS_TARGET_VERSION</version>" "pom.xml -not -wholename \"*/target/*\"" ;;
@@ -277,10 +277,9 @@ function replaceProjectAddons() {
 
 function createFB() {
 	local repo_name=$1
-
-	repoInit ${repo_name}
-	# Remove all branches but the origin one
-	repoCleanup ${repo_name}
+	local organization=$2
+    
+	repoCleanup ${repo_name} ${organization}
 
 	replaceProjectVersion ${repo_name}
 	replaceProjectDeps ${repo_name}
@@ -309,57 +308,60 @@ function createFB() {
 }
 
 pushd ${SWF_FB_REPOS}
+echo "==================================="
+echo "SWF_FB_REPOS : ${SWF_FB_REPOS}"
+echo "==================================="
 
 #Meeds Projects
-createFB gatein-wci
-createFB kernel
-createFB core
-createFB ws
-createFB gatein-pc
-createFB gatein-sso
-createFB gatein-portal
-createFB maven-depmgt-pom
-createFB platform-ui
-createFB commons
-createFB social
-createFB addons-manager
-createFB app-center
-createFB gamification
-createFB kudos
-createFB perk-store
-createFB wallet
-createFB meeds
-createFB push-notifications
-createFB notes
-createFB analytics
-createFB task
-createFB poll
-createFB gamification-github
+createFB gatein-wci Meeds-io
+createFB kernel Meeds-io
+createFB core Meeds-io
+createFB ws Meeds-io
+createFB gatein-pc Meeds-io
+createFB gatein-sso Meeds-io
+createFB gatein-portal Meeds-io
+createFB maven-depmgt-pom Meeds-io
+createFB platform-ui Meeds-io
+createFB commons Meeds-io
+createFB social Meeds-io
+createFB addons-manager Meeds-io
+createFB app-center Meeds-io
+createFB gamification Meeds-io
+createFB kudos Meeds-io
+createFB perk-store Meeds-io
+createFB wallet Meeds-io
+createFB meeds Meeds-io
+createFB push-notifications Meeds-io
+createFB notes Meeds-io
+createFB analytics Meeds-io
+createFB task Meeds-io
+createFB poll Meeds-io
+createFB gamification-github Meeds-io
 
-# Explatform projects
-createFB ecms
-createFB jcr
-createFB agenda
-createFB jitsi
-createFB jitsi-call
-createFB chat-application
-createFB multifactor-authentication
-createFB digital-workplace
-createFB layout-management
-createFB news
-createFB onlyoffice
-createFB saml2-addon
-createFB web-conferencing
-createFB data-upgrade
-createFB platform-private-distributions
-createFB automatic-translation
-createFB processes
-createFB documents
-createFB mail-integration
-createFB anti-bruteforce
-createFB anti-malware
-createFB dlp
-createFB agenda-connectors
+# # Explatform projects
+createFB ecms exoplatform
+createFB jcr exoplatform
+createFB agenda exoplatform
+createFB jitsi exoplatform
+createFB jitsi-call exoplatform
+createFB chat-application exoplatform
+createFB multifactor-authentication exoplatform
+createFB digital-workplace exoplatform
+createFB layout-management exoplatform
+createFB news exoplatform
+createFB onlyoffice exoplatform
+createFB saml2-addon exoplatform
+createFB web-conferencing exoplatform
+createFB data-upgrade exoplatform
+createFB platform-private-distributions exoplatform
+createFB automatic-translation exoplatform
+createFB processes exoplatform
+createFB documents exoplatform
+createFB mail-integration exoplatform
+createFB anti-bruteforce exoplatform
+createFB anti-malware exoplatform
+createFB dlp exoplatform
+createFB agenda-connectors exoplatform
 popd
 
 echo

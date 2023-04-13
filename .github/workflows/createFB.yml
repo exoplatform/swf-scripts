@@ -1,0 +1,51 @@
+name: Create Git Feature Branches for PLF projects 
+
+on:
+  workflow_dispatch:
+    inputs:
+      ORIGIN_BRANCH: 
+        type: choice
+        description: Feature Branch's base branch for Meeds-io repositories (exoplatform repositories will forcibly use develop as a base branch)
+        options:
+          - develop
+          - develop-exo
+          - develop-meed
+      ISSUE: 
+        type: text
+        description: the task id 'task-1234' 
+        required: true     
+      BRANCH:
+        type: text
+        description: the feature branche you want to add it like mips devx ...
+        required: true
+      VALIDATE:
+        type: boolean
+        description: 'CHECK the box to PUSH'
+        default: false
+
+jobs:
+  create_fb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+       - name: Checkout
+         uses: actions/checkout@v3
+         with: 
+           ssh-key: ${{ secrets.SSH_KEY }}
+       - name: Set Git user email and name
+         env:
+           GIT_USER_EMAIL: "exo-swf@exoplatform.com"
+           GIT_USER_NAME: "exo-swf"
+         run: |
+           git config --global user.email "$GIT_USER_EMAIL"
+           git config --global user.name "$GIT_USER_NAME"
+       - name: run createFB script
+         env:
+          ORIGIN_BRANCH: ${{ github.event.inputs.ORIGIN_BRANCH }}
+          BRANCH: ${{ github.event.inputs.BRANCH }}
+          ISSUE: ${{ github.event.inputs.ISSUE }}
+          PUSH: ${{ github.event.inputs.VALIDATE }} 
+         run: |
+            cd git-workflow
+            ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE $PUSH
+         shell: bash
