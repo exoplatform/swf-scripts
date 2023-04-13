@@ -277,9 +277,9 @@ function replaceProjectAddons() {
 
 function createFB() {
 	local repo_name=$1
-	local project=$2
+	local organization=$2
     
-	repoCleanup ${repo_name} ${project}
+	repoCleanup ${repo_name} ${organization}
 
 	replaceProjectVersion ${repo_name}
 	replaceProjectDeps ${repo_name}
