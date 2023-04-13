@@ -4,9 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       ORIGIN_BRANCH: 
-        type: text
-        description: like develop-meed or develop or develop-exo 
-        required: true
+        type: choice
+        description: Feature Branch's base branch for Meeds-io repositories (exoplatform repositories will forcibly use develop as a base branch)
+        options:
+          - develop
+          - develop-exo
+          - develop-meed
       ISSUE: 
         type: text
         description: the task id 'task-1234' 
