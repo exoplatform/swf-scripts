@@ -28,13 +28,7 @@ jobs:
        - name: Checkout
          uses: actions/checkout@v3
          with: 
-           ref: ready
-           token: ${{ secrets.SWF_TOKEN }}
-       - name: install ssh
-         uses: shimataro/ssh-key-action@v2
-         with:
-           key: ${{ secrets.SSH_KEY }}
-           known_hosts: ${{ secrets.KNOWN_HOSTS }}.
+           ssh-key: ${{ secrets.SSH_KEY }}
        - name: Set Git user email and name
          env:
            GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
