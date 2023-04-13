@@ -31,8 +31,8 @@ jobs:
            ssh-key: ${{ secrets.SSH_KEY }}
        - name: Set Git user email and name
          env:
-           GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-           GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+           GIT_USER_EMAIL: "exo-swf@exoplatform.com"
+           GIT_USER_NAME: "exo-swf"
          run: |
            git config --global user.email "$GIT_USER_EMAIL"
            git config --global user.name "$GIT_USER_NAME"
