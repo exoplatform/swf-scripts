@@ -139,25 +139,12 @@ echo "==================================="
 
 function repoCleanup() {
 	local repo_name=$1
-	local project=$2
-
-	case $project in
-    exoplatform)
-		if [ ! -d "repo-projects/${repo_name}" ]; then
-    		git clone git@github.com:exoplatform/${repo_name}.git repo-projects/${repo_name}
-		else
-    		echo "Repo already exists, skipping clone"
-    	fi
-    ;;
-    Meeds-io)
-		if [ ! -d "repo-projects/${repo_name}" ]; then
-			git clone git@github.com:Meeds-io/${repo_name}.git repo-projects/${repo_name}
-		else
-        	echo "Repo already exists, skipping clone"
-    	fi
-    ;;
-	esac
-
+	local organization=$2
+	if [ ! -d "repo-projects/${repo_name}" ]; then
+    		git clone git@github.com:${organization}/${repo_name}.git repo-projects/${repo_name}
+	else
+    		echo "Repo ${repo_name} already exists, skipping clone"
+        fi
 	# git checkout ${ORIGIN_BRANCH} && git branch | grep -v "${ORIGIN_BRANCH}" | xargs git branch -d -D
 	printf "\e[1;33m# %s\e[m\n" "Cleaning of ${repo_name} repository ..."
 	# git checkout $ORIGIN_BRANCH
