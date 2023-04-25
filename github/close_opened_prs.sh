@@ -24,9 +24,7 @@ for row in ${items}; do
     item="$(_jq '.project')"
     org="$(_jq '.gitOrganization')"
     echo "Fetching open pull request of $org/$item...."
-    prs=$(curl -s -f -XGET -L "https://api.github.com/repos/$org/$item/pulls?state=open" \
-        --header 'Accept: application/vnd.github.luke-cage-preview+json' \
-        --header "Authorization: Bearer ${GIT_TOKEN}" | jq -r '.[] | @base64')
+    prs=$(gh api -X GET "/repos/$org/$item/pulls?state=open" | jq -r '.[] | @base64')
     echo "Done."
     for pr in ${prs}; do
         set +e
@@ -34,19 +32,17 @@ for row in ${items}; do
             echo ${pr} | base64 --decode | jq -r ${1}
         }
         number="$(_jqpr '.number')" || continue
+        ref="$(_jqpr '.head.ref')" || continue
         set -e
         title="$(_jqpr '.title')"
         updated_at="$(_jqpr '.updated_at')"
         epoch_updated_date="$(date -d $updated_at '+%s')"
         diff_in_days=$(((current_date - epoch_updated_date) / (60 * 60 * 24)))
         if [ $diff_in_days -gt $MAX_DAYS_TOKEEP ]; then
-            curl -s -XPATCH -L "https://api.github.com/repos/$org/$item/pulls/$number" \
-            --header 'Accept: application/vnd.github.v3+json' \
-                --header "Authorization: Bearer ${GIT_TOKEN}" \
-                -d '{"state":"closed"}' &>/dev/null
-            echo "PR: $org/$item/$number has been closed. Its latest update date is: $updated_at"
+            gh api -X DELETE "/repos/$org/$item/git/refs/heads/${ref}"
+            echo "PR: $org/$item/$number: \"${title}\" has been closed. Latest update date: $updated_at"
         else
-            echo "PR: $org/$item/$number is Keeped. Its latest update date is: $(date -d $updated_at '+%Y-%m-%d %H:%M:%S'), Remaining days is: $((MAX_DAYS_TOKEEP - diff_in_days))"
+            echo "PR: $org/$item/$number: \"${title}\" is Kept. Latest update date: $(date -d $updated_at '+%Y-%m-%d %H:%M:%S'). Stale Remaining days: $((MAX_DAYS_TOKEEP - diff_in_days))"
         fi
     done
     echo "Done fetching prs of $org/$item."
