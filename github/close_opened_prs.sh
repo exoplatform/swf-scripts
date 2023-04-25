@@ -32,8 +32,8 @@ while IFS=']' read -r line; do
         epoch_updated_date="$(date -d $updated_at '+%s')"
         diff_in_days=$(((current_date - epoch_updated_date) / (60 * 60 * 24)))
         if [ $diff_in_days -gt $MAX_DAYS_TOKEEP ]; then
-            gh api -X DELETE "/repos/$org/$item/git/refs/heads/${ref}"
-            gh api -X POST "/repos/$org/$item/issues/$number/comments" -f body='Stale PR. Closed' 
+            gh api -X DELETE "/repos/$org/$item/git/refs/heads/${ref}" >/dev/null
+            gh api -X POST "/repos/$org/$item/issues/$number/comments" -f body='Stale PR. Closed' >/dev/null
             echo "PR: $org/$item/$number: \"${title}\" has been closed. Latest update date: $updated_at"
         else
             echo "PR: $org/$item/$number: \"${title}\" is Kept. Latest update date: $(date -d $updated_at '+%Y-%m-%d %H:%M:%S'). Stale Remaining days: $((MAX_DAYS_TOKEEP - diff_in_days))"
