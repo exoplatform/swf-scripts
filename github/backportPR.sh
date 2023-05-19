@@ -2,7 +2,11 @@
 set -o pipefail 
 PR_JSON=""
 getJsonItem() {
-    echo $PR_JSON | jq ".$1" | xargs -r echo 
+    echo $PR_JSON | jq -r ".$1"
+}
+
+getPRReviewers() {
+    echo $PR_JSON | jq -r '[ .requested_reviewers[].login ] | join(",")'
 }
 
 # Sanitize PR URL
@@ -36,6 +40,7 @@ echo "OK PR merge commit is ${PR_MERGE_COMMIT}"
 PR_TITLE=$(getJsonItem title)
 PR_BODY=$(getJsonItem body)
 PR_OWNER=$(getJsonItem user.login)
+PR_REVIEWERS=$(getPRReviewers)
 PR_REPO=$(getJsonItem head.repo.name)
 git clone $PR_CLONE_URL &>/dev/null
 pushd ${PR_REPO}
@@ -63,10 +68,22 @@ git push origin HEAD
 if [ ${REVIEWERS:-} = "_OWNER_" ]; then 
     REVIEWERS=$PR_OWNER
 fi
+if [ ${REVIEWERS:-} = "_REVIEWERS_" ]; then
+    if [ -z "${PR_REVIEWERS:-}" ]; then 
+      echo "Error: This PR does not have reviewers! Please select other reviewers. Abort"
+      exit 1
+    else  
+      REVIEWERS=$PR_REVIEWERS
+    fi
+fi
 if [ ! -z ${GH_ACTOR_TOKEN:-} ]; then
   export GH_TOKEN=${GH_ACTOR_TOKEN}
 fi
+echo "OK! Creating backport PR with base branch ${TARGET_BASE_BRANCH}, assignee ${PR_OWNER}, and reviewers ${REVIEWERS}..."
 gh pr create --repo $PR_CLONE_URL -f --reviewer "${REVIEWERS}" --assignee "${PR_OWNER}" --base "${TARGET_BASE_BRANCH}" --head ${BRANCH_NAME}
+echo "Done."
 if [ "${AUTO_MERGE:-DEFAULT}" != "DEFAULT" ]; then 
+  echo "Enabling ${AUTO_MERGE:-DEFAULT} auto merge..."
   gh pr merge --auto --${AUTO_MERGE} --repo $PR_CLONE_URL
+  echo "Done."
 fi
