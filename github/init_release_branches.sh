@@ -42,7 +42,7 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     else 
         milestone_version=$(echo $version | sed "s/-\${release-version}//g")
     fi
-    git clone --depth ${FETCH_DEPTH_MAX} --branch ${module_version} git@github.com:${git_organization}/$name
+    git -c advice.detachedHead=false clone --depth ${FETCH_DEPTH_MAX} --branch ${module_version} git@github.com:${git_organization}/$name
     pushd $name &>/dev/null
     git checkout -b ${TARGET_BRANCH} ${module_version}
     commitsSWFCount="$(git log --grep '\[exo-release\]' HEAD~${SWF_RELEASE_COMMITS_MAX}..HEAD --oneline | wc -l)" # HEAD~2..HEAD: Max two commits checks to expand if needed
