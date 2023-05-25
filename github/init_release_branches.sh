@@ -7,7 +7,14 @@
 # TASK_ID: Tribe's task id (only digits)
 
 echo "Parsing CI CD Release modules..."
-
+FETCH_DEPTH_MAX=3
+# Does not correlate with FETCH DEPTH! 2 commits (1-Update module version, 2- Update dependencies snapshot to released version)
+# Always SWF_RELEASE_COMMITS_MAX should be lower than FETCH_DEPTH_MAX
+SWF_RELEASE_COMMITS_MAX=2
+if ((SWF_RELEASE_COMMITS_MAX >= FETCH_DEPTH_MAX)); then 
+    echo "Error! ${SWF_RELEASE_COMMITS_MAX} should be lower than ${FETCH_DEPTH_MAX}"
+    exit 1
+fi
 current_date=$(date '+%s')
 modules=$(curl -H "Authorization: token ${GIT_TOKEN}" \
     -H 'Accept: application/vnd.github.v3.raw' \
@@ -29,16 +36,16 @@ for module in $(echo "${modules}" | jq -r '.[] | @base64'); do
     [ "${name}" = "platform-qa-tribe" ] && continue
     # Module to be not released -> Skipped
     [[ "${version}" =~ .*-\$\{release-version\}$ ]] || continue
-    git clone git@github.com:${git_organization}/$name
-    pushd $name &>/dev/null
     module_version=$(echo $version | sed "s/\${release-version}/${RELEASE_SUFFIX}/g")
     if [ ! -z "${MILESTONE_SUFFIX:-}" ]; then 
         milestone_version=$(echo $version | sed "s/\${release-version}/${MILESTONE_SUFFIX}/g")
     else 
         milestone_version=$(echo $version | sed "s/-\${release-version}//g")
     fi
+    git clone --depth ${FETCH_DEPTH_MAX} --branch ${module_version} git@github.com:${git_organization}/$name
+    pushd $name &>/dev/null
     git checkout -b ${TARGET_BRANCH} ${module_version}
-    commitsSWFCount="$(git log --grep '\[exo-release\]' HEAD~2..HEAD --oneline | wc -l)" # HEAD~2..HEAD: Max two commits checks to expand if needed
+    commitsSWFCount="$(git log --grep '\[exo-release\]' HEAD~${SWF_RELEASE_COMMITS_MAX}..HEAD --oneline | wc -l)" # HEAD~2..HEAD: Max two commits checks to expand if needed
     # Revert SWF Release commits
     if [ "${commitsSWFCount}" = "2" ]; then 
         git revert HEAD HEAD^ --no-commit # Revert two commits
