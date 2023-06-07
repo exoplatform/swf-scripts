@@ -24,7 +24,7 @@ echo "Parsing FB repositories from catalog..."
 curl -H "Authorization: token ${GIT_TOKEN}" \
     -H 'Accept: application/vnd.github.v3.raw' \
     -L "https://api.github.com/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/platform/seed_jobs_ci.groovy" --output ${seedfilefiltred}
-cat ${seedfilefiltred} | grep "${DIST_BRANCH}" | grep "project:" > ${seedfileraw}
+cat ${seedfilefiltred} | grep "project:" > ${seedfileraw}
 modules_length=$(wc -l ${seedfileraw} | awk '{ print $1 }')
 counter=0
 echo "Done. Performing action..."
