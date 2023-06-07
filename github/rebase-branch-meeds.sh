@@ -15,6 +15,7 @@ echo -e "\033[1;32m[Success]\033[0m $1"
 ###
 
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
+export DEFAULT_ORG="Meeds-io"
 
 seedfileraw=$(mktemp)
 seedfilefiltred=$(mktemp)
@@ -33,7 +34,7 @@ while IFS= read -r line; do
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
-    [ -z "${org}" ] && continue
+    [ -z "${org}" ] && org=${DEFAULT_ORG}
     echo "================================================================================================="
     echo -e " Module (${counter}/${modules_length}): \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a"
     echo "================================================================================================="
