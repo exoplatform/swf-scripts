@@ -23,7 +23,7 @@ current_date=$(date '+%s')
 echo "Parsing FB repositories from catalog..."
 curl -H "Authorization: token ${GIT_TOKEN}" \
     -H 'Accept: application/vnd.github.v3.raw' \
-    -L "https://api.github.com/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/platform/seed_jobs_ci.groovy" --output ${seedfilefiltred}
+    -L "https://api.github.com/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/platform/seed_jobs_meeds_meed.groovy" --output ${seedfilefiltred}
 cat ${seedfilefiltred} | grep "${BRANCH_NAME}" | grep "project:" > ${seedfileraw}
 modules_length=$(wc -l ${seedfileraw} | awk '{ print $1 }')
 counter=1
