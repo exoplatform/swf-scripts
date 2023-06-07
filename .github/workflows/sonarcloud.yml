@@ -2,6 +2,11 @@ name: Sonar Analysis
 on:
   workflow_call:
     inputs:
+      maven_version:
+        description: Maven version
+        default: '3.9.2'
+        required: false
+        type: string
       extra_maven_opts:
         description: Extra Maven OPTS
         default: ''
@@ -34,6 +39,10 @@ jobs:
         with:
           java-version: ${{ inputs.jdk_major_version }}
           distribution: ${{ inputs.jdk_distribution }}
+      - name: Set up Maven ${{ inputs.maven_version }}
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: ${{ inputs.maven_version }}
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
