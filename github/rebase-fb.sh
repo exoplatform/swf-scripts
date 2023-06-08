@@ -17,8 +17,8 @@ action() {
 echo -e "\033[1;36m[Action]:\033[0m $1"
 }
 ###
-
 [ -z "${FB_NAME}" ] && exit 1
+[ -z "${REBASE_PRS}" ] && REBASE_PRS=false
 info "Parsing FB ${FB_NAME} Seed Job Configuration..."
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 current_date=$(date '+%s')
@@ -91,6 +91,29 @@ while IFS=']' read -r line; do
     if [ "${prev_head}" != "${new_head}" ]; then
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
+      if ${REBASE_PRS}; then 
+        action "Looking for PRs with base feature/${FB_NAME}..."
+        fbPRs=$(gh api /repos/${org}/${item}/pulls?base=feature/${FB_NAME})
+        for fbPR in $(echo "${fbPRs}" | jq -r '.[] | @base64'); do
+          _jq() {
+            echo ${fbPR} | base64 --decode | jq -r ${1}
+          }
+          prBranch=$(_jq '.head.ref')
+          prNumber=$(_jq '.number')
+          action "Trying to rebase https://github.com/${org}/${item}/pull/${prNumber} branch: ${prBranch}..."
+          git checkout -f ${prBranch} &>/dev/null
+          prev_head=$(git rev-parse --short HEAD)
+          if ! git rebase feature/${FB_NAME} ${prBranch} >/dev/null; then 
+            error "Cannot rebase ${prBranch} on feature/${FB_NAME}! Skipped!"
+            git rebase --abort &>/dev/null || :
+          else
+            new_head=$(git rev-parse --short HEAD)
+            info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
+            git push origin ${prBranch}:${prBranch} --force-with-lease | grep -v remote ||:
+          fi
+        done
+        info "PRs rebase finished."
+      fi
     fi
     popd &>/dev/null
 done <<< "$fblist"
