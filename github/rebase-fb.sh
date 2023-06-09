@@ -18,7 +18,9 @@ echo -e "\033[1;36m[Action]:\033[0m $1"
 }
 ###
 [ -z "${FB_NAME}" ] && exit 1
+set +u
 [ -z "${REBASE_PRS}" ] && REBASE_PRS=false
+set -u
 info "Parsing FB ${FB_NAME} Seed Job Configuration..."
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 current_date=$(date '+%s')
