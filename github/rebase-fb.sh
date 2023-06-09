@@ -92,7 +92,7 @@ while IFS=']' read -r line; do
     new_head=$(git rev-parse --short HEAD)
     if [ "${prev_head}" != "${new_head}" ]; then
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
-      git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
+      git push origin feature/${FB_NAME} --force-with-lease 2>&1 | grep -v remote ||:
       if ${REBASE_PRS}; then 
         action "Looking for PRs with base feature/${FB_NAME}..."
         fbPRs=$(gh api /repos/${org}/${item}/pulls?base=feature/${FB_NAME})
@@ -111,7 +111,7 @@ while IFS=']' read -r line; do
           else
             new_head=$(git rev-parse --short HEAD)
             info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
-            git push origin ${prBranch}:${prBranch} --force-with-lease | grep -v remote ||:
+            git push origin ${prBranch}:${prBranch} --force-with-lease 2>&1 | grep -v remote ||:
           fi
         done
         info "PRs rebase finished."
