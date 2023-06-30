@@ -50,7 +50,11 @@ fi
 echo "Operation ${OPERATION} will be performed by user: $USER"
 echo "Downloading new catalog...."
 curl -f -L "${CATALOG_SCRIPT_URL}/exec?${REQ_PARAMS}" >/tmp/list-new.json
-echo "Download old catalog..."
+if ! cat /tmp/list-new.json | jq -e . >/dev/null; then
+  echo "Invalid new catalog! please check gapp script!"
+  exit 1
+fi
+echo "Backing up old catalog..."
 if ! cp -vf ${CATALOG_PATH}/${CATALOG_FILE_NAME} /tmp/list-old.json; then
 	echo Unable to find old remote catalog
 	rm -f /tmp/list-old.json
