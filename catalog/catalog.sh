@@ -50,7 +50,7 @@ fi
 echo "Operation ${OPERATION} will be performed by user: $USER"
 echo "Downloading new catalog...."
 curl -f -L "${CATALOG_SCRIPT_URL}/exec?${REQ_PARAMS}" >/tmp/list-new.json
-if ! cat /tmp/list-new.json | jq -e . >/dev/null; then
+if ! cat /tmp/list-new.json | jq >/dev/null; then
   echo "Invalid new catalog! please check gapp script!"
   exit 1
 fi
