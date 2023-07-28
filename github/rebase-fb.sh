@@ -13,6 +13,10 @@ success() {
 echo -e "\033[1;32m[Success]\033[0m $1"
 }
 
+warn() {
+echo -e "\033[1;33m[Warning]\033[0m $1"
+}
+
 action() {
 echo -e "\033[1;36m[Action]:\033[0m $1"
 }
@@ -93,6 +97,12 @@ while IFS=']' read -r line; do
     if [ "${prev_head}" != "${new_head}" ]; then
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin feature/${FB_NAME} --force-with-lease 2>&1 | grep -v remote ||:
+      # Looking for incorrect submodules version
+      wrongSubmodulesVersion=$(grep -irl '<version>.*\.x-SNAPSHOT</version>' --include=pom.xml | xargs)
+      if [ ! -z ${wrongSubmodulesVersion} ]; then
+        warn "Unfixed ${FB_NAME} FB maven submodules version detected (x-SNAPSHOT instead of x-${FB_NAME}-SNAPSHOT)! Please fix their pom.xml files"
+        printf " - %s\n" $wrongSubmodulesVersion
+      fi
       if ${REBASE_PRS}; then 
         action "Looking for PRs with base feature/${FB_NAME}..."
         fbPRs=$(gh api /repos/${org}/${item}/pulls?base=feature/${FB_NAME})
