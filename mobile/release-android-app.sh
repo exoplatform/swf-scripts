@@ -16,7 +16,7 @@ fi
 set -u
 echo "Generating keystore..."
 cat >keystore.properties <<EOF
-storeFile=/src/eXoPlatform.keystore
+storeFile=/tmp/eXoPlatform.keystore
 storePassword=${STORE_PASSWORD}
 keyAlias=${KEY_ALIAS}
 keyPassword=${KEY_PASSWORD}
@@ -30,6 +30,7 @@ git clone -b ${GIT_BRANCH:-develop} https://github.com/exoplatform/exo-android
 echo "Starting container based on ${IMAGE_NAME} image..."
 sudo docker run --rm -v ${PWD}/exo-android:/src \
     -v ${PWD}/keystore.properties:/srv/ciagent/workspace/keystore.properties \
+    -v /opt/ciagent/.android/eXoPlatform.keystore:/tmp/eXoPlatform.keystore \
     -e APPALOOSA_EXO_STORE_ID=${APPALOOSA_EXO_STORE_ID:-} \
     -e APPALOOSA_EXO_API_TOKEN=${APPALOOSA_EXO_API_TOKEN:-} \
     ${IMAGE_NAME} android ${OPERATION} || [ "${OPERATION}" = "store" ]
