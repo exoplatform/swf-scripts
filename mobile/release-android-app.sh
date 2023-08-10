@@ -28,7 +28,7 @@ set -e
 echo "Cloning exo-android repository, branch/tag: ${GIT_BRANCH:-develop}"
 git clone -b ${GIT_BRANCH:-develop} https://github.com/exoplatform/exo-android
 echo "Starting container based on ${IMAGE_NAME} image..."
-sudo docker run --rm -v ${PWD}/exo-android:/src \
+docker run --rm -v ${PWD}/exo-android:/src \
     -v ${PWD}/keystore.properties:/srv/ciagent/workspace/keystore.properties \
     -v /opt/ciagent/.android/eXoPlatform.keystore:/tmp/eXoPlatform.keystore \
     -e APPALOOSA_EXO_STORE_ID=${APPALOOSA_EXO_STORE_ID:-} \
