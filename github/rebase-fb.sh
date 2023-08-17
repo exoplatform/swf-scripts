@@ -57,7 +57,7 @@ while IFS=']' read -r line; do
       baseBranch="${BASE_BRANCH}"
     fi
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
-    action "(${counter}/${modules_length}) -- ${org}/${item}: Checking ${baseBranch}...${FB_NAME} status..."
+    action "(${counter}/${modules_length}) -- ${org}/${item}: Checking ${baseBranch}...feature/${FB_NAME} status..."
     compareJson=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME})
     status=$(echo "$compareJson" | jq -r .status)
     aheadby=$(echo "$compareJson" | jq -r .ahead_by)
@@ -69,12 +69,6 @@ while IFS=']' read -r line; do
     action "Starting rebase..."
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
-    upstream=$(git log --oneline origin/${baseBranch}..origin/feature/${FB_NAME} | wc -l)
-    downstream=$(git log --oneline origin/feature/${FB_NAME}..origin/${baseBranch} | wc -l)
-    [ "$downstream" -gt "0" ] && downStreamMsg="\033[1;31m${downstream}\033[0m" || downStreamMsg="\033[1;34m${downstream}\033[0m" # if downstream > 1 color red else color blue
-    echo "================================================================================================="
-    echo -e " Module (${counter}/${modules_length}): ${org}/${item} -- Base Branch: ${baseBranch} -- Diff: ^ \033[1;34m${upstream}\033[0m, v ${downStreamMsg}"
-    echo "================================================================================================="
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
     if ! git rebase origin/${baseBranch} feature/${FB_NAME} >/dev/null; then
