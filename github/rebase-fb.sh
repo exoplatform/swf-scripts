@@ -112,7 +112,7 @@ while IFS=']' read -r line; do
           git checkout -f ${prBranch} &>/dev/null
           prev_head=$(git rev-parse --short HEAD)
           if ! git rebase feature/${FB_NAME} ${prBranch} >/dev/null; then 
-            error "Cannot rebase ${prBranch} on feature/${FB_NAME}! Skipped!"
+            error "Cannot rebase ${prBranch} on feature/${FB_NAME} for ${org}/${item}! Skipped!"
             git rebase --abort &>/dev/null || :
           else
             new_head=$(git rev-parse --short HEAD)
