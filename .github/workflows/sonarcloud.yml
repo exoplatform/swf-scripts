@@ -4,7 +4,7 @@ on:
     inputs:
       maven_version:
         description: Maven version
-        default: '3.9.2'
+        default: '3.9.5'
         required: false
         type: string
       extra_maven_opts:
@@ -13,7 +13,7 @@ on:
         required: false
         type: string
       jdk_major_version:
-        description: JDK Major version (eg 8, 11, 14, 17,...)
+        description: JDK Major version (eg 8, 11, 14, 17, 21,...)
         default: 11
         required: false
         type: number
