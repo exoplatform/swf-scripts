@@ -10,7 +10,7 @@ getPRReviewers() {
 }
 
 # Sanitize PR URL
-PR_URL=$(${PR_URL:-} | grep -oP 'https://github.com/[a-zA-Z0-9-_]+/[a-zA-Z0-9-_]+/pull/[0-9]+')
+PR_URL=$(echo ${PR_URL:-} | grep -oP 'https://github.com/[a-zA-Z0-9-_]+/[a-zA-Z0-9-_]+/pull/[0-9]+')
 if [ -z "${PR_URL:-}"]; then 
   echo "Error: Please provide a valid PR URL!"
   exit 1
