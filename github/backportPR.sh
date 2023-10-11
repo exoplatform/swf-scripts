@@ -5,10 +5,6 @@ getJsonItem() {
     echo $PR_JSON | jq -r ".$1"
 }
 
-getPRReviewers() {
-    echo $PR_JSON | jq -r '[ .requested_reviewers[].login ] | join(",")'
-}
-
 # Sanitize PR URL
 PR_URL=$(echo ${PR_URL:-} | grep -oP 'https://github.com/[a-zA-Z0-9-_]+/[a-zA-Z0-9-_]+/pull/[0-9]+')
 if [ -z "${PR_URL:-}"]; then 
@@ -40,7 +36,6 @@ echo "OK PR merge commit is ${PR_MERGE_COMMIT}"
 PR_TITLE=$(getJsonItem title)
 PR_BODY=$(getJsonItem body)
 PR_OWNER=$(getJsonItem user.login)
-PR_REVIEWERS=$(getPRReviewers)
 PR_REPO=$(getJsonItem head.repo.name)
 git clone $PR_CLONE_URL &>/dev/null
 pushd ${PR_REPO}
@@ -67,14 +62,6 @@ fi
 git push origin HEAD
 if [ ${REVIEWERS:-} = "_OWNER_" ]; then 
     REVIEWERS=$PR_OWNER
-fi
-if [ ${REVIEWERS:-} = "_REVIEWERS_" ]; then
-    if [ -z "${PR_REVIEWERS:-}" ]; then 
-      echo "Error: This PR does not have reviewers! Please select other reviewers. Abort"
-      exit 1
-    else  
-      REVIEWERS=$PR_REVIEWERS
-    fi
 fi
 if [ ! -z ${GH_ACTOR_TOKEN:-} ]; then
   export GH_TOKEN=${GH_ACTOR_TOKEN}
