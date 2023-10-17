@@ -17,6 +17,11 @@ on:
         default: "."
         required: false
         type: string
+      signImage:
+        description: Enable Docker Image Signing (DCT)
+        type: boolean
+        required: false
+        default: false
     secrets:
       DOCKER_USERNAME:
         description: Docker Hub username
@@ -24,6 +29,15 @@ on:
       DOCKER_PASSWORD:
         description: Docker Hub user password
         required: true
+      DOCKER_PRIVATE_KEY_ID:
+        description: Docker Hub Signing Private Key ID
+        required: false
+      DOCKER_PRIVATE_KEY:
+        description: Docker Hub Signing Private Key
+        required: false
+      DOCKER_PRIVATE_KEY_PASSPHRASE:
+        description: Docker Hub Signing Private Key Passphrase
+        required: false
 
 jobs:
   build-and-push-image:
@@ -53,3 +67,12 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Sign the published Dockerhub Docker image with DCT
+        uses: sudo-bot/action-docker-sign@latest
+        if: ${{ inputs.signImage == 'true' }}
+        with:
+          image-ref: ${{ steps.meta.outputs.tags }}
+          private-key-id: "${{ secrets.DOCKER_PRIVATE_KEY_ID }}"
+          private-key: ${{ secrets.DOCKER_PRIVATE_KEY }}
+          private-key-passphrase: ${{ secrets.DOCKER_PRIVATE_KEY_PASSPHRASE }}
