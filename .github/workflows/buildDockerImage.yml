@@ -1,0 +1,48 @@
+name: Create and Publish Docker Image to DockerHub
+
+on:
+  workflow_call:
+    inputs:
+      dockerImage:
+        description: Docker Image
+        required: true
+        type: string
+      dockerImageTag:
+        description: Docker Image tag
+        default: "latest"
+        required: false
+        type: string
+      dockerFileContext:
+        description: Dockerfile Context
+        default: "."
+        required: false
+        type: string
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ inputs.dockerImage }}
+          tags: |
+            type=raw,value=${{ inputs.dockerImageTag }}
+      - name: Build and push Docker image to Dockerhub
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ inputs.dockerFileContext }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
