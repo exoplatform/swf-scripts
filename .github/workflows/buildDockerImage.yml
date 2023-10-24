@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       dockerImageTag:
-        description: Docker Image tag
+        description: Docker Image tag (comma separated for multiple)
         default: "latest"
         required: false
         type: string
@@ -53,13 +53,20 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Build list of additional tags
+        id: additional-tags
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setOutput('tags', `${{ inputs.dockerImageTag }}`.split(",").join("\n"))
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ${{ inputs.dockerImage }}
           tags: |
-            type=raw,value=${{ inputs.dockerImageTag }}
+            ${{ steps.additional-tags.outputs.tags }}
       - name: Build and push Docker image to Dockerhub
         uses: docker/build-push-action@v4
         with:
