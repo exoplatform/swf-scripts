@@ -80,9 +80,10 @@ jobs:
   sign-image:
     runs-on: ubuntu-latest
     needs: build-and-push-image
+    if: ${{ inputs.signImage == true }}
     strategy:
       matrix:
-        tags: ${{fromJSON(needs.build-and-push-image.outputs.tags)}}
+        tags: ${{ needs.build-and-push-image.outputs.tags }}
     steps:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -91,7 +92,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Sign the published Dockerhub Docker image with DCT
         uses: sudo-bot/action-docker-sign@latest
-        if: ${{ inputs.signImage == true }}
         with:
           image-ref: ${{ inputs.dockerImage }}:${{ matrix.tags }}
           private-key-id: "${{ secrets.DOCKER_PRIVATE_KEY_ID }}"
