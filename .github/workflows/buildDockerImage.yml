@@ -43,7 +43,7 @@ jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
     outputs:
-      tags: ${{ steps.additional-tags.outputs.tags }}
+      tags: ${{ steps.additional-jsontags.outputs.tags }}
 
     steps:
       - name: Checkout repository
@@ -60,8 +60,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            core.setOutput('tags', `${{ inputs.dockerImageTag }}`.split(",").join("\n"))
-
+            core.setOutput('tags', `${{ inputs.dockerImageTag }}`.split(",").join("\n"))     
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
@@ -77,13 +76,17 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Build Json array of tags for Docker Signing
+        id: additional-jsontags
+        run: |
+          echo tag=$(echo ${{ inputs.dockerImageTag }} | sed 's/,/\n/g'| jq --raw-input | jq --slurp -c) >> $GITHUB_OUTPUT
   sign-image:
     runs-on: ubuntu-latest
     needs: build-and-push-image
     if: ${{ inputs.signImage == true }}
     strategy:
       matrix:
-        tags: ${{ needs.build-and-push-image.outputs.tags }}
+        tags: ${{ fromJson(needs.build-and-push-image.outputs.tags) }}
     steps:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
