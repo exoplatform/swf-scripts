@@ -79,7 +79,7 @@ jobs:
       - name: Build Json array of tags for Docker Signing
         id: additional-jsontags
         run: |
-          echo tag=$(echo ${{ inputs.dockerImageTag }} | sed 's/,/\n/g'| jq --raw-input | jq --slurp -c) >> $GITHUB_OUTPUT
+          echo tags=$(echo ${{ inputs.dockerImageTag }} | sed 's/,/\n/g'| jq --raw-input | jq --slurp -c) >> $GITHUB_OUTPUT
   sign-image:
     runs-on: ubuntu-latest
     needs: build-and-push-image
