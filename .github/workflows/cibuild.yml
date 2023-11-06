@@ -1,0 +1,67 @@
+name: CI Build
+on:
+  workflow_call:
+    inputs:
+      maven_version:
+        description: Maven version
+        default: "3.9.5"
+        required: false
+        type: string
+      maven_profiles:
+        description: Maven Profiles
+        default: "exo-release"
+        required: false
+        type: string
+      extra_maven_opts:
+        description: Extra Maven OPTS
+        default: ""
+        required: false
+        type: string
+      jdk_major_version:
+        description: JDK Major version (eg 8, 11, 14, 17, 21,...)
+        default: 17
+        required: false
+        type: number
+      jdk_distribution:
+        description: OpenJDK Adopted Distribution (temurin, zulu, adopt, liberica,...)
+        default: "temurin"
+        required: false
+        type: string
+    secrets:
+      NEXUS_USERNAME:
+        required: true
+      NEXUS_PASSWORD:
+        required: true
+env: 
+  SETTINGS_XML_URL: 'http://storage.exoplatform.org/public/githubci/maven-settings.xml'
+jobs:
+  build-ci:
+    name: CI Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{ inputs.jdk_major_version }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.jdk_major_version }}
+          distribution: ${{ inputs.jdk_distribution }}
+      - name: Set up Maven ${{ inputs.maven_version }}
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: ${{ inputs.maven_version }}
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Prepare environment 
+        run: |
+          wget -q "${SETTINGS_XML_URL}" -O /tmp/settings.xml
+      - name: Build module
+        env:
+          MAVEN_OPTS:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: mvn -s /tmp/settings.xml -B clean install -P${{ inputs.maven_profiles }} -Dmaven.artifact.threads=20 ${{ inputs.extra_maven_opts }}
