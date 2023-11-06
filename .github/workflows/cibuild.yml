@@ -50,18 +50,19 @@ jobs:
         uses: stCarolas/setup-maven@v4.5
         with:
           maven-version: ${{ inputs.maven_version }}
-      - name: Cache Maven packages
+      - name: Cache Maven artifacts
         uses: actions/cache@v3
         with:
-          path: ~/.m2
+          path: ~/.m2/repository
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          restore-keys: ${{ runner.os }}-m2-repository
       - name: Prepare environment 
         run: |
-          wget -q "${SETTINGS_XML_URL}" -O /tmp/settings.xml
+          mkdir -p ~/.m2
+          wget -q "${SETTINGS_XML_URL}" -O ~/.m2/settings.xml
       - name: Build module
         env:
           MAVEN_OPTS:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        run: mvn -s /tmp/settings.xml -B clean install -P${{ inputs.maven_profiles }} -Dmaven.artifact.threads=20 ${{ inputs.extra_maven_opts }}
+        run: mvn -B clean install -P${{ inputs.maven_profiles }} -Dmaven.artifact.threads=20 ${{ inputs.extra_maven_opts }}
