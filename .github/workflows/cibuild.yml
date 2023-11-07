@@ -49,7 +49,7 @@ jobs:
       - name: Analyse Pull Request Changes
         id: analyse-pr
         run: |
-          echo "partialmodules=" >> $GITHUB_OUTPUTS
+          echo "partialmodules=" >> $GITHUB_OUTPUT
           if [ "${is_fork}" = "true" ]; then 
             echo "❌ Partial Build for forked repositories is not yet supported! Performing full build ..."
             exit 0
@@ -98,7 +98,7 @@ jobs:
           # Remove duplicates
           modulestoBuild=$(printf '%s\n' $modulestoBuild | sort -u | xargs | sed 's/ /,/g')
           echo -e "Frontend Modules to build are ${modulestoBuild}"
-          echo "partialmodules=${modulestoBuild}" >> $GITHUB_OUTPUTS
+          echo "partialmodules=${modulestoBuild}" >> $GITHUB_OUTPUT
       - name: Set up JDK ${{ inputs.jdk_major_version }}
         uses: actions/setup-java@v3
         with:
