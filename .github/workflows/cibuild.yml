@@ -37,11 +37,15 @@ env:
   is_fork: ${{ github.event.pull_request.head.repo.fork }}
   base_branch_name: ${{ github.event.pull_request.base.ref }}
   repo_name: ${{ github.event.repository.name }}
+  clone_url: ${{ github.event.pull_request.head.repo.clone_url }}
+  pull_number: ${{ github.event.pull_request.number }}
 jobs:
   build-ci:
     name: CI Build
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    permissions:
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -119,6 +123,17 @@ jobs:
         run: |
           mkdir -p ~/.m2
           wget -q "${SETTINGS_XML_URL}" -O ~/.m2/settings.xml
+      - name: Update PR labels 
+        env:
+          MAVEN_SUBMODULES: ${{ steps.analyse-pr.outputs.partialmodules }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -z "${MAVEN_SUBMODULES:-}" ]; then
+            gh pr edit ${pull_number} --add-label partialCIBuild --repo ${clone_url} || true 
+          else 
+            gh pr edit ${pull_number} --remove-label partialCIBuild --repo ${clone_url} || true
+          fi
+
       - name: Build module
         env:
           MAVEN_OPTS:
@@ -127,7 +142,7 @@ jobs:
           MAVEN_SUBMODULES: ${{ steps.analyse-pr.outputs.partialmodules }}
         run: | 
           MAVEN_SUBMODULES_ARGS=""
-          if [ ! -z "${MAVEN_SUBMODULES:-}" ]; then 
-             MAVEN_SUBMODULES_ARGS="-pl $(echo ${MAVEN_SUBMODULES} | sed 's/,/ -pl /g')"
+          if [ ! -z "${MAVEN_SUBMODULES:-}" ]; then
+            MAVEN_SUBMODULES_ARGS="-pl $(echo ${MAVEN_SUBMODULES} | sed 's/,/ -pl /g')"
           fi
           mvn -B clean install -P${{ inputs.maven_profiles }} -Dmaven.artifact.threads=20 ${MAVEN_SUBMODULES_ARGS} ${{ inputs.extra_maven_opts }}
