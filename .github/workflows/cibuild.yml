@@ -55,6 +55,7 @@ jobs:
         id: analyse-pr
         run: |
           echo "partialmodules=" >> $GITHUB_OUTPUT
+          echo "partialmodulesStepName=" >> $GITHUB_OUTPUT
           if [ "${is_fork}" = "true" ]; then 
             echo "❌ Partial Build for forked repositories is not yet supported! Performing full build ..."
             exit 0
@@ -104,6 +105,7 @@ jobs:
           modulestoBuild=$(printf '%s\n' $modulestoBuild | sort -u | xargs | sed 's/ /,/g')
           echo -e "Frontend Modules to build are ${modulestoBuild}"
           echo "partialmodules=${modulestoBuild}" >> $GITHUB_OUTPUT
+          echo "partialmodulesStepName='Partial '" >> $GITHUB_OUTPUT
       - name: Set up JDK ${{ inputs.jdk_major_version }}
         uses: actions/setup-java@v3
         with:
@@ -134,7 +136,7 @@ jobs:
             gh pr edit ${pull_number} --remove-label partialCIBuild --repo ${clone_url} || true
           fi
 
-      - name: Build module
+      - name: ${{ steps.analyse-pr.outputs.partialmodulesStepName }}Build module
         env:
           MAVEN_OPTS:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
