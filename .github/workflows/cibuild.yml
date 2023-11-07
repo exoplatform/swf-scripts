@@ -34,13 +34,71 @@ on:
         required: true
 env: 
   SETTINGS_XML_URL: 'http://storage.exoplatform.org/public/githubci/maven-settings.xml'
+  is_fork: ${{ github.event.pull_request.head.repo.fork }}
+  branch_name: ${{ github.event.pull_request.head.ref }}
+  base_branch_name: ${{ github.event.pull_request.base.ref }}
+  repo_name: ${{ github.event.repository.name }}
 jobs:
   build-ci:
     name: CI Build
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Analyse Pull Request Changes
+        id: analyse-pr
+        run: |
+          echo "partialmodules=" >> $GITHUB_OUTPUTS
+          if [ "${is_fork}" = "true" ]; then 
+            echo "❌ Partial Build for forked repositories is not yet supported! Performing full build ..."
+            exit 0
+          fi
+          baseBranchSha=$(git rev-parse origin/${base_branch_name})
+          mergebaseSha=$(git merge-base origin/${base_branch_name} HEAD)
+          if [ ! "${baseBranchSha}" = "${mergebaseSha}" ]; then 
+            echo "❌ Branch is diverged! Please update the branch! Performing full build ..."
+            exit 0
+          fi
+          echo "Looking for frontend modules..."
+          frontendModules=$(find -name pom.xml | while read pomfile; do 
+            if grep -qi '<packaging>war</packaging>' $pomfile; then 
+              dirname $pomfile | sed -E 's|^\.\/||g'
+            fi
+          done | xargs)
+          if [ -z "${frontendModules}" ]; then 
+            echo "✅ No Frontend modules detected! Performing full build ..."
+            exit 0
+          fi
+          echo -e "✅ Frontend Modules are ${frontendModules}"
+          echo "Changed files are:"
+          git diff --name-only origin/${base_branch_name} ${branch_name}
+          files=$(git diff --name-only origin/${base_branch_name} ${branch_name} | xargs)
+          echo
+          echo "Checking if all changed files belong to frontend submodules for partial build eligibility..."
+          modulestoBuild=""
+          for file in $files; do
+            notfound=true
+            for module in $frontendModules; do 
+              if echo "$file" | grep -qP "^${module}"; then
+                modulestoBuild="$(echo ${modulestoBuild} ${module} | xargs)"
+                notfound=false
+                break
+              fi
+            done
+            if $notfound; then 
+              echo "❌ Changed file $file does not belong to frontend modules. Performing full build..."
+              exit 0
+            fi   
+          done
+          if [ -z "${modulestoBuild}" ]; then 
+            echo "✅ No Frontend modules to build detected! Performing full build ..."
+            exit 0
+          fi
+          # Remove duplicates
+          modulestoBuild=$(printf '%s\n' $modulestoBuild | sort -u | xargs | sed 's/ /,/g')
+          echo -e "Frontend Modules to build are ${modulestoBuild}"
+          echo "partialmodules=${modulestoBuild}" >> $GITHUB_OUTPUTS
       - name: Set up JDK ${{ inputs.jdk_major_version }}
         uses: actions/setup-java@v3
         with:
@@ -65,4 +123,10 @@ jobs:
           MAVEN_OPTS:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        run: mvn -B clean install -P${{ inputs.maven_profiles }} -Dmaven.artifact.threads=20 ${{ inputs.extra_maven_opts }}
+          MAVEN_SUBMODULES: ${{ steps.analyse-pr.outputs.partialmodules }}
+        run: | 
+          MAVEN_SUBMODULES_ARGS=""
+          if [ ! -z "${MAVEN_SUBMODULES:-}" ]; then 
+             MAVEN_SUBMODULES_ARGS="-pl $(echo ${MAVEN_SUBMODULES} | sed 's/,/ -pl /g')"
+          fi
+          mvn -B clean install -P${{ inputs.maven_profiles }} -Dmaven.artifact.threads=20 ${MAVEN_SUBMODULES_ARGS} ${{ inputs.extra_maven_opts }}
