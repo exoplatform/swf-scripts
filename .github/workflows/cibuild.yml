@@ -53,7 +53,8 @@ jobs:
           fetch-depth: 0
       - name: Analyse Pull Request Changes
         id: analyse-pr
-        if: ${{ !contains( github.event.pull_request.labels.*.name, 'fullCIBuild') }}
+        env: 
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "partialmodules=" >> $GITHUB_OUTPUT
           if [ "${is_fork}" = "true" ]; then 
@@ -64,6 +65,10 @@ jobs:
           mergebaseSha=$(git merge-base origin/${base_branch_name} HEAD)
           if [ ! "${baseBranchSha}" = "${mergebaseSha}" ]; then 
             echo "❌ Branch is diverged! Please update the branch! Performing full build ..."
+            exit 0
+          fi
+          if [ ! -z "$(gh pr view ${pull_number} --json labels --repo ${clone_url} | jq -r '.labels[].name' 2>/dev/null | grep fullCIBuild)" ]; then 
+            echo "✅ Partial Build is disabled by fullCIBuild label! Performing full build ..."
             exit 0
           fi
           echo "Looking for frontend modules..."
