@@ -35,7 +35,6 @@ on:
 env: 
   SETTINGS_XML_URL: 'http://storage.exoplatform.org/public/githubci/maven-settings.xml'
   is_fork: ${{ github.event.pull_request.head.repo.fork }}
-  branch_name: ${{ github.event.pull_request.head.ref }}
   base_branch_name: ${{ github.event.pull_request.base.ref }}
   repo_name: ${{ github.event.repository.name }}
 jobs:
@@ -74,8 +73,8 @@ jobs:
           fi
           echo -e "✅ Frontend Modules are ${frontendModules}"
           echo "Changed files are:"
-          git diff --name-only origin/${base_branch_name} ${branch_name}
-          files=$(git diff --name-only origin/${base_branch_name} ${branch_name} | grep -Pv '^\.github' | xargs)
+          git diff --name-only origin/${base_branch_name} HEAD
+          files=$(git diff --name-only origin/${base_branch_name} HEAD | grep -Pv '^\.github' | xargs)
           echo
           echo "Checking if all changed files belong to frontend submodules for partial build eligibility..."
           modulestoBuild=""
