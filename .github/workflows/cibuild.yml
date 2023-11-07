@@ -73,7 +73,7 @@ jobs:
           echo -e "✅ Frontend Modules are ${frontendModules}"
           echo "Changed files are:"
           git diff --name-only origin/${base_branch_name} ${branch_name}
-          files=$(git diff --name-only origin/${base_branch_name} ${branch_name} | xargs)
+          files=$(git diff --name-only origin/${base_branch_name} ${branch_name} | grep -Pv '^\.github' | xargs)
           echo
           echo "Checking if all changed files belong to frontend submodules for partial build eligibility..."
           modulestoBuild=""
