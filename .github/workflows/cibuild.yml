@@ -64,7 +64,7 @@ jobs:
         uses: easimon/maximize-build-space@master
         if: ${{ inputs.maximize_build_space == true }}
         with:
-          root-reserve-mb: 512
+          root-reserve-mb: 2048
           swap-size-mb: 1024
           remove-dotnet: 'true'
       - name: Checkout repository
