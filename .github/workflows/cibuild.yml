@@ -154,11 +154,6 @@ jobs:
           else 
             gh pr edit ${pull_number} --remove-label partialCIBuild --repo ${clone_url} || true
           fi
-      - name: Set Swap Space
-        uses: pierotofy/set-swap-space@master
-        with:
-          swap-size-gb: 10
-
       - name: Build module
         env:
           MAVEN_OPTS: ${{ inputs.extra_maven_opts }}
