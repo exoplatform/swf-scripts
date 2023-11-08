@@ -61,10 +61,11 @@ jobs:
             echo "gh_token=${{ github.token }}" >> $GITHUB_ENV
           fi
       - name: Maximize build space
-        uses: easimon/maximize-build-space@master
+        uses: easimon/maximize-build-space@v8
         if: ${{ inputs.maximize_build_space == true }}
         with:
           root-reserve-mb: 2048
+          temp-reserve-mb: 2048
           swap-size-mb: 1024
           remove-dotnet: 'true'
       - name: Checkout repository
