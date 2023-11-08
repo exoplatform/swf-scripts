@@ -55,11 +55,13 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      # Use github.token for Public Repositories. Otherwise, a SWF_TOKEN token is needed for private ones.
       - name: Check Github Token
         run: | 
           if [ -z "${gh_token}" ]; then 
             echo "gh_token=${{ github.token }}" >> $GITHUB_ENV
           fi
+      # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
       - name: Maximize build space
         uses: easimon/maximize-build-space@v8
         if: ${{ inputs.maximize_build_space == true }}
@@ -68,11 +70,13 @@ jobs:
           temp-reserve-mb: 2048
           swap-size-mb: 1024
           remove-dotnet: 'true'
+      # Checkout Repository (Shallow clone is disabled due to partial builds Checks)
       - name: Checkout repository
         uses: actions/checkout@v3
         with: 
           fetch-depth: 0
           token: ${{ env.gh_token }}
+      # Check Partial Build Eligibility
       - name: Analyse Pull Request Changes
         id: analyse-pr
         env: 
@@ -132,26 +136,31 @@ jobs:
           modulestoBuild=$(printf '%s\n' $modulestoBuild | sort -u | xargs | sed 's/ /,/g')
           echo -e "Frontend Modules to build are ${modulestoBuild}"
           echo "partialmodules=${modulestoBuild}" >> $GITHUB_OUTPUT
+      # Setup JDK
       - name: Set up JDK ${{ inputs.jdk_major_version }}
         uses: actions/setup-java@v3
         with:
           java-version: ${{ inputs.jdk_major_version }}
           distribution: ${{ inputs.jdk_distribution }}
+      # Setup Maven
       - name: Set up Maven ${{ inputs.maven_version }}
         uses: stCarolas/setup-maven@v4.5
         with:
           maven-version: ${{ inputs.maven_version }}
+      # Cache Maven Artifcats to boost up builds
       - name: Cache Maven artifacts
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2-repository
+      # Prepare Maven Enviroment by supplying basic settings.xml with readonly/headless access
       - name: Prepare environment 
         run: |
           mkdir -p ~/.m2
           wget -q "${SETTINGS_XML_URL}" -O ~/.m2/settings.xml
-      - name: Update PR labels 
+      # Add/Remove partialCIBuild Github Label according to partial build eligibility
+      - name: Submit Partial PR label 
         env:
           MAVEN_SUBMODULES: ${{ steps.analyse-pr.outputs.partialmodules }}
           GH_TOKEN: ${{ env.gh_token }}
@@ -161,6 +170,7 @@ jobs:
           else 
             gh pr edit ${pull_number} --remove-label partialCIBuild --repo ${clone_url} || true
           fi
+      # Perform Maven Build
       - name: Build module
         env:
           MAVEN_OPTS: ${{ inputs.extra_maven_opts }}
