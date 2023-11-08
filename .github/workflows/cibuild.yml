@@ -27,6 +27,11 @@ on:
         default: "temurin"
         required: false
         type: string
+      maximize_build_space:
+        description: Maximize Build Space for Bigger Projects Unit tests based on files and blocks
+        type: boolean
+        required: false
+        default: false
     secrets:
       NEXUS_USERNAME:
         required: true
@@ -57,6 +62,7 @@ jobs:
           fi
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
+        if: ${{ inputs.maximize_build_space == true }}
         with:
           root-reserve-mb: 512
           swap-size-mb: 1024
