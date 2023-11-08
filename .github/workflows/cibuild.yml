@@ -151,7 +151,7 @@ jobs:
 
       - name: Build module
         env:
-          MAVEN_OPTS:
+          MAVEN_OPTS: ${{ inputs.extra_maven_opts }}
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           MAVEN_SUBMODULES: ${{ steps.analyse-pr.outputs.partialmodules }}
@@ -160,4 +160,4 @@ jobs:
           if [ ! -z "${MAVEN_SUBMODULES:-}" ]; then
             MAVEN_SUBMODULES_ARGS="-pl $(echo ${MAVEN_SUBMODULES} | sed 's/,/ -pl /g')"
           fi
-          mvn -B clean install -P${{ inputs.maven_profiles }} -Dmaven.artifact.threads=20 ${MAVEN_SUBMODULES_ARGS} ${{ inputs.extra_maven_opts }}
+          mvn -B clean install -P${{ inputs.maven_profiles }} -Dmaven.artifact.threads=20 ${MAVEN_SUBMODULES_ARGS}
