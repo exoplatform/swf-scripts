@@ -182,4 +182,4 @@ jobs:
           if [ ! -z "${MAVEN_SUBMODULES:-}" ]; then
             MAVEN_SUBMODULES_ARGS="-pl $(echo ${MAVEN_SUBMODULES} | sed 's/,/ -pl /g')"
           fi
-          mvn -B clean install -P${{ inputs.maven_profiles }} -Dmaven.artifact.threads=20 ${MAVEN_SUBMODULES_ARGS}
+          mvn -B clean install -P${{ inputs.maven_profiles }} -Dstyle.color=always -Dmaven.artifact.threads=20 ${MAVEN_SUBMODULES_ARGS}
