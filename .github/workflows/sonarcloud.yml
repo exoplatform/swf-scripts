@@ -22,6 +22,11 @@ on:
         default: 'temurin'
         required: false
         type: string
+      maximize_build_space:
+        description: Maximize Build Space for Bigger Projects Unit tests based on files and blocks
+        type: boolean
+        required: false
+        default: false
     secrets:
       SONAR_TOKEN:
         required: true
@@ -31,7 +36,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v3
+      # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@v8
+        if: ${{ inputs.maximize_build_space == true }}
+        with:
+          root-reserve-mb: 2048
+          temp-reserve-mb: 2048
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK ${{ inputs.jdk_major_version }}
