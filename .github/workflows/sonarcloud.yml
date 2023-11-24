@@ -75,4 +75,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           MAVEN_OPTS:
-        run: mvn -B test org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -Dmaven.artifact.threads=20 ${{ inputs.extra_maven_opts }}
+        run: mvn -B test org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -Dstyle.color=always -Dmaven.artifact.threads=20 ${{ inputs.extra_maven_opts }}
