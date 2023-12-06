@@ -4,7 +4,7 @@ on:
     inputs:
       maven_version:
         description: Maven version
-        default: '3.9.5'
+        default: '3.9.6'
         required: false
         type: string
       extra_maven_opts:
