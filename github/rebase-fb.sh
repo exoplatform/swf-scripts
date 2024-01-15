@@ -48,7 +48,7 @@ while IFS=']' read -r line; do
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
     if [ -z "${BASE_BRANCH:-}" ]; then 
-      if [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]] && [[ ! $item =~ ^deeds ]]; then 
+      if [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ ^deeds ]]; then
         baseBranch=develop-exo
       else 
         baseBranch=develop
