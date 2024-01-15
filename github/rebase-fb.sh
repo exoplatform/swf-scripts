@@ -78,7 +78,7 @@ while IFS=']' read -r line; do
       action "Trying ours rebase strategy without detecting changes loss (helpful for detecting and removing backported commits)..."
       git rebase --abort || :
       if ! git -c advice.skippedCherryPicks=false rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option ours >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
-        error "Could not rebase feature/${FB_NAME}!"
+        error "Could not rebase feature/${FB_NAME} for ${org}/${item}!"
         exit 1
       fi
     fi
@@ -96,10 +96,10 @@ while IFS=']' read -r line; do
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin feature/${FB_NAME} --force-with-lease 2>&1 | grep -v remote ||:
       # Looking for incorrect submodules version
-      wrongSubmodulesVersion=$(grep -irl '<version>.*\.x-SNAPSHOT</version>' --include=pom.xml | xargs)
+      wrongSubmodulesVersion=$(grep -Pirl '<version>.*\.x(-exo|-meed)?-SNAPSHOT</version>' --include=pom.xml | xargs)
       if [ ! -z ${wrongSubmodulesVersion} ]; then
-        warn "Unfixed ${FB_NAME} FB maven submodules version detected (x-SNAPSHOT instead of x-${FB_NAME}-SNAPSHOT)! Please fix their pom.xml files"
-        printf " - %s\n" $wrongSubmodulesVersion
+        warn "Unfixed ${FB_NAME} FB maven submodules version detected (x(-XXXX)?-SNAPSHOT instead of x-${FB_NAME}-SNAPSHOT)! Please fix their pom.xml files"
+        grep -Pirn '<version>.*\.x(-exo|-meed)?-SNAPSHOT</version>' --include=pom.xml | sed -E 's/^/ - /g'
       fi
       if ${REBASE_PRS}; then 
         action "Looking for PRs with base feature/${FB_NAME}..."
