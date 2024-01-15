@@ -47,15 +47,7 @@ while IFS=']' read -r line; do
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
-    if [ -z "${BASE_BRANCH:-}" ]; then 
-      if [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]] && [[ ! $item =~ ^deeds ]]; then 
-        baseBranch=develop-exo
-      else 
-        baseBranch=develop
-      fi
-    elif [[ $item =~ ^deeds ]]; then 
-      baseBranch=develop
-    else
+    if [ ! -z "${BASE_BRANCH:-}" ]; then
       baseBranch="${BASE_BRANCH}"
     fi
     [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
