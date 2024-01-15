@@ -39,15 +39,12 @@ while IFS= read -r line; do
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
     baseBranch="${BASE_BRANCH}"
-    if [ "${BASE_BRANCH}" = "develop" ] && [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ .*-parent-pom ]]; then 
-      baseBranch=develop-exo
-    fi
-    if [[ $item =~ ^deeds ]]; then 
-      baseBranch="develop"
+    if [ "${org,,}" != "meeds-io" ]; then
+      baseBranch=develop
     fi
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
-    if ! git rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option=theirs >/dev/null; then 
+    if ! git rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option=theirs >/dev/null; then
       error "Could not rebase feature/${FB_NAME}!"
       exit 1
     fi
@@ -67,7 +64,7 @@ while IFS= read -r line; do
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin feature/${FB_NAME} --force-with-lease | grep -v remote ||:
     fi
-    ((counter++))  
+    ((counter++))
     popd &>/dev/null
 done < fblistfiltred.txt
 echo "================================================================================================="
