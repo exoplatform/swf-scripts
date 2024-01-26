@@ -63,7 +63,7 @@ jobs:
           fi
       # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
       - name: Maximize build space
-        uses: easimon/maximize-build-space@v8
+        uses: easimon/maximize-build-space@v10
         if: ${{ inputs.maximize_build_space == true }}
         with:
           root-reserve-mb: 2048
@@ -138,7 +138,7 @@ jobs:
           echo "partialmodules=${modulestoBuild}" >> $GITHUB_OUTPUT
       # Setup JDK
       - name: Set up JDK ${{ inputs.jdk_major_version }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ inputs.jdk_major_version }}
           distribution: ${{ inputs.jdk_distribution }}
