@@ -72,7 +72,7 @@ jobs:
           remove-dotnet: 'true'
       # Checkout Repository (Shallow clone is disabled due to partial builds Checks)
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with: 
           fetch-depth: 0
           token: ${{ env.gh_token }}
