@@ -17,20 +17,14 @@ echo -e "\033[1;32m[Success]\033[0m $1"
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 export DEFAULT_ORG="Meeds-io"
 
-seedfileraw=$(mktemp)
-seedfilefiltred=$(mktemp)
-
 current_date=$(date '+%s')
 echo "Parsing FB repositories from catalog..."
-curl -H "Authorization: token ${GIT_TOKEN}" \
-    -H 'Accept: application/vnd.github.v3.raw' \
-    -L "https://api.github.com/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/platform/seed_jobs_meeds_meed.groovy" --output ${seedfilefiltred}
-cat ${seedfilefiltred} | grep "project:" > ${seedfileraw}
-modules_length=$(wc -l ${seedfileraw} | awk '{ print $1 }')
+modulesList=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/platform/seed_jobs_meeds_meed.groovy" | grep "project:")
+modules_length=$(echo $modulesList | grep -o 'project:' | wc -w)
 counter=1
 echo "Done. Performing action..."
 
-while IFS= read -r line; do
+while IFS=']' read -r line; do
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
@@ -38,11 +32,18 @@ while IFS= read -r line; do
     echo "================================================================================================="
     echo -e " Module (${counter}/${modules_length}): \e]8;;http://github.com/${org}/${item}\a${org}/${item}\e]8;;\a"
     echo "================================================================================================="
+    baseBranch=develop
+    compareJson=$(gh api /repos/${org}/${item}/compare/${baseBranch}...${BRANCH_NAME})
+    status=$(echo "$compareJson" | jq -r .status)
+    aheadby=$(echo "$compareJson" | jq -r .ahead_by)
+    behindby=$(echo "$compareJson" | jq -r .behind_by)
+    info "Status: $status - Ahead by: $aheadby - Behind by $behindby."
+    if [ "${status:-}" != "diverged" ]; then
+      continue
+    fi
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
    
-    baseBranch=develop
-
     git checkout ${BRANCH_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
     if ! git rebase origin/${baseBranch} ${BRANCH_NAME} >/dev/null; then
@@ -71,9 +72,6 @@ while IFS= read -r line; do
     fi
     ((counter++))  
     popd &>/dev/null
-done < ${seedfileraw}
-echo "Cleaning up temorary files..."
-rm -v ${seedfileraw}
-rm -v ${seedfilefiltred}
+done <<< "$modulesList"
 echo "================================================================================================="
 success "Rebase done!"
