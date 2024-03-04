@@ -21,10 +21,11 @@ current_date=$(date '+%s')
 echo "Parsing FB repositories from catalog..."
 modulesList=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/platform/seed_jobs_meeds_meed.groovy" | grep "project:")
 modules_length=$(echo $modulesList | grep -o 'project:' | wc -w)
-counter=1
+counter=0
 echo "Done. Performing action..."
 
 while IFS=']' read -r line; do
+    ((counter++))  
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     [ -z "${item}" ] && continue
@@ -70,7 +71,6 @@ while IFS=']' read -r line; do
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin ${BRANCH_NAME} --force-with-lease | grep -v remote ||:
     fi
-    ((counter++))  
     popd &>/dev/null
 done <<< "$modulesList"
 echo "================================================================================================="
