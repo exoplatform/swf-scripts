@@ -1,0 +1,21 @@
+
+name: Check Commit Message
+
+on:
+  workflow_call:
+
+jobs:
+  validate-commit-message:
+    name: Validate Commit Message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Commit Message Content
+        uses: gsactions/commit-message-checker@v2
+        with:
+          pattern: '^(fix|feat): [\w ]+ - (MEED|EXO)(-[0-9]+)+( - Meeds-io\/MIPs#[0-9]+)?$'
+          excludeDescription: 'true'
+          excludeTitle: 'true'
+          error: |
+            Each commit message must contain fix:|feature: <short title> - (MEED|EXO)(-[0-9]+)+( - Meeds-io\/MIPs#[0-9]+)?$:
+            For how to rename your commit message, follow this GitHub Doc:
+            https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/changing-a-commit-message
