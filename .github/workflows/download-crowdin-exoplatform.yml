@@ -6,17 +6,17 @@ on:
       CROWDIN_DEVELOP_VERSION:
         description: Module develop version
         default: "6.6.x"
-        required: true
+        required: false
         type: string
       CROWDIN_MAINTENANCE_EXO_VERSION:
         description: Module stable version
         default: "6.5.x"
-        required: true
+        required: false
         type: string
       CROWDIN_MAINTENANCE_BRANCH_VERSION:
         description: Maintenance Crowdin branch
         default: "6.5.x"
-        required: true
+        required: false
         type: string
     secrets:
       CROWDIN_GITHUB_TOKEN:
