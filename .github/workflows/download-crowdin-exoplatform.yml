@@ -25,6 +25,10 @@ on:
         required: true
       CROWDIN_PERSONAL_TOKEN:
         required: true
+      SWF_GPG_PRIVATE_KEY:
+        required: true
+      SWF_GPG_PASSPHRASE:
+        required: true
 
 jobs:
 
@@ -74,6 +78,13 @@ jobs:
         with:
           ref: develop
           token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.SWF_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SWF_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
       - name: Merge translation to develop
         run: |
           git fetch origin integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-translation
@@ -133,6 +144,13 @@ jobs:
         with:
           ref: stable/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}
           token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.SWF_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SWF_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
       - name: Merge translation to stable exo
         run: |
           git fetch origin integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation
