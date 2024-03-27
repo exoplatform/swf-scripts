@@ -25,6 +25,10 @@ on:
         required: true
       CROWDIN_PERSONAL_TOKEN:
         required: true
+      SWF_GPG_PRIVATE_KEY:
+        required: true
+      SWF_GPG_PASSPHRASE:
+        required: true
 jobs:
   # develop-exo workflow
   reset-branch-integration-develop-exo:
