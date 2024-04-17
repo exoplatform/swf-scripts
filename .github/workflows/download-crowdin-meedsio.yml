@@ -98,6 +98,7 @@ jobs:
           fi
 # develop-meed workflow
   reset-branch-integration-develop-meed:
+    needs: [crowdin-merge-translation-develop-exo]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -164,6 +165,7 @@ jobs:
           fi
   # stable/x.x.x-exo
   reset-branch-integration-stable-exo:
+    needs: [crowdin-merge-translation-develop-meed]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

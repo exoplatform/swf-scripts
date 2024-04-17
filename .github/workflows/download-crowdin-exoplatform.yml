@@ -99,6 +99,7 @@ jobs:
           fi
   # stable/x.x.x-exo
   reset-branch-integration-stable-exo:
+    needs: [crowdin-merge-translation-develop]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
