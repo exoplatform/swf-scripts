@@ -24,7 +24,7 @@ on:
         type: number
       jdk_distribution:
         description: OpenJDK Adopted Distribution (temurin, zulu, adopt, liberica,...)
-        default: "temurin"
+        default: "zulu"
         required: false
         type: string
       maximize_build_space:
