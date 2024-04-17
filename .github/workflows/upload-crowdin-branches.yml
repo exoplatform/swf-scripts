@@ -29,7 +29,7 @@ jobs:
         id: are_translations_changes
         run: |
           codeChanges="${{ steps.files_impacted.outputs.all }}"
-          if [[ "$codeChanges" == *"properties"* ]]; then
+          if [[ "$codeChanges" == *"properties"* || $codeChanges == *"xml"* ]]; then
             echo "run_jobs=true" >> $GITHUB_OUTPUT            
           else
             echo "run_jobs=false" >> $GITHUB_OUTPUT 
