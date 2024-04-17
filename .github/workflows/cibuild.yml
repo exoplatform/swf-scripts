@@ -144,7 +144,7 @@ jobs:
           distribution: ${{ inputs.jdk_distribution }}
       # Setup Maven
       - name: Set up Maven ${{ inputs.maven_version }}
-        uses: stCarolas/setup-maven@v4.5
+        uses: stCarolas/setup-maven@v5
         with:
           maven-version: ${{ inputs.maven_version }}
       # Cache Maven Artifcats to boost up builds

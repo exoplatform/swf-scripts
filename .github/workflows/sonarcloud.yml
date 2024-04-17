@@ -55,7 +55,7 @@ jobs:
           java-version: ${{ inputs.jdk_major_version }}
           distribution: ${{ inputs.jdk_distribution }}
       - name: Set up Maven ${{ inputs.maven_version }}
-        uses: stCarolas/setup-maven@v4.5
+        uses: stCarolas/setup-maven@v5
         with:
           maven-version: ${{ inputs.maven_version }}
       - name: Cache SonarCloud packages
