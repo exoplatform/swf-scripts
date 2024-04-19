@@ -79,7 +79,7 @@ jobs:
           ref: develop
           token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v5
+        uses: crazy-max/ghaction-import-gpg@v6
         with:
           gpg_private_key: ${{ secrets.SWF_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.SWF_GPG_PASSPHRASE }}
@@ -146,7 +146,7 @@ jobs:
           ref: stable/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}
           token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v5
+        uses: crazy-max/ghaction-import-gpg@v6
         with:
           gpg_private_key: ${{ secrets.SWF_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.SWF_GPG_PASSPHRASE }}
