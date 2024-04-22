@@ -15,14 +15,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: lots0logs/gh-action-get-changed-files@2.2.2
+      - name: Get changed files
+        uses: tj-actions/changed-files@v44
         id: files_impacted
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: check changes in translations properties
         id: are_translations_changes
         run: |
-          codeChanges="${{ steps.files_impacted.outputs.all }}"
+          codeChanges="${{ steps.files_impacted.outputs.all_changed_files }}"
           if [[ $codeChanges == *"properties"* || $codeChanges == *"xml"* ]]; then
             echo "run_jobs=true" >> $GITHUB_OUTPUT            
           else
