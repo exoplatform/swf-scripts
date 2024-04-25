@@ -39,6 +39,10 @@ if [ -n "${CUSTOMER}" ]; then
 	REQ_PARAMS="&customer=${CUSTOMER}&catalog=${ENVIRONMENT}"
 	CATALOG_FILE_NAME="${ENVIRONMENT}-${CUSTOMER}-list.json"
 elif [ -n "${ENVIRONMENT}" ]; then
+    if [[ ${ENVIRONMENT} =~ ^(acceptance|hosting)$ ]]; then 
+      	echo "You must provide a valid customer for the environment ${ENVIRONMENT}"
+		exit 1
+    fi
 	REQ_PARAMS="&catalog=${ENVIRONMENT}"
 	CATALOG_FILE_NAME="${ENVIRONMENT}-list.json"
 fi
