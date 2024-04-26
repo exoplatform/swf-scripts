@@ -18,6 +18,21 @@ on:
         default: "6.5.x"
         required: false
         type: string
+      CROWDIN_ALLOW_DEVELOP_EXO_DOWNLOAD:
+        description: Allow or not merge for develop-exo branch
+        default: true
+        required: false
+        type: boolean
+      CROWDIN_ALLOW_DEVELOP_MEED_DOWNLOAD:
+        description: Allow or not merge for develop-meed branch
+        default: true
+        required: false
+        type: boolean
+      CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD:
+        description: Allow or not merge for maintenance branch
+        default: true
+        required: false
+        type: boolean
     secrets:
       CROWDIN_GITHUB_TOKEN:
         required: true
@@ -32,6 +47,7 @@ on:
 jobs:
   # develop-exo workflow
   reset-branch-integration-develop-exo:
+    if: inputs.CROWDIN_ALLOW_DEVELOP_EXO_DOWNLOAD == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,6 +59,7 @@ jobs:
         run: |
           git push origin origin/develop-exo:refs/heads/integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-exo-translation -f
   crowdin-download-develop-exo:
+    if: inputs.CROWDIN_ALLOW_DEVELOP_EXO_DOWNLOAD == 'true'
     needs: [reset-branch-integration-develop-exo]
     runs-on: ubuntu-latest
     steps:
@@ -69,6 +86,7 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
   crowdin-merge-translation-develop-exo:
+    if: inputs.CROWDIN_ALLOW_DEVELOP_EXO_DOWNLOAD == 'true'
     needs: [crowdin-download-develop-exo]
     runs-on: ubuntu-latest
     steps:
@@ -98,6 +116,7 @@ jobs:
           fi
 # develop-meed workflow
   reset-branch-integration-develop-meed:
+    if: inputs.CROWDIN_ALLOW_DEVELOP_MEED_DOWNLOAD == 'true'
     needs: [crowdin-merge-translation-develop-exo]
     runs-on: ubuntu-latest
     steps:
@@ -110,6 +129,7 @@ jobs:
         run: |
           git push origin origin/develop-meed:refs/heads/integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-meed-translation -f
   crowdin-download-develop-meed:
+    if: inputs.CROWDIN_ALLOW_DEVELOP_MEED_DOWNLOAD == 'true'
     needs: [reset-branch-integration-develop-meed]
     runs-on: ubuntu-latest
     steps:
@@ -136,6 +156,7 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
   crowdin-merge-translation-develop-meed:
+    if: inputs.CROWDIN_ALLOW_DEVELOP_MEED_DOWNLOAD == 'true'
     needs: [crowdin-download-develop-meed]
     runs-on: ubuntu-latest
     steps:
@@ -165,6 +186,7 @@ jobs:
           fi
   # stable/x.x.x-exo
   reset-branch-integration-stable-exo:
+    if: inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
     needs: [crowdin-merge-translation-develop-meed]
     runs-on: ubuntu-latest
     steps:
@@ -177,6 +199,7 @@ jobs:
         run: |
           git push origin origin/stable/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}:refs/heads/integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation -f
   crowdin-download-stable-exo:
+    if: inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
     needs: [reset-branch-integration-stable-exo]
     runs-on: ubuntu-latest
     steps:
@@ -203,6 +226,7 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
   crowdin-merge-translation-stable-exo:
+    if: inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
     needs: [crowdin-download-stable-exo]
     runs-on: ubuntu-latest
     steps:
