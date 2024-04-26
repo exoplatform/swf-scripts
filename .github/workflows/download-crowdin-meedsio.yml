@@ -20,19 +20,19 @@ on:
         type: string
       CROWDIN_ALLOW_DEVELOP_EXO_DOWNLOAD:
         description: Allow or not merge for develop-exo branch
-        default: true
+        default: "true"
         required: false
-        type: boolean
+        type: string
       CROWDIN_ALLOW_DEVELOP_MEED_DOWNLOAD:
         description: Allow or not merge for develop-meed branch
-        default: true
+        default: "true"
         required: false
-        type: boolean
+        type: string
       CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD:
         description: Allow or not merge for maintenance branch
-        default: true
+        default: "true"
         required: false
-        type: boolean
+        type: string
     secrets:
       CROWDIN_GITHUB_TOKEN:
         required: true
