@@ -21,7 +21,7 @@ echo -e "\033[1;32m[Success]\033[0m $1"
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
 current_date=$(date '+%s')
 echo "Parsing CI repositories from catalog..."
-moduleslist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/platform/seed_jobs_ci.groovy" | grep "project:")
+moduleslist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/platform/seed_jobs_ci.groovy" | grep "${DIST_BRANCH}" | grep "project:")
 modules_length=$(echo $moduleslist | grep -o 'project:' | wc -w)
 counter=0
 echo "Done. Performing action..."
