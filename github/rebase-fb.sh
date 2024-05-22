@@ -73,7 +73,7 @@ while IFS=']' read -r line; do
     pushd $item &>/dev/null
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
-    if ! git -c advice.skippedCherryPicks=false rebase origin/${baseBranch} feature/${FB_NAME} >/dev/null; then
+    if ! git -c advice.skippedCherryPicks=false rebase origin/${baseBranch} feature/${FB_NAME} -X theirs >/dev/null; then
       info "Rebasing with recursive strategy has failed!"
       action "Trying ours rebase strategy without detecting changes loss (helpful for detecting and removing backported commits)..."
       git rebase --abort || :
