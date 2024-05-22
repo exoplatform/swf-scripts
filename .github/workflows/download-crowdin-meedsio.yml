@@ -10,7 +10,7 @@ on:
         type: string
       CROWDIN_MAINTENANCE_EXO_VERSION:
         description: Module stable version
-        default: "6.5.x"
+        default: "6.5.x-exo"
         required: false
         type: string
       CROWDIN_MAINTENANCE_BRANCH_VERSION:
