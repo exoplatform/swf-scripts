@@ -69,7 +69,7 @@ jobs:
           token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
           ref: integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-exo-translation
       - name: Crowdin pull
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: false
           upload_translations: false
@@ -139,7 +139,7 @@ jobs:
           token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
           ref: integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-meed-translation
       - name: Crowdin push
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: false
           upload_translations: false
@@ -209,7 +209,7 @@ jobs:
           token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
           ref: integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation
       - name: Crowdin push
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: false
           upload_translations: false
