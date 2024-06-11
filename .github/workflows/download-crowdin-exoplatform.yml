@@ -102,8 +102,8 @@ jobs:
             git commit -m "Merge Translations"
             git push origin
           fi
-  # stable/x.x.x-exo
-  reset-branch-integration-stable-exo:
+  # stable/x.x.x
+  reset-branch-integration-stable:
     if: inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
     needs: [crowdin-merge-translation-develop]
     runs-on: ubuntu-latest
@@ -118,7 +118,7 @@ jobs:
           git push origin origin/stable/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}:refs/heads/integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation -f
   crowdin-download-stable-exo:
     if: inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
-    needs: [reset-branch-integration-stable-exo]
+    needs: [reset-branch-integration-stable]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -132,7 +132,7 @@ jobs:
           upload_sources: false
           upload_translations: false
           download_translations: true
-          crowdin_branch_name: ${{inputs.CROWDIN_MAINTENANCE_EXO_BRANCH_VERSION}}
+          crowdin_branch_name: ${{inputs.CROWDIN_MAINTENANCE_BRANCH_VERSION}}
           localization_branch_name: integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation
           create_pull_request: false
           skip_ref_checkout: true
