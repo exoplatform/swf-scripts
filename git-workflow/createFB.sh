@@ -191,7 +191,6 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.agenda-connectors.version>$ORIGIN_VERSION</addon.exo.agenda-connectors.version>" "<addon.exo.agenda-connectors.version>$TARGET_VERSION</addon.exo.agenda-connectors.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.digital-workplace.version>$ORIGIN_VERSION</addon.exo.digital-workplace.version>" "<addon.exo.digital-workplace.version>$TARGET_VERSION</addon.exo.digital-workplace.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.data-upgrade.version>$ORIGIN_VERSION</addon.exo.data-upgrade.version>" "<addon.exo.data-upgrade.version>$TARGET_VERSION</addon.exo.data-upgrade.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.news.version>$ORIGIN_VERSION</addon.exo.news.version>" "<addon.exo.news.version>$TARGET_VERSION</addon.exo.news.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.onlyoffice.version>$ORIGIN_VERSION</addon.exo.onlyffice.version>" "<addon.exo.onlyoffice.version>$TARGET_VERSION</addon.exo.onlyoffice.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.chat.version>$ORIGIN_VERSION</addon.exo.chat.version>" "<addon.exo.chat.version>$TARGET_VERSION</addon.exo.chat.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.multifactor-authentication.version>$ORIGIN_VERSION</addon.exo.multifactor-authentication.version>" "<addon.exo.multifactor-authentication.version>$TARGET_VERSION</addon.exo.multifactor-authentication.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -289,7 +288,6 @@ createFB agenda-connectors exoplatform
 createFB chat-application exoplatform
 createFB digital-workplace exoplatform
 createFB layout-management exoplatform
-createFB news exoplatform
 createFB onlyoffice exoplatform
 createFB saml2-addon exoplatform
 createFB web-conferencing exoplatform
