@@ -1,11 +1,11 @@
-name: Crowdin  download Action
+name: Crowdin download Action for Meeds-io
 
 on:
   workflow_call:
     inputs:
       CROWDIN_DEVELOP_VERSION:
         description: Module develop version
-        default: "6.6.x"
+        default: "7.0.x"
         required: false
         type: string
       CROWDIN_MAINTENANCE_EXO_VERSION:
@@ -46,211 +46,31 @@ on:
         required: true
 jobs:
   # develop-exo workflow
-  reset-branch-integration-develop-exo:
-    if: inputs.CROWDIN_ALLOW_DEVELOP_EXO_DOWNLOAD == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: develop-exo
-          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-      - name: reset translation branch to develop's
-        run: |
-          git push origin origin/develop-exo:refs/heads/integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-exo-translation -f
   crowdin-download-develop-exo:
     if: inputs.CROWDIN_ALLOW_DEVELOP_EXO_DOWNLOAD == 'true'
-    needs: [reset-branch-integration-develop-exo]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-          ref: integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-exo-translation
-      - name: Crowdin pull
-        uses: crowdin/github-action@v2
-        with:
-          upload_sources: false
-          upload_translations: false
-          download_translations: true
-          crowdin_branch_name: develop-exo
-          localization_branch_name: integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-exo-translation
-          create_pull_request: false
-          skip_ref_checkout: true
-          download_translations_args: '-l ar -l aro -l az -l ca -l ceb -l co -l cs -l de -l el -l en -l es-ES -l eu -l fa -l fi
-           -l fil -l fr -l hi -l hu -l id -l it -l ja -l ko -l lt -l ms -l nl -l no -l pcm -l pl -l pt-BR -l pt-PT -l ro -l ru
-           -l sk -l sl -l sv-SE -l th -l tl -l tr -l uk -l ur-IN -l vi -l zh-CN -l zh-TW'
-        env:
-          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-  crowdin-merge-translation-develop-exo:
-    if: inputs.CROWDIN_ALLOW_DEVELOP_EXO_DOWNLOAD == 'true'
-    needs: [crowdin-download-develop-exo]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: develop-exo
-          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.SWF_GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SWF_GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-      - name: Merge translation to develop-exo
-        run: |
-          git fetch origin integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-exo-translation
-          git config --global user.email "exo-swf@exoplatform.com"
-          git config --global user.name "eXo Software Factory"
-          changes_to_apply=$(git merge --squash origin/integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-exo-translation 2>&1)
-          if [[ "$changes_to_apply" == *"up to date"* ]]; then
-            echo "Nothing to commit"
-          else
-            git commit -m "Merge Translations"
-            git push origin
-          fi
-# develop-meed workflow
-  reset-branch-integration-develop-meed:
-    if: inputs.CROWDIN_ALLOW_DEVELOP_MEED_DOWNLOAD == 'true'
-    needs: [crowdin-merge-translation-develop-exo]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: develop-meed
-          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-      - name: reset translation branch to develop's
-        run: |
-          git push origin origin/develop-meed:refs/heads/integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-meed-translation -f
+    uses: exoplatform/swf-scripts/.github/workflows/download-crowdin-generic.yml@master
+    with: 
+      PROJECT_VERSION: ${{ inputs.CROWDIN_DEVELOP_VERSION }}-exo
+      PROJECT_BRANCH: develop-exo
+      CROWDIN_BRANCH: develop-exo
+    secrets: inherit
+  # develop-meed workflow
   crowdin-download-develop-meed:
-    if: inputs.CROWDIN_ALLOW_DEVELOP_MEED_DOWNLOAD == 'true'
-    needs: [reset-branch-integration-develop-meed]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-          ref: integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-meed-translation
-      - name: Crowdin push
-        uses: crowdin/github-action@v2
-        with:
-          upload_sources: false
-          upload_translations: false
-          download_translations: true
-          crowdin_branch_name: develop-meed
-          localization_branch_name: integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-meed-translation
-          create_pull_request: false
-          skip_ref_checkout: true
-          download_translations_args: '-l ar -l aro -l az -l ca -l ceb -l co -l cs -l de -l el -l en -l es-ES -l eu -l fa -l fi
-           -l fil -l fr -l hi -l hu -l id -l it -l ja -l ko -l lt -l ms -l nl -l no -l pcm -l pl -l pt-BR -l pt-PT -l ro -l ru
-           -l sk -l sl -l sv-SE -l th -l tl -l tr -l uk -l ur-IN -l vi -l zh-CN -l zh-TW'
-        env:
-          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-  crowdin-merge-translation-develop-meed:
-    if: inputs.CROWDIN_ALLOW_DEVELOP_MEED_DOWNLOAD == 'true'
-    needs: [crowdin-download-develop-meed]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: develop-meed
-          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.SWF_GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SWF_GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-      - name: Merge translation to develop-meed
-        run: |
-          git fetch origin integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-meed-translation
-          git config --global user.email "exo-swf@exoplatform.com"
-          git config --global user.name "eXo Software Factory"
-          changes_to_apply=$(git merge --squash origin/integration/${{inputs.CROWDIN_DEVELOP_VERSION}}-meed-translation 2>&1)
-          if [[ "$changes_to_apply" == *"up to date"* ]]; then
-            echo "Nothing to commit"
-          else
-            git commit -m "Merge Translations"
-            git push origin
-          fi
-  # stable/x.x.x-exo
-  reset-branch-integration-stable-exo:
-    if: inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
-    needs: [crowdin-merge-translation-develop-meed]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: stable/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}
-          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-      - name: reset translation branch to stable's
-        run: |
-          git push origin origin/stable/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}:refs/heads/integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation -f
+    if: always() && inputs.CROWDIN_ALLOW_DEVELOP_MEED_DOWNLOAD == 'true'
+    needs: [crowdin-download-develop-exo]
+    uses: exoplatform/swf-scripts/.github/workflows/download-crowdin-generic.yml@master
+    with: 
+      PROJECT_VERSION: ${{ inputs.CROWDIN_DEVELOP_VERSION }}-meed
+      PROJECT_BRANCH: develop-meed
+      CROWDIN_BRANCH: develop-meed
+    secrets: inherit
+  # stable/x.x.x-exo workflow
   crowdin-download-stable-exo:
-    if: inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
-    needs: [reset-branch-integration-stable-exo]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-          ref: integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation
-      - name: Crowdin push
-        uses: crowdin/github-action@v2
-        with:
-          upload_sources: false
-          upload_translations: false
-          download_translations: true
-          crowdin_branch_name: ${{inputs.CROWDIN_MAINTENANCE_BRANCH_VERSION}}
-          localization_branch_name: integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation
-          create_pull_request: false
-          skip_ref_checkout: true
-          download_translations_args: '-l ar -l aro -l az -l ca -l ceb -l co -l cs -l de -l el -l en -l es-ES -l eu -l fa -l fi
-           -l fil -l fr -l hi -l hu -l id -l it -l ja -l ko -l lt -l ms -l nl -l no -l pcm -l pl -l pt-BR -l pt-PT -l ro -l ru
-           -l sk -l sl -l sv-SE -l th -l tl -l tr -l uk -l ur-IN -l vi -l zh-CN -l zh-TW'
-        env:
-          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-  crowdin-merge-translation-stable-exo:
-    if: inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
-    needs: [crowdin-download-stable-exo]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: stable/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}
-          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.SWF_GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SWF_GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-      - name: Merge translation to stable exo
-        run: |
-          git fetch origin integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation
-          git config --global user.email "exo-swf@exoplatform.com"
-          git config --global user.name "eXo Software Factory"
-          changes_to_apply=$(git merge --squash origin/integration/${{inputs.CROWDIN_MAINTENANCE_EXO_VERSION}}-translation 2>&1)
-          if [[ "$changes_to_apply" == *"up to date"* ]]; then
-            echo "Nothing to commit"
-          else
-            git commit -m "Merge Translations"
-            git push origin
-          fi
+    if: always() && inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
+    needs: [crowdin-download-develop-meed]
+    uses: exoplatform/swf-scripts/.github/workflows/download-crowdin-generic.yml@master
+    with: 
+      PROJECT_VERSION: ${{ inputs.CROWDIN_MAINTENANCE_EXO_VERSION }}
+      PROJECT_BRANCH: stable/${{ inputs.CROWDIN_MAINTENANCE_EXO_VERSION }}
+      CROWDIN_BRANCH: ${{ inputs.CROWDIN_MAINTENANCE_BRANCH_VERSION }}
+    secrets: inherit
