@@ -1,0 +1,75 @@
+name: Generic Crowdin download Action
+
+on:
+  workflow_call:
+    inputs:
+      PROJECT_VERSION:
+        description: Project version
+        required: true
+        type: string
+      PROJECT_BRANCH:
+        description: Project git branch 
+        required: false
+        type: string
+    secrets:
+      CROWDIN_GITHUB_TOKEN:
+        required: true
+      CROWDIN_PROJECT_ID:
+        required: true
+      CROWDIN_PERSONAL_TOKEN:
+        required: true
+      SWF_GPG_PRIVATE_KEY:
+        required: true
+      SWF_GPG_PASSPHRASE:
+        required: true
+
+jobs:
+
+  crowdin-download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
+          ref: ${{ inputs.PROJECT_BRANCH }}
+      - name: Reset translation branch
+        run: |
+          git push origin origin/${{inputs.PROJECT_BRANCH}}:refs/heads/integration/${{inputs.PROJECT_VERSION}}-translation -f
+      - name: Crowdin push
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: false
+          upload_translations: false
+          download_translations: true
+          localization_branch_name: integration/${{inputs.PROJECT_VERSION}}-translation
+          create_pull_request: false
+          skip_ref_checkout: true
+          download_translations_args: '-l ar -l aro -l az -l ca -l ceb -l co -l cs -l de -l el -l en -l es-ES -l eu -l fa -l fi
+           -l fil -l fr -l hi -l hu -l id -l it -l ja -l ko -l lt -l ms -l nl -l no -l pcm -l pl -l pt-BR -l pt-PT -l ro -l ru
+           -l sk -l sl -l sv-SE -l th -l tl -l tr -l uk -l ur-IN -l vi -l zh-CN -l zh-TW'
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.SWF_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SWF_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+      - name: Merge translation to ${{ inputs.PROJECT_BRANCH }}
+        run: |
+          git fetch origin integration/${{inputs.PROJECT_VERSION}}-translation
+          git checkout ${{inputs.PROJECT_BRANCH}} -f
+          git reset --hard origin/${{inputs.PROJECT_BRANCH}}
+          git config --global user.email "exo-swf@exoplatform.com"
+          git config --global user.name "eXo Software Factory"
+          changes_to_apply=$(git merge --squash origin/integration/${{inputs.PROJECT_VERSION}}-translation 2>&1)
+          if [[ "$changes_to_apply" == *"up to date"* ]]; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Merge Translations"
+            git push origin
+          fi
