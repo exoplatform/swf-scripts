@@ -62,7 +62,7 @@ jobs:
       PROJECT_VERSION: ${{ inputs.CROWDIN_DEVELOP_VERSION }}-meed
       PROJECT_BRANCH: develop-meed
     secrets: inherit
-  # stable/x.x.x-exo
+  # stable/x.x.x-exo workflow
   crowdin-download-stable-exo:
     if: always() && inputs.CROWDIN_ALLOW_MAINTENANCE_DOWNLOAD == 'true'
     needs: [crowdin-download-develop-meed]
