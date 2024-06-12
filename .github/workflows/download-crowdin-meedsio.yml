@@ -13,6 +13,11 @@ on:
         default: "6.5.x-exo"
         required: false
         type: string
+      CROWDIN_MAINTENANCE_BRANCH_VERSION:
+        description: Maintenance Crowdin branch
+        default: "6.5.x"
+        required: false
+        type: string
       CROWDIN_ALLOW_DEVELOP_EXO_DOWNLOAD:
         description: Allow or not merge for develop-exo branch
         default: "true"
@@ -47,6 +52,7 @@ jobs:
     with: 
       PROJECT_VERSION: ${{ inputs.CROWDIN_DEVELOP_VERSION }}-exo
       PROJECT_BRANCH: develop-exo
+      CROWDIN_BRANCH: develop-exo
     secrets: inherit
   # develop-meed workflow
   crowdin-download-develop-meed:
@@ -56,6 +62,7 @@ jobs:
     with: 
       PROJECT_VERSION: ${{ inputs.CROWDIN_DEVELOP_VERSION }}-meed
       PROJECT_BRANCH: develop-meed
+      CROWDIN_BRANCH: develop-meed
     secrets: inherit
   # stable/x.x.x-exo workflow
   crowdin-download-stable-exo:
@@ -65,4 +72,5 @@ jobs:
     with: 
       PROJECT_VERSION: ${{ inputs.CROWDIN_MAINTENANCE_EXO_VERSION }}
       PROJECT_BRANCH: stable/${{ inputs.CROWDIN_MAINTENANCE_EXO_VERSION }}
+      CROWDIN_BRANCH: ${{ inputs.CROWDIN_MAINTENANCE_BRANCH_VERSION }}
     secrets: inherit
