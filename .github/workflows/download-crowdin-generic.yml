@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
           ref: ${{ inputs.PROJECT_BRANCH }}
@@ -70,6 +70,7 @@ jobs:
           git fetch origin integration/${{inputs.PROJECT_VERSION}}-translation
           git checkout ${{inputs.PROJECT_BRANCH}} -f
           git reset --hard origin/${{inputs.PROJECT_BRANCH}}
+          git clean -fdx
           git config --global user.email "exo-swf@exoplatform.com"
           git config --global user.name "eXo Software Factory"
           changes_to_apply=$(git merge --squash origin/integration/${{inputs.PROJECT_VERSION}}-translation 2>&1)
