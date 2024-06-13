@@ -67,6 +67,8 @@ jobs:
           git_commit_gpgsign: true
       - name: Merge translation to ${{ inputs.PROJECT_BRANCH }}
         run: |
+          # Fix permissions due crowdin action change
+          sudo chown -R $USER:$USER .
           git fetch origin integration/${{inputs.PROJECT_VERSION}}-translation
           git checkout ${{inputs.PROJECT_BRANCH}} -f
           git reset --hard origin/${{inputs.PROJECT_BRANCH}}
