@@ -1,0 +1,29 @@
+on:
+  workflow_call:
+    inputs:
+      CROWDIN_DEVELOP_VERSION:
+        description: Module develop version
+        default: "7.0.x"
+        required: false
+        type: string
+    secrets:
+      CROWDIN_GITHUB_TOKEN:
+        required: true
+      CROWDIN_PROJECT_ID:
+        required: true
+      CROWDIN_PERSONAL_TOKEN:
+        required: true
+      SWF_GPG_PRIVATE_KEY:
+        required: true
+      SWF_GPG_PASSPHRASE:
+        required: true
+
+jobs:
+  # develop workflow
+  crowdin-download-develop:
+    if: inputs.CROWDIN_ALLOW_DEVELOP_DOWNLOAD == 'true'
+    uses: exoplatform/swf-scripts/.github/workflows/download-crowdin-generic.yml@master
+    with:
+      PROJECT_VERSION: ${{ inputs.CROWDIN_DEVELOP_VERSION }}
+      PROJECT_BRANCH: develop
+    secrets: inherit
