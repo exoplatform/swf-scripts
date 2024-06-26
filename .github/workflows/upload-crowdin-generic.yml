@@ -1,0 +1,92 @@
+name: Generic Crowdin Upload Action
+
+on:
+  workflow_call:
+    inputs:
+      CROWDIN_MAINTENANCE_BRANCH_VERSION:
+        description: Crowdin maintenance branch name
+        default: ""
+        required: false
+        type: string
+    secrets:
+      CROWDIN_PROJECT_ID:
+        required: true
+      CROWDIN_PERSONAL_TOKEN:
+        required: true
+jobs:
+  crowdin-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
+      - name: Get git changed files
+        uses: tj-actions/changed-files@v44
+        id: changedFilesStep
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check changes in translation files
+        id: checkTranslationChangesStep
+        run: |
+          codeChanges="${{ steps.changedFilesStep.outputs.all_changed_files }}"
+          if [[ $codeChanges == *"properties"* || $codeChanges == *"xml"* ]]; then
+            echo "✅ OK some changed translation file(s) found!"
+            echo "translationFilesChanged=true" >> $GITHUB_OUTPUT            
+          else
+            echo "✅ No changed translation files found!"
+            echo "translationFilesChanged=false" >> $GITHUB_OUTPUT 
+          fi 
+      - name: Check crowdin project build status
+        if: steps.checkTranslationChangesStep.outputs.translationFilesChanged == true
+        id: checkCrowdinProjetBuildAvailabilityStep
+        run: |
+          wait_exec=0;
+          while [ $(curl -s -H "Accept: application/json" -H "Authorization: Bearer ${{ secrets.CROWDIN_PERSONAL_TOKEN }}"\
+                                                                      https://crowdin.com/api/v2/projects/${{ secrets.CROWDIN_PROJECT_ID }}/translations/builds \
+                                                                      | jq -r 'any(.data[].data; select(.status != "finished" ))') == "true" ] && (( wait_exec<10 )) ; do
+          sleep 10;
+          ((wait_exec=wait_exec+1));
+          done
+          if ((wait_exec==10)); then
+            echo "⏳ Crowdin Project is still building..."
+            echo "crowdin_project_available=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Crowdin Project build is available!"
+            echo "crowdin_project_available=true" >> $GITHUB_OUTPUT
+          fi 
+      - name: Compute crowdin project branch name
+        id: computeCrowdinProjectBranchNameStep
+        run: |
+          branch_ref=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}});
+          if [ -z "${branch_ref}" ]; then 
+            echo "❌ Error: Could not get current branch name Abort!"
+            echo "[Debug] *** Current Git tree:"
+            git cat-file -p HEAD
+            exit 1
+          fi
+          if [[ "${branch_ref}" =~ ^stable/ ]]; then
+            if [ -z "${{inputs.CROWDIN_MAINTENANCE_BRANCH_VERSION}}" ]; then 
+              echo "❌ Error: CROWDIN_MAINTENANCE_BRANCH_VERSION parameter is empty for ${branch_ref} branch! Abort!"
+              exit 1
+            fi
+            echo "✅ Current Crowdin Project is: ${{inputs.CROWDIN_MAINTENANCE_BRANCH_VERSION}}"
+            echo "crowdinBranch=${{inputs.CROWDIN_MAINTENANCE_BRANCH_VERSION}}" >> $GITHUB_OUTPUT
+          elif [[ "${branch_ref}" =~ ^(develop|master)$ ]]; then
+            echo "✅ Current Crowdin Project is: default"
+            echo "crowdinBranch=" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Current Crowdin Project Branch is: ${$branch_ref}"
+            echo "crowdinBranch=${branch_ref}" >> $GITHUB_OUTPUT
+          fi
+      - name: Crowdin upload source translation files
+        uses: crowdin/github-action@v2
+        if: steps.checkCrowdinProjetBuildAvailabilityStep.outputs.crowdin_project_available == 'true'
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+          crowdin_branch_name: ${{steps.computeCrowdinProjectBranchNameStep.outputs.crowdinBranch}}
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
