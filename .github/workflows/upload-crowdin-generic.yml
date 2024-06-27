@@ -30,7 +30,7 @@ jobs:
         id: checkTranslationChangesStep
         run: |
           codeChanges="${{ steps.changedFilesStep.outputs.all_changed_files }}"
-          if [[ $codeChanges == *"properties"* || $codeChanges == *"xml"* ]]; then
+          if [[ $codeChanges == *"properties"* || $codeChanges == *"xml"* || $codeChanges == *"crowdin.yml"* ]]; then
             echo "✅ OK some changed translation file(s) found!"
             echo "translationFilesChanged=true" >> $GITHUB_OUTPUT            
           else
