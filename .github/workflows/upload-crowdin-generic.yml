@@ -56,7 +56,6 @@ jobs:
             echo "crowdin_project_available=true" >> $GITHUB_OUTPUT
           fi 
       - name: Compute crowdin project branch name
-        if: steps.checkCrowdinProjetBuildAvailabilityStep.outputs.crowdin_project_available == 'true'
         id: computeCrowdinProjectBranchNameStep
         run: |
           branch_ref=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}});
