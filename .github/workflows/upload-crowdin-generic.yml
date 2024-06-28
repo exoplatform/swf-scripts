@@ -77,7 +77,7 @@ jobs:
             echo "✅ Current Crowdin Project is: default"
             echo "crowdinBranch=" >> $GITHUB_OUTPUT
           else
-            echo "✅ Current Crowdin Project Branch is: ${$branch_ref}"
+            echo "✅ Current Crowdin Project Branch is: ${branch_ref}"
             echo "crowdinBranch=${branch_ref}" >> $GITHUB_OUTPUT
           fi
       - name: Crowdin upload source translation files
