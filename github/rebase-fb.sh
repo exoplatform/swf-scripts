@@ -45,7 +45,6 @@ while IFS=']' read -r line; do
     counter=$((counter+1))  
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
-    [[ "${item}" =~ -parent-pom$ ]] && continue
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
     if [ -z "${BASE_BRANCH:-}" ]; then 
