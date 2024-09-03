@@ -15,7 +15,7 @@ on:
         type: string
       CROWDIN_MAINTENANCE_BRANCH_VERSION:
         description: Maintenance Crowdin branch
-        default: "6.5.x"
+        default: "maintenance"
         required: false
         type: string
       CROWDIN_ALLOW_DEVELOP_DOWNLOAD:
