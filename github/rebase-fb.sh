@@ -20,10 +20,32 @@ echo -e "\033[1;33m[Warning]\033[0m $1"
 action() {
 echo -e "\033[1;36m[Action]:\033[0m $1"
 }
+
+getJenkinsQueuedJobId() {
+  curl -fsSL "https://${JENKINS_HOST}/queue/api/json?tree=items%5Bid%2Ctask%5Bname%5D%5D" | jq -r ".items[] | select(.task.name | contains( \"${1}\")) | .id"
+}
+
+cancelJenkinsQueuedJobId() {
+  curl -fsSL -XPOST "https://${JENKINS_HOST}/queue/cancelItem?id=${1}" 
+}
+
+cancelJenkinsQueuedJobName() {
+  jobSubname="${1}"
+  sleep 15 # wait for github push webhook
+  jobQueueId=$(getJenkinsQueuedJobId ${jobSubname})
+  if [ -z "${jobQueueId}" ]; then 
+    warn "Could not find the queue id of ${jobSubname} to be canceled!"
+  else
+    cancelJenkinsQueuedJobId ${jobQueueId}
+  fi
+}
 ###
 [ -z "${FB_NAME}" ] && exit 1
 set +u
-[ -z "${REBASE_PRS}" ] && REBASE_PRS=false
+[ -z "${REBASE_PRS:-}" ] && REBASE_PRS=false
+if [ -z "${JENKINS_HOST:-}" ]; then 
+  warn "Secret JENKINS_HOST is not specified! Jenkins Jobs queue cleanup wont't be performed!"
+fi
 set -u
 info "Parsing FB ${FB_NAME} Seed Job Configuration..."
 export FILTER_BRANCH_SQUELCH_WARNING=1 #filter-branch hide warnings
@@ -40,6 +62,7 @@ fi
 modules_length=$(echo $fblist | grep -o 'project:' | wc -w)
 info "Modules count: ${modules_length}"
 counter=0
+rebasesCounter=0
 action "Done. Performing action..."
 while IFS=']' read -r line; do
     counter=$((counter+1))  
@@ -70,6 +93,7 @@ while IFS=']' read -r line; do
     if [ "${status:-}" != "diverged" ]; then
       continue
     fi
+    rebasesCounter=$((rebasesCounter+1))  
     action "Starting rebase..."
     git clone git@github.com:${org}/${item}.git &>/dev/null
     pushd $item &>/dev/null
@@ -97,6 +121,9 @@ while IFS=']' read -r line; do
     if [ "${prev_head}" != "${new_head}" ]; then
       info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
       git push origin feature/${FB_NAME} --force-with-lease 2>&1 | grep -v remote ||:
+      if [ ! -z "${JENKINS_HOST:-}" ] && [ "${rebasesCounter}" -gt "1" ]; then 
+         cancelJenkinsQueuedJobName "${item}-${FB_NAME}-fb-ci" & # async call
+      fi
       # Looking for incorrect submodules version
       wrongSubmodulesVersion=$(grep -Pirl '<version>.*\.x(-exo|-meed)?-SNAPSHOT</version>' --include=pom.xml | xargs)
       if [ ! -z ${wrongSubmodulesVersion} ]; then
@@ -129,5 +156,6 @@ while IFS=']' read -r line; do
     fi
     popd &>/dev/null
 done <<< "$fblist"
+wait < <(jobs -p)
 echo "================================================================================================="
-success "Rebase done!"
+success "Rebase done (${rebasesCounter} rebases)!"
