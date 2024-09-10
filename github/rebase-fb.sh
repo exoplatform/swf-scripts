@@ -97,7 +97,7 @@ while IFS=']' read -r line; do
     aheadby=$(echo "$compareJson" | jq -r .ahead_by)
     behindby=$(echo "$compareJson" | jq -r .behind_by)
     if [ "${status:-}" = "diverged" ]; then
-      info "Status: $status - Ahead by: $aheadby - Behind by $behindby. => Going to be rebased"
+      info "Status: $status - Ahead by: $aheadby - Behind by $behindby => Going to be rebased!"
       modulesToBeRebased="${modulesToBeRebased} ${org}@${item}@${baseBranch}"
       isRebasesNeeded=true
     else 
@@ -108,6 +108,7 @@ if ! ${isRebasesNeeded}; then
   info "Everything is OK. No rebase is needed!"
   exit 0
 else 
+  info "Done. Some rebases are needed!"
   action "FB rebases are starting..."    
 fi
 
