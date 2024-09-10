@@ -117,9 +117,9 @@ rebasesCounter=0
 counter=0
 modulesToBeRebasedCount=$(printf '%s\n' ${modulesToBeRebased} | wc -l)
 while IFS=' ' read -r line; do
-    org=$(echo $line | cut -d '@' -f 1)
-    item=$(echo $line | cut -d '@' -f 2)
-    baseBranch=$(echo $line | cut -d '@' -f 3)
+    org=$(echo $line | awk -F '@' '{print $1}')
+    item=$(echo $line | awk -F '@' '{print $2}')
+    baseBranch=$(echo $line | awk -F '@' '{print $3}')
     counter=$((counter+1))  
     split
     action "(${counter}/${modulesToBeRebasedCount}) -- ${org}/${item}: Rebasing feature/${FB_NAME} on ${baseBranch}..."
