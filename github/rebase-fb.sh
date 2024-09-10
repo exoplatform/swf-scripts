@@ -98,7 +98,7 @@ while IFS=']' read -r line; do
     behindby=$(echo "$compareJson" | jq -r .behind_by)
     if [ "${status:-}" = "diverged" ]; then
       info "Status: $status - Ahead by: $aheadby - Behind by $behindby => Going to be rebased!"
-      modulesToBeRebased="${modulesToBeRebased} ${org}@${item}@${baseBranch}"
+      modulesToBeRebased="${modulesToBeRebased}\n${org}@${item}@${baseBranch}"
       isRebasesNeeded=true
     else 
       info "Status: $status - Ahead by: $aheadby - Behind by $behindby."
@@ -115,8 +115,8 @@ fi
 # Rebase phase
 rebasesCounter=0
 counter=0
-modulesToBeRebasedCount=$(printf '%s\n' ${modulesToBeRebased} | wc -l)
-while IFS=' ' read -r line; do
+modulesToBeRebasedCount=$(echo -e ${modulesToBeRebased} | wc -l)
+while IFS='\n' read -r line; do
     org=$(echo $line | awk -F '@' '{print $1}')
     item=$(echo $line | awk -F '@' '{print $2}')
     baseBranch=$(echo $line | awk -F '@' '{print $3}')
