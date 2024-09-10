@@ -21,6 +21,10 @@ action() {
 echo -e "\033[1;36m[Action]:\033[0m $1"
 }
 
+split() {
+  echo -e "\n\033[1;32m=============================================================================================================\033[0m"
+}
+
 getJenkinsQueuedJobId() {
   curl -fsSL "https://${JENKINS_HOST}/queue/api/json?tree=items%5Bid%2Ctask%5Bname%5D%5D" | jq -r ".items[] | select(.task.name | contains( \"${1}\")) | .id"
 }
@@ -62,8 +66,11 @@ fi
 modules_length=$(echo $fblist | grep -o 'project:' | wc -w)
 info "Modules count: ${modules_length}"
 counter=0
-rebasesCounter=0
-action "Done. Performing action..."
+action "Done. Checking branches divergence statues..."
+modulesToBeRebased=""
+isRebasesNeeded=false
+
+# Rebase checks
 while IFS=']' read -r line; do
     counter=$((counter+1))  
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
@@ -89,10 +96,32 @@ while IFS=']' read -r line; do
     status=$(echo "$compareJson" | jq -r .status)
     aheadby=$(echo "$compareJson" | jq -r .ahead_by)
     behindby=$(echo "$compareJson" | jq -r .behind_by)
-    info "Status: $status - Ahead by: $aheadby - Behind by $behindby."
-    if [ "${status:-}" != "diverged" ]; then
-      continue
+    if [ "${status:-}" = "diverged" ]; then
+      info "Status: $status - Ahead by: $aheadby - Behind by $behindby. => Going to be rebased"
+      modulesToBeRebased="${modulesToBeRebased} ${org}@${item}@${baseBranch}"
+      isRebasesNeeded=true
+    else 
+      info "Status: $status - Ahead by: $aheadby - Behind by $behindby."
     fi
+done <<< "$fblist"
+if ! ${isRebasesNeeded}; then 
+  info "Everything is OK. No rebase is needed!"
+  exit 0
+else 
+  action "FB rebases are starting..."    
+fi
+
+# Rebase phase
+rebasesCounter=0
+counter=0
+modulesToBeRebasedCount=$(printf '%s\n' ${modulesToBeRebased} | wc -l)
+while IFS=' ' read -r line; do
+    org=$(echo $line | cut -d '@' -f 1)
+    item=$(echo $line | cut -d '@' -f 2)
+    baseBranch=$(echo $line | cut -d '@' -f 3)
+    counter=$((counter+1))  
+    split
+    action "(${counter}/${modulesToBeRebasedCount}) -- ${org}/${item}: Rebasing feature/${FB_NAME} on ${baseBranch}..."
     rebasesCounter=$((rebasesCounter+1))  
     action "Starting rebase..."
     git clone git@github.com:${org}/${item}.git &>/dev/null
@@ -155,7 +184,7 @@ while IFS=']' read -r line; do
       fi
     fi
     popd &>/dev/null
-done <<< "$fblist"
+done <<< "$modulesToBeRebased"
 wait < <(jobs -p)
 echo "================================================================================================="
 success "Rebase done (${rebasesCounter} rebases)!"
