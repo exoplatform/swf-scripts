@@ -56,9 +56,10 @@ jobs:
       pull-requests: write
     steps:
       # Use github.token for Public Repositories. Otherwise, a SWF_TOKEN token is needed for private ones.
+      # For dependabot github.token is required even for private repositories; Check out https://github.com/dependabot/dependabot-core/issues/5464
       - name: Check Github Token
         run: | 
-          if [ -z "${gh_token}" ]; then 
+          if [ -z "${gh_token}" ] || [ "${{ github.actor }}" = "dependabot[bot]" ]; then 
             echo "gh_token=${{ github.token }}" >> $GITHUB_ENV
           fi
       # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
