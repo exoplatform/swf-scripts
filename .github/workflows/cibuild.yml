@@ -87,6 +87,10 @@ jobs:
             echo "❌ Partial Build for forked repositories is not yet supported! Performing full build ..."
             exit 0
           fi
+          if [[ "${base_branch_name}" =~ ^patch/ ]]; then 
+            echo "❌ Patch PR is detected Performing full build ..."
+            exit 0
+          fi
           baseBranchSha=$(git rev-parse origin/${base_branch_name})
           mergebaseSha=$(git merge-base origin/${base_branch_name} HEAD)
           if [ ! "${baseBranchSha}" = "${mergebaseSha}" ]; then 
