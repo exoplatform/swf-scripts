@@ -39,14 +39,8 @@ on:
         required: true
       SWF_TOKEN:
         required: false
-env: 
+env:
   SETTINGS_XML_URL: 'http://storage.exoplatform.org/public/githubci/maven-settings.xml'
-  is_fork: ${{ github.event.pull_request.head.repo.fork }}
-  base_branch_name: ${{ github.event.pull_request.base.ref }}
-  repo_name: ${{ github.event.repository.name }}
-  clone_url: ${{ github.event.pull_request.head.repo.clone_url }}
-  pull_number: ${{ github.event.pull_request.number }}
-  gh_token: ${{ secrets.SWF_TOKEN }}
 jobs:
   build-ci:
     name: CI Build
@@ -55,135 +49,18 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      # Use github.token for Public Repositories. Otherwise, a SWF_TOKEN token is needed for private ones.
-      - name: Check Github Token
-        run: | 
-          if [ -z "${gh_token}" ]; then 
-            echo "gh_token=${{ github.token }}" >> $GITHUB_ENV
-          fi
-      # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@v10
-        if: ${{ inputs.maximize_build_space == true }}
+      - name: PR BUILD
+        uses: exo-actions/pr-action@v1
         with:
-          root-reserve-mb: 2048
-          temp-reserve-mb: 2048
-          swap-size-mb: 1024
-          remove-dotnet: 'true'
-      # Checkout Repository (Shallow clone is disabled due to partial builds Checks)
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with: 
-          fetch-depth: 0
-          token: ${{ env.gh_token }}
-      # Check Partial Build Eligibility
-      - name: Analyse Pull Request Changes
-        id: analyse-pr
-        env: 
-          GH_TOKEN: ${{ env.gh_token }}
-        run: |
-          echo "partialmodules=" >> $GITHUB_OUTPUT
-          if [ "${is_fork}" = "true" ]; then 
-            echo "❌ Partial Build for forked repositories is not yet supported! Performing full build ..."
-            exit 0
-          fi
-          if [[ "${base_branch_name}" =~ ^patch/ ]]; then 
-            echo "❌ Patch PR is detected Performing full build ..."
-            exit 0
-          fi
-          baseBranchSha=$(git rev-parse origin/${base_branch_name})
-          mergebaseSha=$(git merge-base origin/${base_branch_name} HEAD)
-          if [ ! "${baseBranchSha}" = "${mergebaseSha}" ]; then 
-            echo "❌ Branch is diverged! Please update the branch! Performing full build ..."
-            exit 0
-          fi
-          if [ ! -z "$(gh pr view ${pull_number} --json labels --repo ${clone_url} | jq -r '.labels[].name' 2>/dev/null | grep fullCIBuild)" ]; then 
-            echo "✅ Partial Build is disabled by fullCIBuild label! Performing full build ..."
-            exit 0
-          fi
-          echo "Looking for frontend modules..."
-          frontendModules=$(find -name pom.xml | while read pomfile; do 
-            if grep -qi '<packaging>war</packaging>' $pomfile; then 
-              dirname $pomfile | sed -E 's|^\.\/||g'
-            fi
-          done | xargs)
-          if [ -z "${frontendModules}" ]; then 
-            echo "✅ No Frontend modules detected! Performing full build ..."
-            exit 0
-          fi
-          echo -e "✅ Frontend Modules are ${frontendModules}"
-          echo "Changed files are:"
-          git diff --name-only origin/${base_branch_name} HEAD
-          files=$(git diff --name-only origin/${base_branch_name} HEAD | grep -Pv '^\.github' | xargs)
-          echo
-          echo "Checking if all changed files belong to frontend submodules for partial build eligibility..."
-          modulestoBuild=""
-          for file in $files; do
-            notfound=true
-            for module in $frontendModules; do 
-              if echo "$file" | grep -qP "^${module}"; then
-                modulestoBuild="$(echo ${modulestoBuild} ${module} | xargs)"
-                notfound=false
-                break
-              fi
-            done
-            if $notfound; then 
-              echo "❌ Changed file $file does not belong to frontend modules. Performing full build..."
-              exit 0
-            fi   
-          done
-          if [ -z "${modulestoBuild}" ]; then 
-            echo "✅ No Frontend modules to build detected! Performing full build ..."
-            exit 0
-          fi
-          # Remove duplicates
-          modulestoBuild=$(printf '%s\n' $modulestoBuild | sort -u | xargs | sed 's/ /,/g')
-          echo -e "Frontend Modules to build are ${modulestoBuild}"
-          echo "partialmodules=${modulestoBuild}" >> $GITHUB_OUTPUT
-      # Setup JDK
-      - name: Set up JDK ${{ inputs.jdk_major_version }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ inputs.jdk_major_version }}
-          distribution: ${{ inputs.jdk_distribution }}
-      # Setup Maven
-      - name: Set up Maven ${{ inputs.maven_version }}
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: ${{ inputs.maven_version }}
-      # Cache Maven Artifcats to boost up builds
-      - name: Cache Maven artifacts
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2-repository
-      # Prepare Maven Enviroment by supplying basic settings.xml with readonly/headless access
-      - name: Prepare environment 
-        run: |
-          mkdir -p ~/.m2
-          wget -q "${SETTINGS_XML_URL}" -O ~/.m2/settings.xml
-      # Add/Remove partialCIBuild Github Label according to partial build eligibility
-      - name: Submit Partial PR label 
-        env:
-          MAVEN_SUBMODULES: ${{ steps.analyse-pr.outputs.partialmodules }}
-          GH_TOKEN: ${{ env.gh_token }}
-        run: |
-          if [ ! -z "${MAVEN_SUBMODULES:-}" ]; then
-            gh pr edit ${pull_number} --add-label partialCIBuild --repo ${clone_url} || true 
-          else 
-            gh pr edit ${pull_number} --remove-label partialCIBuild --repo ${clone_url} || true
-          fi
-      # Perform Maven Build
-      - name: Build module
-        env:
-          MAVEN_OPTS: ${{ inputs.extra_maven_opts }}
+          maven_version: ${{ inputs.maven_version }}
+          maven_profiles: ${{ inputs.maven_profiles }}
+          extra_maven_opts: ${{ inputs.extra_maven_opts }}
+          jdk_major_version: ${{ inputs.jdk_major_version }}
+          jdk_distribution: ${{ inputs.jdk_distribution }}
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-          MAVEN_SUBMODULES: ${{ steps.analyse-pr.outputs.partialmodules }}
-        run: | 
-          MAVEN_SUBMODULES_ARGS=""
-          if [ ! -z "${MAVEN_SUBMODULES:-}" ]; then
-            MAVEN_SUBMODULES_ARGS="-pl $(echo ${MAVEN_SUBMODULES} | sed 's/,/ -pl /g')"
-          fi
-          mvn -B clean verify -P${{ inputs.maven_profiles }} -Dstyle.color=always -Dmaven.artifact.threads=20 -U ${MAVEN_SUBMODULES_ARGS}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          M2_SETTINGS_FILE_URL: ${{ env.SETTINGS_XML_URL }}
+          
+
+            
