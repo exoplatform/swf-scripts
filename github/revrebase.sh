@@ -47,14 +47,6 @@ while IFS=']' read -r line; do
     prev_head=$(git rev-parse --short origin/$DIST_BRANCH)
     # Rebase local develop branch on target dist develop as preparation for FF merge (linear history)
     if ! git rebase origin/$DIST_BRANCH develop &>/dev/null; then
-      git rebase --abort &>/dev/null
-      git checkout $DIST_BRANCH -f
-      git merge origin/develop --no-commit -X ours
-      git commit -m "Merge develop into $DIST_BRANCH"
-      if [ -z "$(git diff -w origin/$DIST_BRANCH)" ]; then 
-        git push origin $DIST_BRANCH
-        continue
-      fi
       ret=1
       echo ""
       echo "==========================================================="
