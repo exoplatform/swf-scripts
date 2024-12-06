@@ -69,6 +69,6 @@ for module in $MODULES; do
         --header 'Accept: application/vnd.github.luke-cage-preview+json' \
         --header "Authorization: Bearer ${GH_TOKEN}" \
         --header 'Content-Type: application/json' \
-        -d '{"required_status_checks":{"strict": true,"contexts": ["CI Build / CI Build"]},"required_pull_request_reviews":{"dismissal_restrictions": {},"dismiss_stale_reviews": true,"require_code_owner_reviews": false,"required_approving_review_count": 1}, "allow_force_pushes":true,"enforce_admins":false,"restrictions":null}' &>/dev/null
+        -d '{"required_status_checks":{"strict": true,"contexts": ["PR Build"]},"required_pull_request_reviews":{"dismissal_restrictions": {},"dismiss_stale_reviews": true,"require_code_owner_reviews": false,"required_approving_review_count": 1}, "allow_force_pushes":true,"enforce_admins":false,"restrictions":null}' &>/dev/null
 done
 echo "Branches now protected!"
