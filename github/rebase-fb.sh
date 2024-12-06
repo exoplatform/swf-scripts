@@ -56,7 +56,7 @@ if ${COMPANY_MODULES_ENABLED:-false}; then
   set +e
   cmpfblist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/company/seed_jobs_ci.groovy" | grep "feature/${FB_NAME}" | grep "project:")
   set -e
-  [ -z "${cmpfblist:-}"] || fblist=$(echo -e "${fblist}\n${cmpfblist}")
+  [ -z "${cmpfblist:-}" ] || fblist=$(echo -e "${fblist}\n${cmpfblist}")
 fi
 
 modules_length=$(echo $fblist | grep -o 'project:' | wc -w)
