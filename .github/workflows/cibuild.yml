@@ -55,12 +55,10 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      # Use github.token for Public Repositories. Otherwise, a SWF_TOKEN token is needed for private ones.
-      - name: Check Github Token
-        run: | 
-          if [ -z "${gh_token}" ]; then 
-            echo "gh_token=${{ github.token }}" >> $GITHUB_ENV
-          fi
+      - name: Deprecation Warning
+        run: |
+          echo "::warning:: 🚨 This workflow is deprecated and will be removed soon."
+          echo "Please update your workflow to use exo-actions/pr-action."
       # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
@@ -75,12 +73,12 @@ jobs:
         uses: actions/checkout@v4
         with: 
           fetch-depth: 0
-          token: ${{ env.gh_token }}
+          token: ${{ secrets.SWF_TOKEN || github.token }}
       # Check Partial Build Eligibility
       - name: Analyse Pull Request Changes
         id: analyse-pr
         env: 
-          GH_TOKEN: ${{ env.gh_token }}
+          GH_TOKEN: ${{ secrets.SWF_TOKEN || github.token }}
         run: |
           echo "partialmodules=" >> $GITHUB_OUTPUT
           if [ "${is_fork}" = "true" ]; then 
@@ -167,7 +165,7 @@ jobs:
       - name: Submit Partial PR label 
         env:
           MAVEN_SUBMODULES: ${{ steps.analyse-pr.outputs.partialmodules }}
-          GH_TOKEN: ${{ env.gh_token }}
+          GH_TOKEN: ${{ secrets.SWF_TOKEN || github.token }}
         run: |
           if [ ! -z "${MAVEN_SUBMODULES:-}" ]; then
             gh pr edit ${pull_number} --add-label partialCIBuild --repo ${clone_url} || true 
