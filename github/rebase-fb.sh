@@ -78,7 +78,7 @@ info "Modules count: ${modules_length}"
 counter=0
 action "Done. Scanning unrebased modules..."
 modulesToRebase=""
-
+counter_width=${#modules_length}
 # Iterate over each module and check rebase status
 while IFS=']' read -r line; do
     counter=$((counter+1))  
@@ -116,7 +116,8 @@ while IFS=']' read -r line; do
     else 
       behindbyMsg="\033[1;31m${behindby}\033[0m"
     fi
-    info "(${counter}/${modules_length}) -- ${org}/${item}: ${baseBranch}...feature/${FB_NAME} Status: $status - Ahead by: \033[1;34m$aheadby\033[0m - Behind by: $behindbyMsg."
+    formatted_counter=$(printf "%0${counter_width}d" $counter)
+    info "(${formatted_counter}/${modules_length}) -- ${org}/${item}: ${baseBranch}...feature/${FB_NAME} Status: $status - Ahead by: \033[1;34m$aheadby\033[0m - Behind by: $behindbyMsg."
 
     # If not diverged, no rebase is needed
     if [ "${status:-}" != "diverged" ]; then
