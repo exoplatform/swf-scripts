@@ -21,6 +21,33 @@ action() {
     echo -e "\033[1;36m[Action]:\033[0m $1"
 }
 
+# Function to colorize status
+colorize_status() {
+    case $1 in
+        ahead)
+            echo -e "\033[1;32m$1\033[0m"  # Green
+            ;;
+        behind|identical)
+            echo -e "\033[1;33m$1\033[0m"  # Yellow
+            ;;
+        diverged)
+            echo -e "\033[1;31m$1\033[0m"  # Red
+            ;;
+        unknown)
+            echo -e "\033[1;35m$1\033[0m"  # Magenta
+            ;;
+        *)
+            echo "$1"  # Default (no color)
+            ;;
+    esac
+}
+
+# Strip color codes for accurate length calculation
+strip_color_codes() {
+    echo "$1" | sed -e 's/\033\[[0-9;]*m//g'
+}
+
+
 ### Functions for Jenkins Job Management
 getJenkinsQueuedJobId() {
     curl -fsSL "https://${JENKINS_HOST}/queue/api/json?tree=items%5Bid%2Ctask%5Bname%5D%5D" | jq -r ".items[] | select(.task.name | contains( \"${1}\")) | .id"
@@ -78,7 +105,12 @@ info "Modules count: ${modules_length}"
 counter=0
 action "Done. Scanning unrebased modules..."
 modulesToRebase=""
+# Define column widths
 counter_width=${#modules_length}
+repo_width=45  # Width for the combined org/item column
+branch_width=30
+status_width=12
+ahead_behind_width=20
 # Iterate over each module and check rebase status
 while IFS=']' read -r line; do
     counter=$((counter+1))  
@@ -116,8 +148,21 @@ while IFS=']' read -r line; do
     else 
       behindbyMsg="\033[1;31m${behindby}\033[0m"
     fi
+    aheadbyMsg="\033[1;34m$aheadby\033[0m"
     formatted_counter=$(printf "%0${counter_width}d" $counter)
-    info "(${formatted_counter}/${modules_length}) -- ${org}/${item}: ${baseBranch}...feature/${FB_NAME} Status: $status - Ahead by: \033[1;34m$aheadby\033[0m - Behind by: $behindbyMsg."
+
+    # Calculate status color length without codes
+    colored_status=$(colorize_status "$status")
+    status_length=$(strip_color_codes "$colored_status")
+    status_width=$((status_width > ${#status_length} ? status_width : ${#status_length}))
+
+    # Format the fields for tabular display
+    printf "\033[1;34m[Info]\033[0m %-*s %-*s %-*s %-*s %-*s\n" \
+        $((counter_width + 3)) "(${formatted_counter}/${modules_length})" \
+        $repo_width "${org}/${item}" \
+        $branch_width "${baseBranch}...feature/${FB_NAME}" \
+        $status_width "${colored_status}" \
+        $ahead_behind_width "Ahead: $(echo -e $aheadbyMsg), Behind: $(echo -e $behindbyMsg)"
 
     # If not diverged, no rebase is needed
     if [ "${status:-}" != "diverged" ]; then
