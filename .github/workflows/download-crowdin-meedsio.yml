@@ -33,6 +33,11 @@ on:
         default: "true"
         required: false
         type: string
+      CROWDIN_LANGUAGES_ARG:
+        description: Crowdin args for used languages
+        default: "-l ar -l aro -l az -l ca -l ceb -l co -l cs -l de -l el -l en -l es-ES -l eu -l fa -l fi -l fil -l fr -l hi -l hu -l id -l it -l ja -l ko -l lt -l ms -l nl -l no -l pcm -l pl -l pt-BR -l pt-PT -l ro -l ru -l sk -l sl -l sq -l sv-SE -l th -l tl -l tr -l uk -l ur-IN -l vi -l zh-CN -l zh-TW"
+        required: false
+        type: string
     secrets:
       CROWDIN_GITHUB_TOKEN:
         required: true
@@ -53,6 +58,7 @@ jobs:
       PROJECT_VERSION: ${{ inputs.CROWDIN_DEVELOP_VERSION }}-exo
       PROJECT_BRANCH: develop-exo
       CROWDIN_BRANCH: develop-exo
+      CROWDIN_LANGUAGES_ARG: ${{ inputs.CROWDIN_LANGUAGES_ARG }}
     secrets: inherit
   # develop-meed workflow
   crowdin-download-develop-meed:
@@ -63,6 +69,7 @@ jobs:
       PROJECT_VERSION: ${{ inputs.CROWDIN_DEVELOP_VERSION }}-meed
       PROJECT_BRANCH: develop-meed
       CROWDIN_BRANCH: develop-meed
+      CROWDIN_LANGUAGES_ARG: ${{ inputs.CROWDIN_LANGUAGES_ARG }}
     secrets: inherit
   # stable/x.x.x-exo workflow
   crowdin-download-stable-exo:
@@ -73,4 +80,5 @@ jobs:
       PROJECT_VERSION: ${{ inputs.CROWDIN_MAINTENANCE_EXO_VERSION }}
       PROJECT_BRANCH: stable/${{ inputs.CROWDIN_MAINTENANCE_EXO_VERSION }}
       CROWDIN_BRANCH: ${{ inputs.CROWDIN_MAINTENANCE_BRANCH_VERSION }}
+      CROWDIN_LANGUAGES_ARG: ${{ inputs.CROWDIN_LANGUAGES_ARG }}
     secrets: inherit
