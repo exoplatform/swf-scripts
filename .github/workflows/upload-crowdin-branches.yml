@@ -8,6 +8,11 @@ on:
         default: "maintenance"
         required: false
         type: string
+      YML_CROWDIN_LANGUAGES_ARG:
+        description: Crowdin language env var for crowdin.yml file
+        default: '"_en!": "","ar_SA": "ar","ar_OM": "aro","az_AZ": "az","ca_ES": "ca","ceb_PH": "ceb", "co_FR": "co","cs_CZ": "cs","de_DE": "de","el_GR": "el","en_US": "en","es_ES": "es_ES","eu_ES": "eu","fa_IR": "fa", "fi_FI": "fi","fil_PH": "fil","fr_FR": "fr","hi_IN": "hi","hu_HU": "hu","id_ID": "id","it_IT": "it","ja_JP": "ja", "kab_KAB": "kab","ko_KR": "ko","lt_LT": "lt","ms_MY": "ms","nl_NL": "nl","no_NO": "no","pcm_NG": "pcm","pl_PL": "pl", "pt_BR": "pt_BR","pt_PT": "pt_PT","ro_RO": "ro","ru_RU": "ru","sk_SK": "sk","sl_SI": "sl","sq_AL": "sq", "sv_SE": "sv_SE","th_TH": "th","tl_PH": "tl","tr_TR": "tr","uk_UA": "uk","ur_IN": "ur_IN","vi_VN": "vi", "zh_CN": "zh_CN","zh_TW": "zh_TW",'
+        required: false
+        type: string
     secrets:
       CROWDIN_PROJECT_ID:
         required: true
@@ -18,4 +23,5 @@ jobs:
     uses: exoplatform/swf-scripts/.github/workflows/upload-crowdin-generic.yml@master
     with:
       CROWDIN_MAINTENANCE_BRANCH_VERSION: ${{inputs.CROWDIN_MAINTENANCE_BRANCH_VERSION}}
+      YML_CROWDIN_LANGUAGES_ARG: ${{ inputs.YML_CROWDIN_LANGUAGES_ARG }}
     secrets: inherit
