@@ -8,6 +8,11 @@ on:
         default: "7.0.x"
         required: false
         type: string
+      CROWDIN_LANGUAGES_ARG:
+        description: Crowdin args for used languages
+        default: "-l ar -l aro -l az -l ca -l ceb -l co -l cs -l de -l el -l en -l es-ES -l eu -l fa -l fi -l fil -l fr -l hi -l hu -l id -l it -l ja -l ko -l lt -l ms -l nl -l no -l pcm -l pl -l pt-BR -l pt-PT -l ro -l ru -l sk -l sl -l sq -l sv-SE -l th -l tl -l tr -l uk -l ur-IN -l vi -l zh-CN -l zh-TW"
+        required: false
+        type: string
     secrets:
       CROWDIN_GITHUB_TOKEN:
         required: true
@@ -28,4 +33,5 @@ jobs:
     with:
       PROJECT_VERSION: ${{ inputs.CROWDIN_DEVELOP_VERSION }}
       PROJECT_BRANCH: develop
+      CROWDIN_LANGUAGES_ARG: ${{ inputs.CROWDIN_LANGUAGES_ARG }}
     secrets: inherit
