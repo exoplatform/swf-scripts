@@ -36,6 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
+      - name: Deprecation Warning
+        run: |
+          echo "::warning:: 🚨 This workflow is deprecated and will be removed soon."
+          echo "Please update your workflow to use exo-actions/sonarcloud-action."
       # Hack: Maximize Disk space for big & legacy projects (May become unsupported in future Azure runner releases)
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
