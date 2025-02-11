@@ -193,13 +193,13 @@ for moduleToRebase in ${modulesToRebase}; do
     git checkout feature/${FB_NAME} &>/dev/null
     prev_head=$(git rev-parse --short HEAD)
 
-    # Attempt rebase with recursive strategy, fallback to 'ours' if it fails
+    # Attempt rebase with recursive strategy, fallback to 'theirs' if it fails
     if ! git -c advice.skippedCherryPicks=false rebase origin/${baseBranch} feature/${FB_NAME} >/dev/null; then
         info "Rebasing with recursive strategy has failed!"
-        action "Trying 'ours' rebase strategy..."
+        action "Trying 'theirs' rebase strategy..."
         git rebase --abort || :
         
-        if ! git -c advice.skippedCherryPicks=false rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option ours >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
+        if ! git -c advice.skippedCherryPicks=false rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option theirs >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
             error "Could not rebase feature/${FB_NAME} for ${org}/${item}!"
             exit 1
         fi
