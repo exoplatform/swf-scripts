@@ -199,7 +199,7 @@ for moduleToRebase in ${modulesToRebase}; do
         action "Trying 'theirs' rebase strategy..."
         git rebase --abort || :
         
-        if ! git -c advice.skippedCherryPicks=false rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option theirs >/dev/null || [ ! -z "$(git diff -w origin/feature/${FB_NAME})" ]; then 
+        if ! git -c advice.skippedCherryPicks=false rebase origin/${baseBranch} feature/${FB_NAME} --strategy-option theirs >/dev/null; then 
             error "Could not rebase feature/${FB_NAME} for ${org}/${item}!"
             exit 1
         fi
