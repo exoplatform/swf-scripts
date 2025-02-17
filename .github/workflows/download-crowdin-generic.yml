@@ -37,7 +37,6 @@ on:
         required: true
       SWF_GPG_PASSPHRASE:
         required: true
-
 jobs:
 
   crowdin-download:
@@ -51,6 +50,9 @@ jobs:
       - name: Reset translation branch
         run: |
           git push origin origin/${{inputs.PROJECT_BRANCH}}:refs/heads/integration/${{inputs.PROJECT_VERSION}}-translation -f
+      - name: Setup language replacement to crowdin.yml file
+        run: |
+          sed -i "s/YML_CROWDIN_LANGUAGES_ARG/${{ inputs.YML_CROWDIN_LANGUAGES_ARG }}/g" crowdin.yml
       - name: Crowdin push
         uses: crowdin/github-action@v2
         with:
@@ -66,7 +68,6 @@ jobs:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.CROWDIN_GITHUB_TOKEN }}
-          YML_CROWDIN_LANGUAGES_ARG: ${{ inputs.YML_CROWDIN_LANGUAGES_ARG }}
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
         with:
@@ -84,8 +85,11 @@ jobs:
           git clean -fdx
           git config --global user.email "exo-swf@exoplatform.com"
           git config --global user.name "eXo Software Factory"
-          changes_to_apply=$(git merge --squash origin/integration/${{inputs.PROJECT_VERSION}}-translation 2>&1)
-          if [[ "$changes_to_apply" == *"up to date"* ]]; then
+          git merge --squash origin/integration/${{inputs.PROJECT_VERSION}}-translation 2>&1
+          # Ignore changes to crowdin.yml
+          git checkout origin/${{inputs.PROJECT_BRANCH}} -- crowdin.yml
+          changes_to_apply=$(git status)
+          if [[ "$changes_to_apply" == *"nothing to commit"* ]]; then
             echo "Nothing to commit"
           else
             git commit -m "Merge Translations"
