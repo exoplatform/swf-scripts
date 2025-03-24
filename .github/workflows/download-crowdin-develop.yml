@@ -5,7 +5,7 @@ on:
     inputs:
       CROWDIN_DEVELOP_VERSION:
         description: Module develop version
-        default: "7.0.x"
+        default: "7.1.x"
         required: false
         type: string
       CROWDIN_LANGUAGES_ARG:
