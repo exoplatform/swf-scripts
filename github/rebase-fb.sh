@@ -128,10 +128,6 @@ while IFS=']' read -r line; do
         else 
             baseBranch=develop
         fi
-    elif [[ $item =~ ^deeds-tenant$ ]]; then 
-        baseBranch="${BASE_BRANCH}"
-    elif [[ $item =~ ^deeds ]]; then 
-        baseBranch=develop
     else
         baseBranch="${BASE_BRANCH}"
     fi
