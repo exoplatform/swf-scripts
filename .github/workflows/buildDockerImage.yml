@@ -173,7 +173,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.9.1
+        uses: sigstore/cosign-installer@v3.9.2
       - name: Sign the published ghcr.io Docker image with Cosign
         run: |
           images=""
