@@ -143,21 +143,22 @@ function replaceProjectDeps() {
 	printf "\e[1;33m# %s\e[m\n" "Modifying dependencies versions in the project POMs ($repo_name) ..."
 
 	#Meeds
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.gatein.wci.version>$ORIGIN_VERSION</org.exoplatform.gatein.wci.version>" "<org.exoplatform.gatein.wci.version>$TARGET_VERSION</org.exoplatform.gatein.wci.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.kernel.version>$ORIGIN_VERSION</org.exoplatform.kernel.version>" "<org.exoplatform.kernel.version>$TARGET_VERSION</org.exoplatform.kernel.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.core.version>$ORIGIN_VERSION</org.exoplatform.core.version>" "<org.exoplatform.core.version>$TARGET_VERSION</org.exoplatform.core.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.ws.version>$ORIGIN_VERSION</org.exoplatform.ws.version>" "<org.exoplatform.ws.version>$TARGET_VERSION</org.exoplatform.ws.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.gatein.sso.version>$ORIGIN_VERSION</org.exoplatform.gatein.sso.version>" "<org.exoplatform.gatein.sso.version>$TARGET_VERSION</org.exoplatform.gatein.sso.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.gatein.pc.version>$ORIGIN_VERSION</org.exoplatform.gatein.pc.version>" "<org.exoplatform.gatein.pc.version>$TARGET_VERSION</org.exoplatform.gatein.pc.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.gatein.portal.version>$ORIGIN_VERSION</org.exoplatform.gatein.portal.version>" "<org.exoplatform.gatein.portal.version>$TARGET_VERSION</org.exoplatform.gatein.portal.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.depmgt.version>$DEPMGT_ORIGIN_VERSION</org.exoplatform.depmgt.version>" "<org.exoplatform.depmgt.version>$DEPMGT_TARGET_VERSION</org.exoplatform.depmgt.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform-ui.version>$ORIGIN_VERSION</org.exoplatform.platform-ui.version>" "<org.exoplatform.platform-ui.version>$TARGET_VERSION</org.exoplatform.platform-ui.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.commons.version>$ORIGIN_VERSION</org.exoplatform.commons.version>" "<org.exoplatform.commons.version>$TARGET_VERSION</org.exoplatform.commons.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.social.version>$ORIGIN_VERSION</org.exoplatform.social.version>" "<org.exoplatform.social.version>$TARGET_VERSION</org.exoplatform.social.version>" "pom.xml -not -wholename \"*/target/*\""	
-	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.platform.addons-manager.version>$ORIGIN_VERSION</org.exoplatform.platform.addons-manager.version>" "<org.exoplatform.platform.addons-manager.version>$TARGET_VERSION</org.exoplatform.platform.addons-manager.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.gatein.wci.version>$ORIGIN_VERSION</io.meeds.gatein.wci.version>" "<io.meeds.gatein.wci.version>$TARGET_VERSION</io.meeds.gatein.wci.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.kernel.version>$ORIGIN_VERSION</io.meeds.kernel.version>" "<io.meeds.kernel.version>$TARGET_VERSION</io.meeds.kernel.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.core.version>$ORIGIN_VERSION</io.meeds.core.version>" "<io.meeds.core.version>$TARGET_VERSION</io.meeds.core.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.ws.version>$ORIGIN_VERSION</io.meeds.ws.version>" "<io.meeds.ws.version>$TARGET_VERSION</io.meeds.ws.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.gatein.sso.version>$ORIGIN_VERSION</io.meeds.gatein.sso.version>" "<io.meeds.gatein.sso.version>$TARGET_VERSION</io.meeds.gatein.sso.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.gatein.pc.version>$ORIGIN_VERSION</io.meeds.gatein.pc.version>" "<io.meeds.gatein.pc.version>$TARGET_VERSION</io.meeds.gatein.pc.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.portal.version>$ORIGIN_VERSION</io.meeds.portal.version>" "<io.meeds.portal.version>$TARGET_VERSION</io.meeds.portal.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.depmgt.version>$DEPMGT_ORIGIN_VERSION</io.meeds.depmgt.version>" "<io.meeds.depmgt.version>$DEPMGT_TARGET_VERSION</io.meeds.depmgt.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.platform-ui.version>$ORIGIN_VERSION</io.meeds.platform-ui.version>" "<io.meeds.platform-ui.version>$TARGET_VERSION</io.meeds.platform-ui.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.commons.version>$ORIGIN_VERSION</io.meeds.commons.version>" "<io.meeds.commons.version>$TARGET_VERSION</io.meeds.commons.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.social.version>$ORIGIN_VERSION</io.meeds.social.version>" "<io.meeds.social.version>$TARGET_VERSION</io.meeds.social.version>" "pom.xml -not -wholename \"*/target/*\""	
+	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.platform.addons-manager.version>$ORIGIN_VERSION</io.meeds.platform.addons-manager.version>" "<io.meeds.platform.addons-manager.version>$TARGET_VERSION</io.meeds.platform.addons-manager.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<io.meeds.distribution.version>$ORIGIN_VERSION</io.meeds.distribution.version>" "<io.meeds.distribution.version>$TARGET_VERSION</io.meeds.distribution.version>" "pom.xml -not -wholename \"*/target/*\""
 
 	#eXoplatform
+	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.maven-exo-depmgt-pom.version>$DEPMGT_EXO_ORIGIN_VERSION</org.exoplatform.maven-exo-depmgt-pom.version>" "<org.exoplatform.maven-exo-depmgt-pom.version>$DEPMGT_EXO_TARGET_VERSION</org.exoplatform.maven-exo-depmgt-pom.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<org.exoplatform.commons-exo.version>$ORIGIN_VERSION</org.exoplatform.commons-exo.version>" "<org.exoplatform.commons-exo.version>$TARGET_VERSION</org.exoplatform.commons-exo.version>" "pom.xml -not -wholename \"*/target/*\""
 }
 
@@ -165,20 +166,24 @@ function replaceProjectAddons() {
 	printf "\e[1;33m# %s\e[m\n" "Modifying add-ons versions in the packaging project POMs ($repo_name) ..."
 	
 	#Meeds
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.layout.version>$ORIGIN_VERSION</addon.exo.layout.version>" "<addon.exo.layout.version>$TARGET_VERSION</addon.exo.layout.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.gamification.version>$ORIGIN_VERSION</addon.exo.gamification.version>" "<addon.exo.gamification.version>$TARGET_VERSION</addon.exo.gamification.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.kudos.version>$ORIGIN_VERSION</addon.exo.kudos.version>" "<addon.exo.kudos.version>$TARGET_VERSION</addon.exo.kudos.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.perk-store.version>$ORIGIN_VERSION</addon.exo.perk-store.version>" "<addon.exo.perk-store.version>$TARGET_VERSION</addon.exo.perk-store.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.wallet.version>$ORIGIN_VERSION</addon.exo.wallet.version>" "<addon.exo.wallet.version>$TARGET_VERSION</addon.exo.wallet.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.app-center.version>$ORIGIN_VERSION</addon.exo.app-center.version>" "<addon.exo.app-center.version>$TARGET_VERSION</addon.exo.app-center.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.layout.version>$ORIGIN_VERSION</addon.meeds.layout.version>" "<addon.meeds.layout.version>$TARGET_VERSION</addon.meeds.layout.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.gamification.version>$ORIGIN_VERSION</addon.meeds.gamification.version>" "<addon.meeds.gamification.version>$TARGET_VERSION</addon.meeds.gamification.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.kudos.version>$ORIGIN_VERSION</addon.meeds.kudos.version>" "<addon.meeds.kudos.version>$TARGET_VERSION</addon.meeds.kudos.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.perk-store.version>$ORIGIN_VERSION</addon.meeds.perk-store.version>" "<addon.meeds.perk-store.version>$TARGET_VERSION</addon.meeds.perk-store.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.wallet.version>$ORIGIN_VERSION</addon.meeds.wallet.version>" "<addon.meeds.wallet.version>$TARGET_VERSION</addon.meeds.wallet.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.app-center.version>$ORIGIN_VERSION</addon.meeds.app-center.version>" "<addon.meeds.app-center.version>$TARGET_VERSION</addon.meeds.app-center.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.analytics.version>$ORIGIN_VERSION</addon.meeds.analytics.version>" "<addon.meeds.analytics.version>$TARGET_VERSION</addon.meeds.analytics.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.notes.version>$ORIGIN_VERSION</addon.exo.notes.version>" "<addon.exo.notes.version>$TARGET_VERSION</addon.exo.notes.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.notes.version>$ORIGIN_VERSION</addon.meeds.notes.version>" "<addon.meeds.notes.version>$TARGET_VERSION</addon.meeds.notes.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.content.version>$ORIGIN_VERSION</addon.meeds.content.version>" "<addon.meeds.content.version>$TARGET_VERSION</addon.meeds.content.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.poll.version>$ORIGIN_VERSION</addon.exo.poll.version>" "<addon.exo.poll.version>$TARGET_VERSION</addon.exo.poll.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.tasks.version>$ORIGIN_VERSION</addon.exo.tasks.version>" "<addon.exo.tasks.version>$TARGET_VERSION</addon.exo.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.poll.version>$ORIGIN_VERSION</addon.meeds.poll.version>" "<addon.meeds.poll.version>$TARGET_VERSION</addon.meeds.poll.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.tasks.version>$ORIGIN_VERSION</addon.meeds.tasks.version>" "<addon.meeds.tasks.version>$TARGET_VERSION</addon.meeds.tasks.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.pwa.version>$ORIGIN_VERSION</addon.meeds.pwa.version>" "<addon.meeds.pwa.version>$TARGET_VERSION</addon.meeds.pwa.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.ide.version>$ORIGIN_VERSION</addon.meeds.ide.version>" "<addon.meeds.ide.version>$TARGET_VERSION</addon.meeds.ide.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.gamification-github.version>$ORIGIN_VERSION</addon.meeds.gamification-github.version>" "<addon.meeds.gamification-github.version>$TARGET_VERSION</addon.meeds.gamification-github.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "addon.meeds.gamification-twitter.version>$ORIGIN_VERSION</addon.meeds.gamification-twitter.version>" "<addon.meeds.gamification-twitter.version>$TARGET_VERSION</addon.meeds.gamification-twitter.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.gamification-twitter.version>$ORIGIN_VERSION</addon.meeds.gamification-twitter.version>" "<addon.meeds.gamification-twitter.version>$TARGET_VERSION</addon.meeds.gamification-twitter.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.gamification-evm.version>$ORIGIN_VERSION</addon.meeds.gamification-evm.version>" "<addon.meeds.gamification-evm.version>$TARGET_VERSION</addon.meeds.gamification-evm.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.gamification-crowdin.version>$ORIGIN_VERSION</addon.meeds.gamification-crowdin.version>" "<addon.meeds.gamification-crowdin.version>$TARGET_VERSION</addon.meeds.gamification-crowdin.version>" "pom.xml -not -wholename \"*/target/*\""
+
 	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.deeds-tenant.version>$ORIGIN_VERSION</addon.meeds.deeds-tenant.version>" "<addon.meeds.deeds-tenant.version>$TARGET_VERSION</addon.meeds.deeds-tenant.version>" "pom.xml -not -wholename \"*/target/*\""
 
 	#eXoplatform
@@ -196,7 +201,7 @@ function replaceProjectAddons() {
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.multifactor-authentication.version>$ORIGIN_VERSION</addon.exo.multifactor-authentication.version>" "<addon.exo.multifactor-authentication.version>$TARGET_VERSION</addon.exo.multifactor-authentication.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.automatic-translation.version>$ORIGIN_VERSION</addon.exo.automatic-translation.version>" "<addon.exo.automatic-translation.version>$TARGET_VERSION</addon.exo.automatic-translation.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.documents.version>$ORIGIN_VERSION</addon.exo.documents.version>" "<addon.exo.documents.version>$TARGET_VERSION</addon.exo.documents.version>" "pom.xml -not -wholename \"*/target/*\""
-	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.push-notifications.version>$ORIGIN_VERSION</addon.exo.push-notifications.version>" "<addon.exo.push-notifications.version>$TARGET_VERSION</addon.exo.push-notifications.version>" "pom.xml -not -wholename \"*/target/*\""
+	$SCRIPTDIR/../replaceInFile.sh "<addon.meeds.push-notifications.version>$ORIGIN_VERSION</addon.meeds.push-notifications.version>" "<addon.meeds.push-notifications.version>$TARGET_VERSION</addon.meeds.push-notifications.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.processes.version>$ORIGIN_VERSION</addon.exo.processes.version>" "<addon.exo.processes.version>$TARGET_VERSION</addon.exo.processes.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.anti-bruteforce.version>$ORIGIN_VERSION</addon.exo.anti-bruteforce.version>" "<addon.exo.anti-bruteforce.version>$TARGET_VERSION</addon.exo.anti-bruteforce.version>" "pom.xml -not -wholename \"*/target/*\""
 	$SCRIPTDIR/../replaceInFile.sh "<addon.exo.anti-malware.version>$ORIGIN_VERSION</addon.exo.anti-malware.version>" "<addon.exo.anti-malware.version>$TARGET_VERSION</addon.exo.anti-malware.version>" "pom.xml -not -wholename \"*/target/*\""
@@ -245,6 +250,10 @@ echo "SWF_FB_REPOS : ${SWF_FB_REPOS}"
 echo "==================================="
 
 #Meeds Projects
+
+#createFB maven-parent-pom Meeds-io
+#createFB addons-parent-pom Meeds-io
+
 createFB maven-depmgt-pom Meeds-io
 createFB gatein-wci Meeds-io
 createFB kernel Meeds-io
@@ -268,14 +277,21 @@ createFB notes Meeds-io
 createFB content Meeds-io
 createFB poll Meeds-io
 createFB task Meeds-io
+createFB pwa Meeds-io
+createFB ide Meeds-io
 createFB gamification-github Meeds-io
 createFB gamification-twitter Meeds-io
-createFB gamification-evm Meeds-io
+createFB gamification-crowdin Meeds-io
+#createFB gamification-evm Meeds-io
 createFB addons-manager Meeds-io
 createFB deeds-tenant Meeds-io
 createFB meeds Meeds-io
 
 # # Explatform projects
+
+#createFB maven-exo-parent-pom exoplatform
+#createFB addons-exo-parent-pom exoplatform
+#
 createFB maven-exo-depmgt-pom exoplatform
 createFB commons-exo exoplatform
 createFB jcr exoplatform
@@ -287,7 +303,7 @@ createFB agenda exoplatform
 createFB agenda-connectors exoplatform
 createFB chat-application exoplatform
 createFB digital-workplace exoplatform
-createFB layout-management exoplatform
+#createFB layout-management exoplatform
 createFB onlyoffice exoplatform
 createFB saml2-addon exoplatform
 createFB web-conferencing exoplatform
@@ -300,7 +316,7 @@ createFB processes exoplatform
 createFB data-upgrade exoplatform
 createFB anti-bruteforce exoplatform
 createFB anti-malware exoplatform
-createFB external-visio-connector exoplatform
+#createFB external-visio-connector exoplatform
 createFB platform-private-distributions exoplatform
 popd
 
