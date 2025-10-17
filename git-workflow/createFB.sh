@@ -10,7 +10,7 @@ show_help() {
     echo "  -p       Execute the script with the 'p' option to activate push"
     echo "  -h       Display this help message"
     echo
-    echo "Arguments:"
+    echo "Arguments: "
     echo "  FBRANCH           Name of Feature Branch"
     echo "  ORIGIN_BRANCH     Branch to base the feature branch on (develop-meed or develop-exo or develop (Default)):"
     echo "                      - For Meeds repos: develop-meed or develop-exo or develop (Default)"
