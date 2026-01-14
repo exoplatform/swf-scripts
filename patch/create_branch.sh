@@ -71,7 +71,7 @@ for i in ${_REPOS}; do
   echo "OK: patch/${tagversion} branch has been created locally."
   if [ -f "${repo}/pom.xml" ]; then
     maven_cmd() {
-      sudo docker run --rm -v $(readlink -m ${repo}):/home -v /opt/prdacc/mavenpatch/settings.xml:/root/.m2/settings.xml --dns="8.8.8.8" --dns="8.8.8.4" --sysctl net.ipv6.conf.all.disable_ipv6=1 --add-host repository.exoplatform.org:15.235.114.166 -w /home maven:3.9.9 mvn $*
+      sudo docker run --rm -v $(readlink -m ${repo}):/home -v /opt/prdacc/mavenpatch/settings.xml:/root/.m2/settings.xml --dns="8.8.8.8" --dns="8.8.8.4" --sysctl net.ipv6.conf.all.disable_ipv6=1 -w /home maven:3.9.12 mvn $*
     }
     echo "Maven projet has been detected. Adding \"-patched\" suffix to the project version..."
     maven_cmd -ntp versions:set -DgenerateBackupPoms=false -DnewVersion="${tagversion}-patched"
