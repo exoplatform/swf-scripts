@@ -27,7 +27,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Get git changed files
-        uses: tj-actions/changed-files@v46
+        uses: tj-actions/changed-files@v47
         id: changedFilesStep
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
