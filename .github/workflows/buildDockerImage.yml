@@ -152,7 +152,7 @@ jobs:
       - name: Pull image ${{ inputs.dockerRegistry }}/${{ inputs.dockerImage }}@${{ env.digest }}
         run: docker pull ${{ inputs.dockerRegistry }}/${{ inputs.dockerImage }}@${{ env.digest }}
       - name: Attest the publised Docker image with Github
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v3
         id: attest
         with:
           subject-name: ${{ inputs.attestImageRegistry }}/${{ inputs.dockerImage }}
