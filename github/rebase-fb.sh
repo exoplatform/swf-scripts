@@ -120,20 +120,9 @@ while IFS=']' read -r line; do
     # Skip empty values
     [ -z "${item}" ] && continue
     [ -z "${org}" ] && continue
-
-    # Determine base branch for rebase
-    if [ -z "${BASE_BRANCH:-}" ]; then 
-        if [ "${org,,}" = "meeds-io" ] && [[ ! $item =~ ^deeds ]]; then
-            baseBranch=develop-exo
-        else 
-            baseBranch=develop
-        fi
-    else
-        baseBranch="${BASE_BRANCH}"
-    fi
-    
-    [ "${org,,}" = "meeds-io" ] || baseBranch="develop"
         
+    baseBranch="${BASE_BRANCH:-develop}"
+            
     # Check the comparison status between branches
     compareJson=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME})
     status=$(echo "$compareJson" | jq -r .status)
