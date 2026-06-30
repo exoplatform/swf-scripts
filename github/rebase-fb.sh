@@ -111,19 +111,11 @@ repo_width=45  # Width for the combined org/item column
 branch_width=30
 status_width=12
 ahead_behind_width=20
-last_org=""
 # Iterate over each module and check rebase status
 while IFS=']' read -r line; do
     counter=$((counter+1))  
     item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
-    
-    # Carry-forward gitOrganization from previous entry
-    if [ -z "${org}" ] && [ -n "${last_org}" ]; then
-        org="${last_org}"
-    elif [ -n "${org}" ]; then
-        last_org="${org}"
-    fi
     
     # Skip empty values
     [ -z "${item}" ] && continue

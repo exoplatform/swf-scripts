@@ -68,12 +68,10 @@ echo "Modules in catalog: ${modules_length}"
 echo "Checking modules..."
 
 counter=0
-last_org=""
 
 while IFS=']' read -r line; do
     item="$(awk -F'project:' '{print $2}' <<< "$line" | cut -d',' -f1 | tr -d "'" | xargs)"
     org="$(awk -F'gitOrganization:' '{print $2}' <<< "$line" | cut -d',' -f1 | tr -d "']" | xargs)"
-    if [ -z "${org}" ] && [ -n "${last_org}" ]; then org="${last_org}"; elif [ -n "${org}" ]; then last_org="${org}"; fi
 
     [[ -z "$item" || -z "$org" ]] && continue
 
