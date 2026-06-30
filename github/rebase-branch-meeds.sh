@@ -73,7 +73,7 @@ baseBranch=develop
 # Iterate over each module and check rebase status
 while IFS=']' read -r line; do
     counter=$((counter+1))
-    item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'"| xargs)
+    item=$(echo $line | awk -F'project:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
     org=$(echo $line | awk -F'gitOrganization:' '{print $2}' | cut -d "," -f 1 | tr -d "'" | tr -d "]"| xargs)
 
     # Skip empty values
