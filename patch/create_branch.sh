@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Patch Branch Creator for eXo Support
-# Creates patch branches from existing tags with version suffix and branch protection
+# Creates patch branches from existing tags with version suffix and ruleset protection
 #
 # Requirements:
 #   GIT_TOKEN   - GitHub API token (environment variable)
@@ -81,7 +81,7 @@ usage() {
 Usage: ${SCRIPT_NAME}
 
 Creates patch branches from existing tags with "-patched" version suffix
-and configures branch protection rules.
+and configures a repository ruleset for branch protection.
 
 Environment Variables:
     GIT_TOKEN       Required. GitHub API token with repo permissions.
@@ -138,6 +138,7 @@ validate_prerequisites() {
     command -v git &>/dev/null || missing+=("git")
     command -v curl &>/dev/null || missing+=("curl")
     command -v docker &>/dev/null || missing+=("docker")
+    command -v yq &>/dev/null || missing+=("yq")
 
     if [[ ${#missing[@]} -gt 0 ]]; then
         log_error "Missing required commands: ${missing[*]}"
@@ -197,30 +198,90 @@ run_maven() {
 }
 
 #######################################
+# Workflow helper function
+#######################################
+# Idempotently adds the patch branch to .github/workflows/prbuild.yml
+# under on.pull_request.branches. Creates the key if missing; no-op if
+# the branch is already listed. Skips silently if the workflow file
+# does not exist.
+update_prbuild_workflow() {
+    local repo_dir="$1"
+    local branch="$2"
+    local file="${repo_dir}/.github/workflows/prbuild.yml"
+
+    if [[ ! -f "${file}" ]]; then
+        log_info "No prbuild.yml workflow found - skipping"
+        return 0
+    fi
+
+    if ! yq -e '.on.pull_request' "${file}" >/dev/null 2>&1; then
+        log_warn "prbuild.yml does not use on.pull_request (map form) - skipping"
+        return 0
+    fi
+
+    if yq '.on.pull_request.branches[]?' "${file}" 2>/dev/null | grep -qx "${branch}"; then
+        log_info "Branch ${branch} already in prbuild.yml"
+        return 0
+    fi
+
+    if yq -e '.on.pull_request.branches' "${file}" >/dev/null 2>&1; then
+        yq -i ".on.pull_request.branches += [\"${branch}\"]" "${file}"
+        log_success "Added ${branch} to prbuild.yml branches list"
+    else
+        yq -i ".on.pull_request.branches = [\"${branch}\"]" "${file}"
+        log_success "Created on.pull_request.branches with ${branch} in prbuild.yml"
+    fi
+
+    git -C "${repo_dir}" add .github/workflows/prbuild.yml
+}
+
+#######################################
 # GitHub API helper function
 #######################################
-set_branch_protection() {
+set_branch_ruleset() {
     local org="$1"
     local repo="$2"
     local branch="$3"
-    local encoded_branch
 
-    # URL encode the branch name (/ -> %2F)
-    encoded_branch="${branch//\//%2F}"
-
-    local protection_rules
-    protection_rules=$(cat <<'EOF'
+    local ruleset_payload
+    ruleset_payload=$(cat <<EOF
 {
-    "required_status_checks": {
-        "strict": true,
-        "contexts": ["PR Build"]
+    "name": "patch-branch-protection-${branch}",
+    "target": "branch",
+    "enforcement": "active",
+    "conditions": {
+        "ref_name": {
+            "include": ["refs/heads/${branch}"],
+            "exclude": []
+        }
     },
-    "enforce_admins": true,
-    "required_pull_request_reviews": {
-        "dismiss_stale_reviews": true,
-        "required_approving_review_count": 1
-    },
-    "restrictions": null
+    "rules": [
+        {
+            "type": "required_status_checks",
+            "parameters": {
+                "strict_required_status_checks_policy": true,
+                "required_status_checks": [
+                    {"context": "PR Build"}
+                ]
+            }
+        },
+        {
+            "type": "pull_request",
+            "parameters": {
+                "dismiss_stale_reviews_on_push": true,
+                "require_code_owner_review": false,
+                "require_last_push_approval": false,
+                "required_approving_review_count": 1,
+                "required_review_thread_resolution": false
+            }
+        },
+        {
+            "type": "non_fast_forward"
+        },
+        {
+            "type": "deletion"
+        }
+    ]
 }
 EOF
     )
@@ -229,22 +290,30 @@ EOF
     local http_code
 
     response=$(curl --silent --show-error \
-        --request PUT \
-        --url "https://api.github.com/repos/${org}/${repo}/branches/${encoded_branch}/protection" \
+        --request POST \
+        --url "https://api.github.com/repos/${org}/${repo}/rulesets" \
         --header 'Accept: application/vnd.github+json' \
         --header "Authorization: Bearer ${GIT_TOKEN}" \
         --header 'Content-Type: application/json' \
-        --data "${protection_rules}" \
+        --data "${ruleset_payload}" \
         --write-out '\n%{http_code}' \
         2>&1)
 
     http_code=$(echo "${response}" | tail -n1)
+    local body
+    body=$(echo "${response}" | head -n -1)
 
     if [[ "${http_code}" -ge 200 && "${http_code}" -lt 300 ]]; then
         return 0
     else
-        log_error "Failed to set branch protection (HTTP ${http_code})"
-        log_error "Response: $(echo "${response}" | head -n -1)"
+        local error_msg
+        error_msg=$(echo "${body}" | jq -r '.message // empty' 2>/dev/null || true)
+        if [[ -n "${error_msg}" ]]; then
+            log_error "Failed to set branch ruleset (HTTP ${http_code}): ${error_msg}"
+        else
+            log_error "Failed to set branch ruleset (HTTP ${http_code})"
+            log_error "Response: ${body}"
+        fi
         return 1
     fi
 }
@@ -319,6 +388,10 @@ EOF
     git -C "${repo}" add patches-changelog.txt
     log_success "Changelog file created"
 
+    # Update prbuild workflow
+    log_info "Updating prbuild.yml workflow..."
+    update_prbuild_workflow "${repo}" "${patch_branch}"
+
     # Commit changes
     local commit_msg="TASK-${TASK_ID}: Create Patch Branch for version ${tag_version}"
     log_info "Committing: ${commit_msg}"
@@ -333,12 +406,12 @@ EOF
         git -C "${repo}" push --quiet -u origin "${patch_branch}" 2>&1 | grep -v remote || true
         log_success "Branch pushed"
 
-        # Set branch protection
-        log_info "Setting branch protection rules..."
-        if set_branch_protection "${organization}" "${repo}" "${patch_branch}"; then
-            log_success "Branch protection configured"
+        # Set branch ruleset
+        log_info "Setting branch ruleset..."
+        if set_branch_ruleset "${organization}" "${repo}" "${patch_branch}"; then
+            log_success "Branch ruleset configured"
         else
-            log_warn "Failed to set branch protection. Please configure manually."
+            log_warn "Failed to set branch ruleset. Please configure manually."
         fi
     fi
 
