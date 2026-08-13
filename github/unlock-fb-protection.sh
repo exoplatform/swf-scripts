@@ -98,16 +98,19 @@ echo "Checks OK."
 # Ref covered by the ruleset (used to locate rulesets to delete)
 FB_REF="refs/heads/feature/${FB_NAME}"
 
-# Deletes every branch-scoped ruleset whose conditions match the FB ref.
-# 404 for an individual ruleset is tolerated (already gone); other failures abort.
+# Deletes every repository-level ruleset applying to the FB branch.
+# 404 on the branch-rules endpoint means no rules apply (tolerated).
+# 404 for an individual ruleset DELETE is tolerated (already gone);
+# other failures abort.
 delete_branch_rulesets() {
     local module="$1"
+    local encoded_branch="${FB_NAME//\//%2F}"
+    local encoded_path="feature%2F${encoded_branch}"
     local ids
 
-    ids="$(gh api --paginate "/repos/${module}/rulesets" 2>/dev/null \
-        | jq -r --arg ref "${FB_REF}" \
-            '[.[] | select(.target == "branch") | select(any(.conditions.ref_name.include // [] | .[]; . == $ref)) | .id] | .[]' \
-        2>/dev/null)" || return 1
+    ids="$(gh api "/repos/${module}/rules/branches/${encoded_path}" 2>/dev/null \
+        | jq -r '[.[] | select(.ruleset_source_type == "Repository") | .ruleset_id] | unique | .[]' \
+        2>/dev/null)" || true
 
     if [[ -z "${ids}" ]]; then
         echo "  No ruleset found for ${FB_REF}"
