@@ -194,6 +194,13 @@ create_branch_ruleset() {
             "exclude": []
         }
     },
+    "bypass_actors": [
+        {
+            "actor_id": 1565469,
+            "actor_type": "User",
+            "bypass_mode": "always"
+        }
+    ],
     "rules": [
         {
             "type": "required_status_checks",

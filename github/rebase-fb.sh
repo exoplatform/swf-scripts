@@ -214,8 +214,17 @@ for moduleToRebase in ${modulesToRebase}; do
     # If the HEAD has changed, push and handle Jenkins job cancellation if needed
     if [ "${prev_head}" != "${new_head}" ]; then
         info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
-        git push origin feature/${FB_NAME} --force-with-lease 2>&1 | grep -v remote ||:
-        
+        set +e
+        push_output=$(git push origin feature/${FB_NAME} --force-with-lease 2>&1)
+        push_status=$?
+        set -e
+        if [ "${push_status}" -ne 0 ]; then
+            error "Could not push feature/${FB_NAME} for ${org}/${item}!"
+            echo "${push_output}"
+            exit 1
+        fi
+        echo "${push_output}" | grep -v remote ||:
+
         # Cancel Jenkins job if required
         if [ ! -z "${JENKINS_HOST:-}" ] && [ "${rebasesCounter}" -gt "1" ]; then 
             cancelJenkinsQueuedJobName "${item}-${FB_NAME}-fb-ci" &  # Async call
@@ -251,7 +260,16 @@ for moduleToRebase in ${modulesToRebase}; do
                 else
                     new_head=$(git rev-parse --short HEAD)
                     info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
-                    git push origin ${prBranch}:${prBranch} --force-with-lease 2>&1 | grep -v remote ||:
+                    set +e
+                    push_output=$(git push origin ${prBranch}:${prBranch} --force-with-lease 2>&1)
+                    push_status=$?
+                    set -e
+                    if [ "${push_status}" -ne 0 ]; then
+                        error "Could not push ${prBranch} for ${org}/${item}! Skipped!"
+                        echo "${push_output}"
+                    else
+                        echo "${push_output}" | grep -v remote ||:
+                    fi
                 fi
             done
             info "PRs rebase finished."
