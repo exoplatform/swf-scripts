@@ -89,7 +89,17 @@ export FILTER_BRANCH_SQUELCH_WARNING=1  # Filter-branch hide warnings
 current_date=$(date '+%s')
 
 action "Parsing FB repositories from catalog..."
-fblist=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy" | grep "project:")
+seedFile="dsl-jobs/FB/seed_jobs_FB_$(echo ${FB_NAME//-} | tr '[:upper:]' '[:lower:]').groovy"
+if ! seedContent=$(gh api -H 'Accept: application/vnd.github.v3.raw' "/repos/exoplatform/swf-jenkins-pipeline/contents/${seedFile}" 2>&1); then
+    error "Could not fetch the seed job file ${seedFile} from exoplatform/swf-jenkins-pipeline (does FB '${FB_NAME}' exist?):"
+    echo "${seedContent}"
+    exit 1
+fi
+fblist=$(echo "${seedContent}" | grep "project:" || :)
+if [ -z "${fblist}" ]; then
+    error "No project found in ${seedFile}!"
+    exit 1
+fi
 
 # Include company modules if enabled
 if ${COMPANY_MODULES_ENABLED:-false}; then 
@@ -132,7 +142,19 @@ while IFS=']' read -r line; do
     baseBranch="${BASE_BRANCH:-develop}"
             
     # Check the comparison status between branches
-    compareJson=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME})
+    set +e
+    compareJson=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} 2>&1)
+    compareStatus=$?
+    set -e
+    if [ "${compareStatus}" -ne 0 ]; then
+        if echo "${compareJson}" | grep -q "HTTP 404"; then
+            error "(${counter}/${modules_length}) ${org}/${item}: branch feature/${FB_NAME} or ${baseBranch} not found on GitHub!"
+        else
+            error "(${counter}/${modules_length}) ${org}/${item}: GitHub compare failed!"
+            echo "${compareJson}"
+        fi
+        exit 1
+    fi
     status=$(echo "$compareJson" | jq -r .status)
     aheadby=$(echo "$compareJson" | jq -r .ahead_by)
     behindby=$(echo "$compareJson" | jq -r .behind_by)
