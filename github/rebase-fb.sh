@@ -69,6 +69,31 @@ cancelJenkinsQueuedJobName() {
     fi
 }
 
+# A push webhook makes Jenkins poll every FB job of the repository (the GitHub plugin ignores the branch), so
+# pushing a rebased FB would also queue builds of the other FBs. To avoid it, the Jenkins webhook of the repository
+# is paused while pushing a module that must not be built (see rebasesCounter below), then restored.
+pausedHook=""   # "org/repo hookId" of the webhook currently paused
+
+findJenkinsHookId() {  # $1: org/repo
+    gh api "/repos/${1}/hooks" --paginate -q ".[] | select(.active == true) | select(.config.url // \"\" | contains(\"${JENKINS_HOST}\")) | .id" 2>/dev/null | head -1
+}
+
+setHookActive() {  # $1: org/repo, $2: hook id, $3: true|false
+    gh api -X PATCH "/repos/${1}/hooks/${2}" -F "active=${3}" >/dev/null
+}
+
+resumeJenkinsHook() {
+    [ -z "${pausedHook}" ] && return 0
+    set -- ${pausedHook}
+    pausedHook=""
+    if setHookActive "$1" "$2" true; then
+        info "Jenkins webhook $2 of $1 resumed."
+    else
+        error "Could not resume Jenkins webhook $2 of $1! Re-activate it manually."
+    fi
+}
+trap resumeJenkinsHook EXIT
+
 ### Main Script
 # Ensure FB_NAME is set
 [ -z "${FB_NAME}" ] && exit 1
@@ -237,9 +262,28 @@ for moduleToRebase in ${modulesToRebase}; do
     if [ "${prev_head}" != "${new_head}" ]; then
         info "Previous HEAD: \033[1;31m${prev_head}\033[0m, New HEAD: \033[1;32m${new_head}\033[0m."
         set +e
+        hookPaused=false
+        if [ ! -z "${JENKINS_HOST:-}" ] && [ "${rebasesCounter}" -gt "1" ]; then
+            hookId=$(findJenkinsHookId "${org}/${item}" || :)
+            if [ ! -z "${hookId}" ] && setHookActive "${org}/${item}" "${hookId}" true 2>/dev/null; then
+                pausedHook="${org}/${item} ${hookId}"
+                if setHookActive "${org}/${item}" "${hookId}" false; then
+                    hookPaused=true
+                    info "Jenkins webhook ${hookId} of ${org}/${item} paused during the push."
+                else
+                    pausedHook=""
+                fi
+            else
+                warn "No manageable Jenkins webhook found on ${org}/${item}, queued builds will be canceled instead."
+            fi
+        fi
         push_output=$(git push origin feature/${FB_NAME} --force-with-lease 2>&1)
         push_status=$?
         set -e
+        if ${hookPaused}; then
+            sleep 3  # Let GitHub evaluate the push event while the webhook is still inactive
+            resumeJenkinsHook
+        fi
         if [ "${push_status}" -ne 0 ]; then
             error "Could not push feature/${FB_NAME} for ${org}/${item}!"
             echo "${push_output}"
@@ -248,7 +292,7 @@ for moduleToRebase in ${modulesToRebase}; do
         echo "${push_output}" | grep -v remote ||:
 
         # Cancel Jenkins job if required
-        if [ ! -z "${JENKINS_HOST:-}" ] && [ "${rebasesCounter}" -gt "1" ]; then 
+        if [ ! -z "${JENKINS_HOST:-}" ] && [ "${rebasesCounter}" -gt "1" ] && ! ${hookPaused}; then 
             cancelJenkinsQueuedJobName "${item}-${FB_NAME}-fb-ci" &  # Async call
         fi
 
