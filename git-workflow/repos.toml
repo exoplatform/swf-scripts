@@ -1,0 +1,93 @@
+# Repositories and POM properties handled by swf-branch.
+# Order matters: repositories are processed top to bottom (build order).
+
+# Branch every feature branch starts from. Overridden by $SWF_BASE_BRANCH, then by --base.
+base_branch = "develop"
+
+# Repos used when no --repos/--group/--all is given in non-interactive mode.
+# (Previously: the only uncommented createFB lines in createFB.sh.)
+default_repos = ["maven-exo-depmgt-pom", "commons-exo"]
+
+# Repos whose own <version> follows the dependency-management version.
+depmgt_repos = ["maven-depmgt-pom", "maven-exo-depmgt-pom"]
+
+[orgs]
+meeds = "Meeds-io"
+exo = "exoplatform"
+
+[repos]
+meeds = [
+  "maven-depmgt-pom",
+  "gatein-wci",
+  "kernel",
+  "core",
+  "ws",
+  "portlet-container",
+  "gatein-sso",
+  "portal",
+  "platform-ui",
+  "commons",
+  "social",
+  "layout",
+  "auth-server",
+  "gamification",
+  "kudos",
+  "perk-store",
+  "wallet",
+  "push-notifications",
+  "app-center",
+  "mcp-server",
+  "analytics",
+  "notes",
+  "content",
+  "poll",
+  "task",
+  "gamification-github",
+  "gamification-twitter",
+  "gamification-evm",
+  "gamification-crowdin",
+  "pwa",
+  "ide",
+  "matrix",
+  "ai",
+  "addons-manager",
+  "deeds-tenant",
+  "meeds",
+  "billing",
+]
+exo = [
+  "maven-exo-depmgt-pom",
+  "commons-exo",
+  "jcr",
+  "ecms",
+  "email-connector",
+  "dlp",
+  "agenda",
+  "agenda-connectors",
+  "digital-workplace",
+  "onlyoffice",
+  "saml2-addon",
+  "web-conferencing",
+  "jitsi-call",
+  "jitsi",
+  "multifactor-authentication",
+  "automatic-translation",
+  "documents",
+  "processes",
+  "data-upgrade",
+  "anti-bruteforce",
+  "anti-malware",
+  "external-visio-connector",
+  "caldav-integration",
+  "platform-private-distributions",
+  "platform-public-distributions",
+]
+
+[properties]
+# Any <name.version>X</name.version> whose name starts with one of these prefixes AND whose
+# value is exactly the old snapshot version is rewritten. New add-ons are picked up automatically.
+prefixes = ["io.meeds.", "org.exoplatform.", "addon.meeds.", "addon.exo."]
+# Names containing this marker follow the dependency-management version, the others the project version.
+depmgt_marker = "depmgt"
+# Property names never rewritten, even if they match.
+exclude = []

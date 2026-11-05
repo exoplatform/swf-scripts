@@ -1,0 +1,545 @@
+#!/usr/bin/env python3
+"""swf-branch: create or remove Git Feature Branches across the PLF repositories.
+
+    swf-branch create [FBRANCH PROJECT_VERSION DEPMGT_VERSION ISSUE] [options]
+    swf-branch remove [BRANCH] [options]
+
+Interactive: run in a terminal with arguments missing and you are prompted.
+Non-interactive: pass every argument; nothing is ever prompted when stdin is
+not a TTY or --non-interactive is given (-y only skips confirmations).
+Nothing is pushed unless --push is given.
+
+Standard library only (Python >= 3.11).
+"""
+from __future__ import annotations
+
+import argparse
+import os
+import re
+import subprocess
+import sys
+import time
+import tomllib
+from dataclasses import dataclass
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+DEFAULT_CONFIG = HERE / "repos.toml"
+DEFAULT_URL = "git@github.com:{org}/{repo}.git"
+PROTECTED = re.compile(r"^(develop(-.+)?|master|main|stable/.+|release/.+|maintenance/.+)$")
+
+COLOR = sys.stdout.isatty() and "NO_COLOR" not in os.environ
+
+
+def paint(code: str, msg: str) -> str:
+    return f"\033[{code}m{msg}\033[m" if COLOR else msg
+
+
+def info(msg: str) -> None:
+    print(paint("1;33", f"# {msg}"), flush=True)
+
+
+def warn(msg: str) -> None:
+    print(paint("1;35", f"# {msg}"), flush=True)
+
+
+def err(msg: str) -> None:
+    print(paint("1;31", f"# {msg}"), file=sys.stderr, flush=True)
+
+
+class Fatal(Exception):
+    """Aborts one repo (or the whole run when raised outside a repo)."""
+
+
+# --------------------------------------------------------------------------- git
+
+def git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+    proc = subprocess.run(["git", *args], cwd=repo, text=True, capture_output=True)
+    if check and proc.returncode:
+        raise Fatal(f"git {' '.join(args)} failed in {repo.name}: {(proc.stderr or proc.stdout).strip()}")
+    return proc
+
+
+def has_local(repo: Path, branch: str) -> bool:
+    return git(repo, "rev-parse", "--verify", "--quiet", f"refs/heads/{branch}", check=False).returncode == 0
+
+
+def has_remote(repo: Path, branch: str) -> bool:
+    return git(repo, "ls-remote", "--exit-code", "--heads", "origin", branch, check=False).returncode == 0
+
+
+def ensure_clone(ctx: Context, org: str, name: str) -> Path:
+    repo = ctx.workdir / name
+    if repo.is_dir():
+        return repo
+    url = ctx.url_template.format(org=org, repo=name)
+    info(f"Cloning {url} ...")
+    proc = subprocess.run(["git", "clone", url, str(repo)], text=True, capture_output=True)
+    if proc.returncode:
+        raise Fatal(f"clone of {url} failed: {proc.stderr.strip()}")
+    return repo
+
+
+def prepare(ctx: Context, repo: Path) -> None:
+    """Fetch, make sure the tree is clean, and sit on an up-to-date base branch."""
+    git(repo, "remote", "update", "--prune")
+    if git(repo, "status", "--porcelain").stdout.strip():
+        if not ctx.discard:
+            raise Fatal("working tree has uncommitted changes (use --discard-changes to wipe them)")
+        git(repo, "reset", "--hard", "HEAD")
+        git(repo, "clean", "-fd")
+    if not has_local(repo, ctx.base):
+        git(repo, "checkout", "-B", ctx.base, f"origin/{ctx.base}")
+    else:
+        git(repo, "checkout", ctx.base)
+    git(repo, "merge", "--ff-only", f"origin/{ctx.base}")
+
+
+# ------------------------------------------------------------------------ config
+
+@dataclass
+class Context:
+    cfg: dict
+    workdir: Path
+    base: str
+    push: bool
+    discard: bool
+    url_template: str
+    interactive: bool
+
+    def orgs_of(self) -> dict[str, str]:
+        """repo name -> organization"""
+        return {r: self.cfg["orgs"][g] for g, repos in self.cfg["repos"].items() for r in repos}
+
+
+def resolve_base(cli: str | None, env: dict, cfg: dict) -> str:
+    """--base, then $SWF_BASE_BRANCH, then base_branch in the config, then 'develop'."""
+    base = cli or env.get("SWF_BASE_BRANCH") or cfg.get("base_branch") or "develop"
+    if not re.fullmatch(r"[\w./-]+", base) or base.startswith(("-", "/")):
+        raise SystemExit(f"invalid base branch: {base!r}")
+    return base
+
+
+def load_config(path: Path) -> dict:
+    try:
+        with path.open("rb") as f:
+            return tomllib.load(f)
+    except (OSError, tomllib.TOMLDecodeError) as e:
+        raise SystemExit(f"cannot read config {path}: {e}")
+
+
+# ----------------------------------------------------------------------- prompts
+
+def ask(prompt: str, default: str | None = None, optional: bool = False) -> str:
+    suffix = f" [{default}]" if default else ""
+    while True:
+        answer = input(f"{prompt}{suffix}: ").strip() or (default or "")
+        if answer or optional:
+            return answer
+
+
+def choose(prompt: str, options: dict[str, str], default: str) -> str:
+    print(paint("1;36", prompt))
+    for key, text in options.items():
+        print(f"  {key}) {text}")
+    while True:
+        answer = input(f"Your choice [{default}]: ").strip() or default
+        if answer in options:
+            return answer
+
+
+def confirm(prompt: str, default: bool = False) -> bool:
+    answer = input(f"{prompt} [{'Y/n' if default else 'y/N'}]: ").strip().lower()
+    return default if not answer else answer.startswith("y")
+
+
+def parse_selection(raw: str, cfg: dict, ordered: list[str]) -> list[str]:
+    """'all', group names, 1-based numbers, ranges (3-7) and repo names, comma/space separated."""
+    names: list[str] = []
+    for tok in re.split(r"[,\s]+", raw.strip()):
+        if not tok:
+            continue
+        if tok == "all":
+            names += ordered
+        elif tok in cfg["repos"]:
+            names += cfg["repos"][tok]
+        elif m := re.fullmatch(r"(\d+)-(\d+)", tok):
+            lo, hi = int(m[1]), int(m[2])
+            if not 1 <= lo <= hi <= len(ordered):
+                raise SystemExit(f"range out of bounds: {tok} (1-{len(ordered)})")
+            names += ordered[lo - 1:hi]
+        elif tok.isdigit():
+            if not 1 <= int(tok) <= len(ordered):
+                raise SystemExit(f"number out of bounds: {tok} (1-{len(ordered)})")
+            names.append(ordered[int(tok) - 1])
+        else:
+            names.append(tok)
+    return names
+
+
+def select_repos(ctx: Context, args: argparse.Namespace) -> list[tuple[str, str]]:
+    """Resolve --repos/--group/--all (or a prompt) to ordered (repo, org) pairs."""
+    cfg, orgs = ctx.cfg, ctx.orgs_of()
+    ordered = list(orgs)
+    if args.repos:
+        names = [r.strip() for r in args.repos.split(",") if r.strip()]
+    elif args.group:
+        unknown = [g for g in args.group if g not in cfg["repos"]]
+        if unknown:
+            raise SystemExit(f"unknown group(s) {unknown}; known: {sorted(cfg['repos'])}")
+        names = [r for g in args.group for r in cfg["repos"][g]]
+    elif args.all:
+        names = ordered
+    elif ctx.interactive:
+        print(paint("1;36", "Repositories:"))
+        for i, r in enumerate(ordered, 1):
+            mark = "*" if r in cfg["default_repos"] else " "
+            print(f"  {i:>3}){mark}{r} ({orgs[r]})")
+        print("  (* = default)  groups: " + ", ".join(cfg["repos"]))
+        raw = ask("Select: 'all', group, numbers/ranges (1,3,5-9) or names", ",".join(cfg["default_repos"]))
+        names = parse_selection(raw, cfg, ordered)
+    else:
+        names = cfg["default_repos"]
+    bad = [n for n in names if n not in orgs]
+    if bad:
+        raise SystemExit(f"unknown repo(s) {bad} (see {DEFAULT_CONFIG.name})")
+    names = sorted(set(names), key=ordered.index)  # build order, no duplicates
+    return [(n, orgs[n]) for n in names]
+
+
+# ------------------------------------------------------------------------ create
+
+@dataclass
+class Versions:
+    project_from: str
+    project_to: str
+    depmgt_from: str
+    depmgt_to: str
+    parents: tuple = ()  # ((artifactId | None, old, new), ...)
+
+
+def parse_parent(spec: str) -> tuple[str | None, str, str]:
+    """'[ARTIFACT:]OLD=NEW' -> (artifact | None, old, new)."""
+    m = re.fullmatch(r"(?:([\w.-]+):)?([^=:\s<>]+)=([^=:\s<>]+)", spec)
+    if not m or m[2] == m[3]:
+        raise SystemExit(f"invalid --parent {spec!r}: expected [ARTIFACT:]OLD=NEW, e.g. 22-SNAPSHOT=22-maintenance-SNAPSHOT")
+    return m[1], m[2], m[3]
+
+
+PARENT_RE = re.compile(r"<parent>.*?</parent>", re.S)
+
+
+def replace_parents(text: str, parents: tuple) -> str:
+    """Rewrite <version> inside <parent> blocks only, when it equals OLD (and the artifact matches)."""
+    def sub(m: re.Match) -> str:
+        block = m.group(0)
+        art = re.search(r"<artifactId>([^<]*)</artifactId>", block)
+        for artifact, old, new in parents:
+            if artifact in (None, art and art.group(1).strip()):
+                block = block.replace(f"<version>{old}</version>", f"<version>{new}</version>")
+        return block
+    return PARENT_RE.sub(sub, text)
+
+
+def replace_versions(repo: Path, cfg: dict, v: Versions, own_is_depmgt: bool) -> int:
+    """Rewrite versions in every pom.xml (excluding target/). Returns files changed.
+
+    Rewrites the project's own <version> and every <prefix...version> property that holds
+    exactly the old snapshot version (depmgt-named ones use the depmgt version)."""
+    props = cfg["properties"]
+    own = (v.depmgt_from, v.depmgt_to) if own_is_depmgt else (v.project_from, v.project_to)
+    own_old, own_new = f"<version>{own[0]}</version>", f"<version>{own[1]}</version>"
+    prefixes = "|".join(re.escape(p) for p in props["prefixes"])
+    prop_re = re.compile(rf"<((?:{prefixes})[\w.-]*\.version)>([^<]*)</\1>")
+    exclude, marker = set(props.get("exclude", [])), props["depmgt_marker"]
+
+    def sub(m: re.Match) -> str:
+        name, value = m.group(1), m.group(2)
+        old, new = (v.depmgt_from, v.depmgt_to) if marker in name else (v.project_from, v.project_to)
+        return f"<{name}>{new}</{name}>" if value == old and name not in exclude else m.group(0)
+
+    changed = 0
+    for pom in repo.rglob("pom.xml"):
+        if "target" in pom.relative_to(repo).parts:
+            continue
+        text = pom.read_text(encoding="utf-8")
+        new_text = prop_re.sub(sub, text.replace(own_old, own_new))
+        if v.parents:
+            new_text = replace_parents(new_text, v.parents)
+        if new_text != text:
+            pom.write_text(new_text, encoding="utf-8")
+            changed += 1
+    return changed
+
+
+def backup_branch(repo: Path, target: str, tip: str) -> str:
+    """Local-only safety net (never pushed): backup/<branch>-<timestamp> at the old tip."""
+    name = f"backup/{target}-{time.strftime('%Y%m%d-%H%M%S')}"
+    git(repo, "branch", name, tip)
+    warn(f"old tip {tip[:10]} saved as local branch {name}; restore with: "
+         f"git branch -f {target} {name}")
+    return name
+
+
+def commit_bump(ctx: Context, a: argparse.Namespace, v: Versions, repo: Path, name: str) -> None:
+    """Rewrite versions and commit them (no commit when nothing changed)."""
+    n = replace_versions(repo, ctx.cfg, v, name in ctx.cfg["depmgt_repos"])
+    info(f"Updated {n} pom.xml file(s) ({name})")
+    git(repo, "add", "-u")
+    if git(repo, "diff", "--cached", "--quiet", check=False).returncode:
+        git(repo, "commit", "-m", f"{a.issue}: Create FB {a.fbranch} and update projects versions/dependencies")
+    else:
+        info(f"Nothing to commit ({name})")
+
+
+def preserve_branch(ctx: Context, a: argparse.Namespace, v: Versions, repo: Path, name: str, target: str) -> str:
+    """Rebuild the FB as: fresh base -> new version-bump commit -> the devs' commits
+    (replayed: new hashes, same content/history). The old bump commit(s) are dropped,
+    so a move such as 7.2.x -> 7.3.x only needs this re-run."""
+    source = f"origin/{target}" if has_remote(repo, target) else target
+    old_tip = git(repo, "rev-parse", source).stdout.strip()
+    backup = backup_branch(repo, target, old_tip) if not a.no_backup else None
+    bump = re.compile(rf"^.+: Create FB {re.escape(a.fbranch)} and update projects versions/dependencies$")
+    shas = git(repo, "rev-list", "--reverse", "--no-merges", f"{ctx.base}..{source}").stdout.split()
+    for m in git(repo, "rev-list", "--merges", f"{ctx.base}..{source}").stdout.split():
+        parents = git(repo, "rev-list", "--parents", "-n1", m).stdout.split()[1:]
+        if any(git(repo, "merge-base", "--is-ancestor", pa, ctx.base, check=False).returncode for pa in parents[1:]):
+            warn(f"merge commit {m[:10]} ({name}) merges something other than {ctx.base}: it is replayed as "
+                 "its plain commits (linear history); any conflict resolution inside the merge is NOT kept")
+    keep = [c for c in shas if not bump.match(git(repo, "log", "-1", "--format=%s", c).stdout.strip())]
+    warn(f"{target} already exists: replaying {len(keep)} commit(s) on {ctx.base}, "
+         f"dropping {len(shas) - len(keep)} old bump commit(s) ({name}); previous tip {old_tip[:10]}")
+    git(repo, "checkout", "-B", target, ctx.base)
+    commit_bump(ctx, a, v, repo, name)  # the bump sits right on top of the base
+    for c in keep:
+        proc = git(repo, "cherry-pick", "--empty=drop", c, check=False)
+        if proc.returncode:
+            git(repo, "cherry-pick", "--abort", check=False)
+            git(repo, "checkout", "-f", "-B", target, old_tip)
+            git(repo, "checkout", ctx.base)
+            if backup:
+                git(repo, "branch", "-D", backup)  # nothing was changed: no need to keep it
+            raise Fatal(f"conflict replaying {c[:10]} onto {ctx.base}; branch left untouched, resolve manually")
+    return f"preserved ({len(keep)} commits replayed)"
+
+
+def create_one(ctx: Context, a: argparse.Namespace, v: Versions, name: str, org: str) -> str:
+    target = f"feature/{a.fbranch}"
+    repo = ensure_clone(ctx, org, name)
+    prepare(ctx, repo)
+    push_flags: list[str] = []
+    bumped = False
+
+    exists = has_local(repo, target) or has_remote(repo, target)
+    if not exists:
+        info(f"{target} does not exist yet, creating it from {ctx.base} ({name})")
+        git(repo, "checkout", "-b", target)
+        outcome = "created"
+    elif a.existing == "skip":
+        warn(f"{target} already exists, skipping ({name})")
+        return "skipped (exists)"
+    elif a.existing == "recreate":
+        warn(f"{target} already exists: recreating it from {ctx.base} ({name})")
+        if not a.no_backup:
+            backup_branch(repo, target, f"origin/{target}" if has_remote(repo, target) else target)
+        if has_local(repo, target):
+            git(repo, "branch", "-D", target)
+        git(repo, "checkout", "-b", target)
+        push_flags = ["--force-with-lease"]
+        outcome = "recreated"
+    elif a.existing == "preserve":
+        outcome = preserve_branch(ctx, a, v, repo, name, target)
+        bumped = True
+        push_flags = ["--force-with-lease"]
+    else:  # keep
+        warn(f"{target} already exists: keeping its commits and merging {ctx.base} ({name})")
+        if has_local(repo, target):
+            git(repo, "checkout", target)
+            if has_remote(repo, target) and git(repo, "merge", "--no-edit", f"origin/{target}", check=False).returncode:
+                git(repo, "merge", "--abort", check=False)
+                raise Fatal(f"local {target} diverges from origin/{target} and does not merge cleanly; resolve manually")
+        else:
+            git(repo, "checkout", "-b", target, f"origin/{target}")
+        if git(repo, "merge", "--no-edit", ctx.base, check=False).returncode:
+            git(repo, "merge", "--abort", check=False)
+            raise Fatal(f"merge conflict merging {ctx.base} into {target}; resolve manually")
+        outcome = "kept + merged"
+
+    if not bumped:
+        commit_bump(ctx, a, v, repo, name)
+
+    cmd = ["push", *push_flags, "--set-upstream", "origin", target]
+    if ctx.push:
+        info(f"git {' '.join(cmd)} ({name})")
+        git(repo, *cmd)
+    else:
+        warn(f"push disabled (use --push); would run: git {' '.join(cmd)} ({name})")
+    git(repo, "checkout", ctx.base)  # always leave the clone on the base branch
+    return outcome
+
+
+def cmd_create(ctx: Context, a: argparse.Namespace) -> int:
+    if ctx.interactive:
+        a.fbranch = a.fbranch or ask("Feature branch name (feature/<name>)")
+        a.project_version = a.project_version or ask("Project version (e.g. 7.3.x)")
+        a.depmgt_version = a.depmgt_version or ask("Dependency management version (e.g. 26.x)")
+        a.issue = a.issue or ask("Task / ticket id")
+        if not a.parent:
+            raw = ask("Parent pom version change, optional ([ARTIFACT:]OLD=NEW, e.g. 22-SNAPSHOT=22-maintenance-SNAPSHOT; empty = none)",
+                      optional=True)
+            a.parent = raw.split() if raw else []
+        if a.existing == "ask":
+            a.existing = {"1": "recreate", "2": "keep", "3": "preserve", "4": "skip"}[choose(
+                f"What if feature/{a.fbranch} already exists in a repo?",
+                {"1": f"Delete it and recreate it from {ctx.base}",
+                 "2": f"Keep its commits and merge {ctx.base} into it",
+                 "3": f"Preserve: replay its commits on a fresh {ctx.base}, replacing the old bump commit "
+                      "(hashes change, history kept)",
+                 "4": "Skip that repo"}, "2")]
+    missing = [n for n in ("fbranch", "project_version", "depmgt_version", "issue") if not getattr(a, n)]
+    if missing:
+        raise SystemExit(f"missing argument(s): {', '.join(missing)} (run in a terminal to be prompted)")
+    if a.existing == "ask":  # non-interactive: never destructive by default
+        a.existing = "keep"
+    if not re.fullmatch(r"[\w.-]+", a.fbranch):
+        raise SystemExit(f"invalid feature branch name: {a.fbranch!r}")
+
+    v = Versions(f"{a.project_version}-SNAPSHOT", f"{a.project_version}-{a.fbranch}-SNAPSHOT",
+                 f"{a.depmgt_version}-SNAPSHOT", f"{a.depmgt_version}-{a.fbranch}-SNAPSHOT",
+                 tuple(parse_parent(x) for x in a.parent))
+    repos = select_repos(ctx, a)
+    print()
+    print(paint("1;36", "Plan"))
+    print(f"  branch      : feature/{a.fbranch} (from {ctx.base}), existing -> {a.existing}")
+    print(f"  project     : {v.project_from} -> {v.project_to}")
+    print(f"  depmgt      : {v.depmgt_from} -> {v.depmgt_to}")
+    for art, old, new in v.parents:
+        print(f"  parent pom  : {(art + ': ') if art else ''}{old} -> {new}")
+    print(f"  issue       : {a.issue}")
+    print(f"  repos ({len(repos)})  : {', '.join(n for n, _ in repos)}")
+    print(f"  workdir     : {ctx.workdir}")
+    print(f"  push        : {'YES' if ctx.push else 'no (dry run, use --push)'}")
+    print()
+    if ctx.interactive and not a.yes and not confirm("Proceed?", default=True):
+        return 1
+    return run_each(repos, lambda n, o: create_one(ctx, a, v, n, o))
+
+
+# ------------------------------------------------------------------------ remove
+
+def remove_one(ctx: Context, a: argparse.Namespace, name: str, org: str) -> str:
+    repo = ensure_clone(ctx, org, name)
+    prepare(ctx, repo)
+    done = []
+    if has_local(repo, a.branch):
+        git(repo, "branch", "-D", a.branch)
+        done.append("local")
+    if ctx.push:
+        if has_remote(repo, a.branch):
+            git(repo, "push", "origin", "--delete", a.branch)
+            done.append("remote")
+    elif has_remote(repo, a.branch):
+        warn(f"push disabled: remote {a.branch} kept ({name}); use --push to delete it")
+    return "deleted " + "+".join(done) if done else "nothing to delete"
+
+
+def cmd_remove(ctx: Context, a: argparse.Namespace) -> int:
+    if ctx.interactive:
+        a.branch = a.branch or ask("Branch to delete (e.g. feature/foo)")
+    if not a.branch:
+        raise SystemExit("missing argument: BRANCH")
+    if PROTECTED.match(a.branch) or a.branch == ctx.base:
+        raise SystemExit(f"refusing to delete protected branch {a.branch!r}")
+    repos = select_repos(ctx, a)
+    print()
+    print(paint("1;36", "Plan"))
+    print(f"  delete      : {a.branch} ({'local + REMOTE' if ctx.push else 'local only'})")
+    print(f"  repos ({len(repos)})  : {', '.join(n for n, _ in repos)}")
+    print()
+    if ctx.push and not a.yes:
+        if not ctx.interactive:
+            raise SystemExit("deleting remote branches non-interactively requires --yes")
+        if not confirm(f"Really delete {a.branch} on the remotes?"):
+            return 1
+    return run_each(repos, lambda n, o: remove_one(ctx, a, n, o))
+
+
+# -------------------------------------------------------------------------- main
+
+def run_each(repos: list[tuple[str, str]], fn) -> int:
+    results: list[tuple[str, str, bool]] = []
+    for name, org in repos:
+        print(paint("1;32", f"\n===== {name} ({org}) ====="))
+        try:
+            results.append((name, fn(name, org), True))
+        except Fatal as e:
+            err(str(e))
+            results.append((name, str(e), False))
+    print(paint("1;36", "\nSummary"))
+    for name, status, ok in results:
+        print(f"  {'OK  ' if ok else 'FAIL'} {name}: {status}")
+    return 0 if all(ok for *_, ok in results) else 1
+
+
+def build_parser() -> argparse.ArgumentParser:
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("-p", "--push", action="store_true", help="push to origin (default: dry run)")
+    common.add_argument("-y", "--yes", action="store_true", help="skip confirmations")
+    common.add_argument("-N", "--non-interactive", action="store_true",
+                        help="never prompt (implied when stdin is not a TTY)")
+    sel = common.add_argument_group("repository selection (default: default_repos of the config)")
+    sel.add_argument("-r", "--repos", help="comma-separated repo names")
+    sel.add_argument("-g", "--group", action="append", help="repo group from the config (meeds, exo); repeatable")
+    sel.add_argument("-a", "--all", action="store_true", help="every configured repo")
+    common.add_argument("-b", "--base", default=None,
+                        help="base branch. Default: $SWF_BASE_BRANCH, else base_branch of the config, else develop")
+    common.add_argument("-w", "--workdir", type=Path,
+                        default=Path(os.environ.get("SWF_FB_REPOS", Path.cwd())),
+                        help="directory holding the clones (default: $SWF_FB_REPOS or cwd)")
+    common.add_argument("--discard-changes", action="store_true", help="wipe uncommitted changes in clones")
+    common.add_argument("--url-template", default=os.environ.get("SWF_GIT_URL", DEFAULT_URL),
+                        help=f"clone URL template (default: {DEFAULT_URL})")
+    common.add_argument("-c", "--config", type=Path, default=DEFAULT_CONFIG, help="repos config (TOML)")
+
+    ap = argparse.ArgumentParser(prog="swf-branch", description=__doc__.split("\n\n")[0])
+    sub = ap.add_subparsers(dest="command", required=True)
+
+    c = sub.add_parser("create", parents=[common], help="create a feature branch and bump versions")
+    c.add_argument("fbranch", nargs="?", help="feature branch name (becomes feature/<name>)")
+    c.add_argument("project_version", nargs="?", help="project version, e.g. 7.3.x")
+    c.add_argument("depmgt_version", nargs="?", help="dependency management version, e.g. 26.x")
+    c.add_argument("issue", nargs="?", help="task or ticket id")
+    c.add_argument("--existing", choices=["ask", "keep", "recreate", "preserve", "skip"], default="ask",
+                   help="if the branch already exists: keep (merge base), recreate (drop its commits), "
+                        "preserve (replay its commits on a fresh base, new hashes), or skip. "
+                        "Default: ask, or keep when non-interactive")
+    c.add_argument("--parent", action="append", default=[], metavar="[ARTIFACT:]OLD=NEW",
+                   help="optional, repeatable: also change the version of <parent> poms, e.g. "
+                        "22-SNAPSHOT=22-maintenance-SNAPSHOT or maven-parent-pom:22-SNAPSHOT=22-maintenance-SNAPSHOT")
+    c.add_argument("--no-backup", action="store_true",
+                   help="recreate/preserve: do not keep the old tip as a local backup/<branch>-<time> branch")
+    c.set_defaults(func=cmd_create)
+
+    r = sub.add_parser("remove", parents=[common], help="delete a branch from the repositories")
+    r.add_argument("branch", nargs="?", help="branch to delete, e.g. feature/foo")
+    r.set_defaults(func=cmd_remove)
+    return ap
+
+
+def main(argv: list[str] | None = None) -> int:
+    a = build_parser().parse_args(argv)
+    interactive = sys.stdin.isatty() and not a.non_interactive
+    a.workdir.mkdir(parents=True, exist_ok=True)
+    cfg = load_config(a.config)
+    ctx = Context(cfg, a.workdir.resolve(), resolve_base(a.base, os.environ, cfg), a.push, a.discard_changes,
+                  a.url_template, interactive)
+    try:
+        return a.func(ctx, a)
+    except (KeyboardInterrupt, EOFError):
+        print()
+        err("aborted")
+        return 130
+
+
+if __name__ == "__main__":
+    sys.exit(main())
