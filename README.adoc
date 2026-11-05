@@ -11,7 +11,7 @@ This repository contains various files and scripts used for SWF management. +
 Those files are organized like below:
 
 * *git-workflow* directory contains:
-** scripts executed by SWF admins on their laptop (prerequisites required) related to *git branches process*
+** `swf-branch` (Python 3.11+, standard library only): create or remove feature branches across the PLF repositories, interactively or not (see link:git-workflow/README.adoc[git-workflow/README.adoc])
 * *github* directory contains:
 ** scripts to clone GitHub repositories
 * *jenkins* directory contains:
