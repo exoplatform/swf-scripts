@@ -142,10 +142,25 @@ while IFS=']' read -r line; do
     baseBranch="${BASE_BRANCH:-develop}"
             
     # Check the comparison status between branches
-    set +e
-    compareJson=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} 2>&1)
-    compareStatus=$?
-    set -e
+    # GitHub compare can fail transiently (HTTP 5xx under load): retry with backoff.
+    # Permanent errors (404, ...) are not retried.
+    compareMaxAttempts=5
+    compareAttempt=1
+    while true; do
+        set +e
+        compareJson=$(gh api /repos/${org}/${item}/compare/${baseBranch}...feature/${FB_NAME} 2>&1)
+        compareStatus=$?
+        set -e
+        [ "${compareStatus}" -eq 0 ] && break
+        if echo "${compareJson}" | grep -qE "HTTP (5[0-9]{2}|429)" && [ "${compareAttempt}" -lt "${compareMaxAttempts}" ]; then
+            compareDelay=$((compareAttempt * 5))
+            warn "(${counter}/${modules_length}) ${org}/${item}: GitHub compare failed (attempt ${compareAttempt}/${compareMaxAttempts}), retrying in ${compareDelay}s..."
+            sleep "${compareDelay}"
+            compareAttempt=$((compareAttempt+1))
+            continue
+        fi
+        break
+    done
     if [ "${compareStatus}" -ne 0 ]; then
         if echo "${compareJson}" | grep -q "HTTP 404"; then
             error "(${counter}/${modules_length}) ${org}/${item}: branch feature/${FB_NAME} or ${baseBranch} not found on GitHub!"
