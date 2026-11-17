@@ -1,0 +1,312 @@
+= git-workflow: `swf-branch`
+:toc: macro
+:toclevels: 2
+
+Create or remove *feature branches* across the Meeds-io and exoplatform repositories, from your laptop.
+
+toc::[]
+
+== TL;DR
+
+[source,sh]
+----
+swf-branch create mips 7.3.x 26.x TASK-1234        # dry run: clones, edits, commits locally, pushes nothing
+swf-branch create mips 7.3.x 26.x TASK-1234 --push # same, then pushes
+swf-branch create                                  # interactive: it asks for everything
+swf-branch remove feature/mips --push --yes        # delete a feature branch (local + remote)
+----
+
+* Nothing is ever pushed without `--push`.
+* Run it with arguments missing in a terminal and it asks; run it from a script or CI and it never asks.
+* Python 3.11+ and `git` only. No dependency to install.
+
+== Why this replaces the old scripts
+
+`createFB.sh` and `removeGitBranch.sh` were edited by hand for every run (repos commented in and out, hardcoded
+branch names), took 4 positional arguments, and blocked on a `read` prompt, which broke the GitHub workflow.
+`swf-branch` does the same job with the same Git behaviour, but the choices are arguments instead of file edits.
+
+=== What stays the same
+
+* A feature branch is `feature/<name>`, created from `develop` (the base branch is now configurable, see <<base>>).
+* Versions are rewritten in every `pom.xml` (not under `target/`): `7.3.x-SNAPSHOT` becomes `7.3.x-<name>-SNAPSHOT`,
+  and the dependency-management version `26.x-SNAPSHOT` becomes `26.x-<name>-SNAPSHOT`.
+* One commit: `<ISSUE>: Create FB <name> and update projects versions/dependencies`.
+* The default repos are still `maven-exo-depmgt-pom` and `commons-exo`.
+* Without `-p`/`--push` nothing is pushed (the flag is now also spelled `--push`).
+
+=== What is different
+
+[cols="2,3,3",options="header"]
+|===
+| Topic | Before | Now
+
+| Choosing repos
+| Comment/uncomment `createFB ...` lines in the script
+| `--repos a,b`, `--group exo`, `--all`, or a numbered list when interactive. The list itself lives in `repos.toml`.
+
+| Branch already exists
+| One prompt: delete+recreate, or keep
+| `--existing keep\|recreate\|preserve\|skip` (see <<existing>>). Non-interactive default is `keep`, which destroys nothing.
+
+| Force push
+| `--force`
+| `--force-with-lease`, preceded by a local backup branch.
+
+| Dirty clone
+| `git reset --hard` silently
+| Refused, unless `--discard-changes`.
+
+| One repo fails
+| The whole run stops
+| The other repos continue; a summary is printed and the exit code is 1.
+
+| POM properties
+| ~70 hardcoded `replaceInFile.sh` calls
+| Any `io.meeds.*`, `org.exoplatform.*`, `addon.meeds.*`, `addon.exo.*` `*.version` holding the old snapshot version. New add-ons need no edit. (This also fixes `io.meeds.mcp-server.version`, which the old script missed.)
+
+| Removing a branch
+| Branch name hardcoded in the file
+| `swf-branch remove <branch>`; refuses `develop*`, `master`, `main`, `stable/*`, `release/*`, `maintenance/*`.
+
+| Stale scripts
+| `createPB`, `createSB-for-PLF`, `createSB-for-CF`, `createFB-with-juzu`, `renameBranch`
+| Removed (2021-2022, hardcoded versions or fully commented out). They remain in the Git history.
+|===
+
+== Install
+
+Clone this repository and put `swf-branch` on your `PATH`. A symlink works from anywhere, because the script finds
+`repos.toml` next to the real file.
+
+[source,sh]
+----
+ln -s /path/to/swf-scripts/git-workflow/swf-branch ~/bin/swf-branch
+
+# keep the feature-branch clones in one place instead of the current directory
+echo 'export SWF_FB_REPOS=$HOME/swf-fb-repos' >> ~/.bashrc
+----
+
+Requirements: `git` with SSH access to Meeds-io and exoplatform, and Python 3.11+.
+For another clone URL (HTTPS, mirror) set `SWF_GIT_URL`, for example `https://github.com/{org}/{repo}.git`.
+
+== Usage
+
+=== Interactive
+
+Leave arguments out in a terminal. You are asked for the missing values, shown a plan, and asked to confirm.
+
+[source,sh]
+----
+swf-branch create
+swf-branch remove
+----
+
+=== Non-interactive
+
+Pass every argument. It never prompts when stdin is not a terminal, or with `--non-interactive` (`-N`);
+a missing argument is an error, not a hang. `--yes` (`-y`) only skips confirmations.
+
+[source,sh]
+----
+# dry run on the default repos
+swf-branch create mips 7.3.x 26.x TASK-1234 -N
+
+# push, on every repo of the exo group, replacing the branch where it already exists
+swf-branch create mips 7.3.x 26.x TASK-1234 -N --push -g exo --existing recreate
+
+# delete a branch on two repos, locally and on the remotes
+swf-branch remove feature/mips -r kernel,core --push --yes
+----
+
+=== Choosing repositories
+
+`--repos a,b` (names), `--group meeds|exo` (repeatable), `--all`. With none of them: the `default_repos` of `repos.toml`.
+Interactively you get a numbered list and can answer `all`, a group, numbers and ranges (`1,3,5-9`) or names.
+Repos are always processed in the order of `repos.toml` (build order), whatever order you typed.
+
+[#base]
+=== Base branch
+
+By default branches start from `develop`. Change it for everyone with `base_branch` in `repos.toml`, for your
+shell with `export SWF_BASE_BRANCH=develop-exo`, or for one run with `--base`. The most specific wins:
+`--base`, then `$SWF_BASE_BRANCH`, then `base_branch`, then `develop`. The base branch is also protected from `remove`.
+
+[#existing]
+== When the feature branch already exists (`--existing`)
+
+[cols="1,4,2",options="header"]
+|===
+| Value | What happens | Commits of the devs
+
+| `keep` _(default when non-interactive)_
+| Merges `origin/<branch>` then `develop` into the branch. Nothing is rewritten.
+| Kept, same hashes.
+
+| `preserve`
+| Rebuilds the branch as `develop` -> new version commit -> the devs' commits, replayed. The old version commit is dropped.
+| Kept, *new hashes*.
+
+| `recreate`
+| Deletes the branch and recreates it from `develop`.
+| *Dropped.*
+
+| `skip`
+| Leaves that repo alone.
+| Untouched.
+|===
+
+`recreate` and `preserve` push with `--force-with-lease` and first save the old tip as a *local-only* branch
+`backup/<branch>-<timestamp>` (never pushed; disable with `--no-backup`). Restore with
+`git branch -f feature/x backup/feature/x-<timestamp>`. Delete old backups yourself.
+
+=== Moving a branch to a new version (7.2.x to 7.3.x)
+
+Use `preserve`. Branch `feature/mips`, started on 7.2.x, becomes:
+
+----
+before:  develop(7.2.x) - bump to 7.2.x-mips - dev A - dev B
+after:   develop(7.3.x) - bump to 7.3.x-mips - dev A' - dev B'     (A', B' = same changes, new hashes)
+----
+
+[source,sh]
+----
+swf-branch create mips 7.3.x 26.x TASK-1234 --existing preserve --push
+----
+
+`keep` cannot do this: merging a `develop` whose versions moved conflicts with the branch's own version lines.
+
+Caveats of `preserve`:
+
+* A dev commit that edits a line *right next to* a version line in a `pom.xml` can conflict when replayed. The run
+  stops for that repo, *leaves the branch untouched*, reports it as failed, and continues with the others.
+  Resolve that repo by hand (or ask the dev to move the edit).
+* Merge commits other than "merge develop" are replayed as their plain commits (linear history), with a warning.
+  Conflict resolutions made inside such a merge are not kept.
+
+=== What devs do after a `preserve` or `recreate`
+
+Their local branch now diverges from the remote because the hashes changed. Tell them:
+
+[source,sh]
+----
+git fetch
+git pull --rebase origin feature/mips     # keeps unpushed work; already-pushed commits are recognised
+# or, if they have no unpushed work:
+git reset --hard origin/feature/mips
+----
+
+(Tested: `git pull --rebase` ends identical to the remote, without duplicated commits, for a dev with nothing unpushed.)
+
+== Optional: parent pom version (`--parent`)
+
+Off by default. Also changes the version of `<parent>` poms, for example to follow a parent that has its own
+maintenance snapshot:
+
+[source,sh]
+----
+# every <parent> on 22-SNAPSHOT
+swf-branch create mips 7.3.x 26.x TASK-1234 --parent 22-SNAPSHOT=22-maintenance-SNAPSHOT
+
+# one parent artifact only; repeatable
+swf-branch create mips 7.3.x 26.x TASK-1234 \
+  --parent maven-parent-pom:22-SNAPSHOT=22-maintenance-SNAPSHOT \
+  --parent addons-parent-pom:21-M02=21-maintenance-SNAPSHOT
+----
+
+Only the `<version>` inside `<parent>` blocks is touched, and only when it equals `OLD` exactly.
+Dependencies and anything else using the same version are left alone. It goes in the same commit as the other versions.
+Interactively you are asked for it; an empty answer means none.
+
+== Safety guarantees
+
+* *Dry run by default*: no push without `--push`. Deleting remote branches non-interactively also needs `--yes`.
+* *Non-destructive default*: `--existing` defaults to `keep` when it cannot ask.
+* *No silent data loss*: a clone with uncommitted changes is refused; force-pushes use `--force-with-lease` and a
+  local backup branch; a conflict leaves the branch exactly as it was.
+* *Protected branches*: `remove` refuses `develop*`, `master`, `main`, `stable/*`, `release/*`, `maintenance/*`.
+* *Isolated*: it only touches clones inside `--workdir`, never your other checkouts.
+
+== Configuration: `repos.toml`
+
+[cols="2,5",options="header"]
+|===
+| Key | Meaning
+
+| `base_branch`
+| Branch the feature branches start from (default `develop`). See <<base>>.
+
+| `default_repos`
+| Repos used when no selection is given (non-interactive).
+
+| `depmgt_repos`
+| Repos whose own `<version>` follows the dependency-management version.
+
+| `[orgs]` and `[repos]`
+| Groups of repos in build order, and the GitHub organisation of each group.
+
+| `[properties] prefixes`
+| Property prefixes that are rewritten (`io.meeds.`, `org.exoplatform.`, `addon.meeds.`, `addon.exo.`).
+
+| `[properties] depmgt_marker`
+| Property names containing it use the dependency-management version.
+
+| `[properties] exclude`
+| Property names never rewritten.
+|===
+
+Add a repo by adding its name to the right group. Use `--config` for an alternative file.
+
+== Options reference
+
+Run `swf-branch create -h` or `swf-branch remove -h`. The main ones:
+
+[cols="2,4",options="header"]
+|===
+| Option | Meaning
+
+| `-p`, `--push` | Push (create) / also delete on the remote (remove).
+| `-y`, `--yes` | Skip confirmations.
+| `-N`, `--non-interactive` | Never prompt (implied when stdin is not a terminal).
+| `-r`, `-g`, `-a` | Repo selection: names, groups, all.
+| `-b`, `--base` | Base branch (default: `$SWF_BASE_BRANCH`, else `base_branch` of `repos.toml`, else `develop`).
+| `-w`, `--workdir` | Where the clones live (default `$SWF_FB_REPOS`, else the current directory).
+| `--existing` | `keep`, `recreate`, `preserve`, `skip` (create only).
+| `--parent` | Optional parent pom change (create only).
+| `--no-backup` | No local backup branch before `recreate`/`preserve`.
+| `--discard-changes` | Wipe uncommitted changes in clones instead of refusing.
+| `--url-template`, `-c` | Clone URL template, alternative `repos.toml`.
+|===
+
+== Troubleshooting
+
+[cols="2,3",options="header"]
+|===
+| Message | What to do
+
+| `working tree has uncommitted changes`
+| Commit or stash in that clone, or pass `--discard-changes`.
+
+| `conflict replaying <sha> onto develop`
+| See <<existing>>: a dev commit touches a line next to a version. The branch is untouched; fix that repo by hand.
+
+| `merge conflict merging develop into ...` (`keep`)
+| `develop`'s versions moved. Use `--existing preserve`.
+
+| `missing argument(s) ...`
+| You are not in a terminal. Pass all four arguments, or run it from one.
+
+| push rejected
+| Someone pushed in between. Re-run; `keep` pulls the remote first.
+|===
+
+== Tests
+
+[source,sh]
+----
+python3 -m unittest discover -s git-workflow/tests
+----
+
+They run against local bare repositories only: no network, no GitHub, nothing is pushed.
+The cases cover versions rewriting, every `--existing` strategy, stale clones, parent poms, repo selection and the
+refusals above. The GitHub workflow `.github/workflows/createFB.yml` is a thin wrapper around `swf-branch create`.

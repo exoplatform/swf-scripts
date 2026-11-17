@@ -1,51 +1,85 @@
-name: Create Git Feature Branches for PLF projects 
+name: Create Git Feature Branches for PLF projects
 
 on:
   workflow_dispatch:
     inputs:
-      ORIGIN_BRANCH: 
-        type: choice
-        description: Feature Branch's base branch for Meeds-io repositories (exoplatform repositories will forcibly use develop as a base branch)
-        options:
-          - develop
-          - develop-exo
-          - develop-meed
-      ISSUE: 
-        type: text
-        description: the task id 'task-1234' 
-        required: true     
-      BRANCH:
-        type: text
-        description: the feature branche you want to add it like mips devx ...
+      FBRANCH:
+        type: string
+        description: Feature branch name, e.g. 'mips' creates feature/mips
         required: true
+      PROJECT_VERSION:
+        type: string
+        description: Current project version, e.g. 7.3.x
+        required: true
+      DEPMGT_VERSION:
+        type: string
+        description: Dependency management version, e.g. 26.x
+        required: true
+      ISSUE:
+        type: string
+        description: The task id, e.g. 'task-1234'
+        required: true
+      EXISTING:
+        type: choice
+        description: If the feature branch already exists in a repo
+        options:
+          - keep   # keep its commits and merge develop into it
+          - recreate   # delete it and recreate it from develop
+          - preserve   # replay its commits on fresh develop, new version commit
+          - skip
+        default: keep
+      REPOS:
+        type: string
+        description: Comma-separated repos (empty = the defaults of git-workflow/repos.toml; 'all' = every repo)
+        required: false
+      BASE:
+        type: string
+        description: Base branch (empty = base_branch of git-workflow/repos.toml, 'develop' by default)
+        required: false
+      PARENT:
+        type: string
+        description: "Optional parent pom version change(s), space separated, e.g. 22-SNAPSHOT=22-maintenance-SNAPSHOT"
+        required: false
       VALIDATE:
         type: boolean
-        description: 'CHECK the box to PUSH'
+        description: 'CHECK the box to PUSH (otherwise dry run)'
         default: false
+
+permissions:
+  contents: read
 
 jobs:
   create_fb:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-       - name: Checkout
-         uses: actions/checkout@v5
-         with: 
-           ssh-key: ${{ secrets.SSH_KEY }}
-       - name: Set Git user email and name
-         env:
-           GIT_USER_EMAIL: "exo-swf@exoplatform.com"
-           GIT_USER_NAME: "exo-swf"
-         run: |
-           git config --global user.email "$GIT_USER_EMAIL"
-           git config --global user.name "$GIT_USER_NAME"
-       - name: run createFB script
-         env:
-          ORIGIN_BRANCH: ${{ github.event.inputs.ORIGIN_BRANCH }}
-          BRANCH: ${{ github.event.inputs.BRANCH }}
-          ISSUE: ${{ github.event.inputs.ISSUE }}
-          PUSH: ${{ github.event.inputs.VALIDATE }} 
-         run: |
-            cd git-workflow
-            ./createFB.sh $BRANCH $ORIGIN_BRANCH $ISSUE $PUSH
-         shell: bash
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ssh-key: ${{ secrets.SSH_KEY }}
+      - name: Set Git user email and name
+        env:
+          GIT_USER_EMAIL: "exo-swf@exoplatform.com"
+          GIT_USER_NAME: "exo-swf"
+        run: |
+          git config --global user.email "$GIT_USER_EMAIL"
+          git config --global user.name "$GIT_USER_NAME"
+      - name: Run swf-branch create
+        env:
+          FBRANCH: ${{ inputs.FBRANCH }}
+          PROJECT_VERSION: ${{ inputs.PROJECT_VERSION }}
+          DEPMGT_VERSION: ${{ inputs.DEPMGT_VERSION }}
+          ISSUE: ${{ inputs.ISSUE }}
+          EXISTING: ${{ inputs.EXISTING }}
+          REPOS: ${{ inputs.REPOS }}
+          PARENT: ${{ inputs.PARENT }}
+          BASE: ${{ inputs.BASE }}
+          PUSH: ${{ inputs.VALIDATE }}
+          SWF_FB_REPOS: ${{ runner.temp }}/fb-repos
+        run: |
+          args=(create "$FBRANCH" "$PROJECT_VERSION" "$DEPMGT_VERSION" "$ISSUE" --non-interactive --existing "$EXISTING")
+          if [ "$REPOS" = "all" ]; then args+=(--all); elif [ -n "$REPOS" ]; then args+=(--repos "$REPOS"); fi
+          if [ -n "$BASE" ]; then args+=(--base "$BASE"); fi
+          for p in $PARENT; do args+=(--parent "$p"); done
+          if [ "$PUSH" = "true" ]; then args+=(--push); fi
+          ./git-workflow/swf-branch "${args[@]}"
